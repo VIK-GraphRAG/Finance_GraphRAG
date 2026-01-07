@@ -6,6 +6,8 @@ import streamlit.components.v1 as components
 import time
 import json
 from datetime import datetime
+import re
+from typing import List, Dict
 
 # .env 파일 읽기
 try:
@@ -24,6 +26,149 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# Perplexity 스타일 CSS
+st.markdown("""
+<style>
+/* 전체 앱 스타일 */
+.stApp {
+    background-color: #fafafa;
+}
+
+/* 보고서 컨테이너 */
+.report-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    line-height: 1.7;
+}
+
+/* 보고서 제목 */
+.report-container h2 {
+    color: #1a1a1a;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+/* Citation 스타일 */
+.citation {
+    display: inline-block;
+    color: #0066cc;
+    background: #e6f2ff;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin: 0 0.1rem;
+    cursor: help;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.citation:hover {
+    background: #0066cc;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* References 섹션 */
+.references {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #e0e0e0;
+}
+
+.references h4 {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.references ol {
+    padding-left: 1.5rem;
+}
+
+.references li {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.references li strong {
+    color: #0066cc;
+}
+
+.references li em {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Executive Summary 아이콘 */
+.report-container p:has(> strong:first-child) {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-left: 4px solid #0066cc;
+    border-radius: 4px;
+}
+
+/* Key Findings 리스트 */
+.report-container ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.report-container ul li {
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+
+.report-container ul li:before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #0066cc;
+    font-weight: bold;
+}
+
+/* 차트 메시지 스타일 개선 */
+.stChatMessage {
+    background: white !important;
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* 사용자 메시지 */
+[data-testid="stChatMessageContent"][data-test-user="true"] {
+    background: #f0f7ff;
+    border-left: 3px solid #0066cc;
+}
+
+/* 코드 블록 */
+.report-container code {
+    background: #f5f5f5;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* Popover 스타일 (Streamlit native) */
+[data-baseweb="popover"] {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+</style>
+""", unsafe_allow_html=True)
 
 # 데이터 소스 관리 파일 경로
 DATA_SOURCES_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data_sources.json")
@@ -50,6 +195,110 @@ def add_data_source(source_type, name, content_preview=""):
     }
     data_sources[source_type].append(source)
     save_data_sources(data_sources)
+
+
+# Citation 렌더링 함수
+def render_report_with_citations(answer: str, sources: List[Dict]) -> str:
+    """
+    답변 텍스트에 Citation을 인터랙티브하게 렌더링
+    
+    Args:
+        answer: LLM 답변 (마크다운 형식)
+        sources: 출처 리스트 [{"id": 1, "file": "...", "excerpt": "...", "chunk_id": "..."}, ...]
+    
+    Returns:
+        HTML 형식의 렌더링된 보고서
+    """
+    if not sources:
+        # 출처가 없으면 그냥 마크다운 그대로 반환
+        return f"<div class='report-container'>{answer}</div>"
+    
+    # Citation 패턴 찾기: [1], [2], [1,2], [1][2] 등
+    citation_pattern = r'\[(\d+(?:\s*,\s*\d+)*)\]'
+    
+    def replace_citation(match):
+        citations = match.group(1)
+        citation_nums = [int(n.strip()) for n in citations.split(',')]
+        
+        # 여러 citation을 span으로 변환
+        html_citations = []
+        for num in citation_nums:
+            # 해당 번호의 소스 찾기
+            source = next((s for s in sources if s['id'] == num), None)
+            if source:
+                title = f"{source.get('file', 'Unknown source')}"
+                html_citations.append(
+                    f'<span class="citation" title="{title}">[{num}]</span>'
+                )
+            else:
+                html_citations.append(f'<span class="citation">[{num}]</span>')
+        
+        return ''.join(html_citations)
+    
+    # Citation 교체
+    answer_with_citations = re.sub(citation_pattern, replace_citation, answer)
+    
+    # References 섹션 생성
+    references_html = "<div class='references'><h4>📚 References</h4><ol>"
+    for source in sources:
+        file_name = source.get('file', 'Unknown')
+        chunk_id = source.get('chunk_id', 'N/A')
+        excerpt = source.get('excerpt', '')
+        url = source.get('url', '')
+        
+        # URL이 있으면 링크로 표시
+        if url and url.startswith('http'):
+            references_html += f"<li><strong><a href='{url}' target='_blank'>{file_name}</a></strong><br>"
+        else:
+            references_html += f"<li><strong>{file_name}</strong> (Chunk: {chunk_id})<br>"
+        
+        references_html += f"<em>{excerpt[:250]}...</em></li>"
+    
+    references_html += "</ol></div>"
+    
+    # 전체 보고서 HTML
+    report_html = f"""
+    <div class='report-container'>
+        {answer_with_citations}
+        {references_html}
+    </div>
+    """
+    
+    return report_html
+
+
+def render_citations_with_popover(sources: List[Dict]):
+    """
+    Streamlit popover를 사용하여 citation 클릭 시 출처 정보 표시
+    
+    Args:
+        sources: 출처 리스트
+    """
+    if not sources:
+        return
+    
+    st.markdown("---")
+    st.markdown("### 📚 References")
+    
+    # 각 출처를 expander 또는 popover로 표시
+    cols = st.columns(min(len(sources), 3))
+    for idx, source in enumerate(sources):
+        col_idx = idx % 3
+        with cols[col_idx]:
+            with st.popover(f"[{source['id']}] {source.get('file', 'Source')[:30]}...", use_container_width=True):
+                st.caption(f"**File**: {source.get('file', 'Unknown')}")
+                st.caption(f"**Chunk ID**: {source.get('chunk_id', 'N/A')}")
+                
+                if source.get('url'):
+                    st.caption(f"**URL**: [{source['url']}]({source['url']})")
+                
+                st.text_area(
+                    "Excerpt",
+                    value=source.get('excerpt', '')[:400],
+                    height=150,
+                    disabled=True,
+                    key=f"excerpt_{source['id']}"
+                )
 
 # 데이터 소스 삭제 함수
 def delete_data_source(source_type, index):
@@ -163,6 +412,59 @@ tab1, tab2, tab3, tab4 = st.tabs(["Query", "Data Ingestion", "Data Sources", "Gr
 with tab1:
     st.markdown("### Query Interface")
     
+    # Advanced Settings Expander
+    with st.expander("⚙️ Advanced Settings", expanded=False):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            temperature = st.slider(
+                "Temperature",
+                min_value=0.0,
+                max_value=2.0,
+                value=0.2,
+                step=0.1,
+                help="Controls randomness. Lower = more focused, Higher = more creative"
+            )
+            st.caption(f"Current: {temperature}")
+        
+        with col2:
+            top_k = st.slider(
+                "Retrieval Chunks",
+                min_value=5,
+                max_value=50,
+                value=30,
+                step=5,
+                help="Number of text chunks to retrieve from the knowledge graph"
+            )
+            st.caption(f"Current: {top_k} chunks")
+        
+        st.markdown("---")
+        st.markdown("**📊 Parameter Guide:**")
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown("""
+            **Temperature:**
+            - 0.0-0.3: Precise, factual
+            - 0.4-0.7: Balanced
+            - 0.8-2.0: Creative, diverse
+            """)
+        with col_b:
+            st.markdown("""
+            **Retrieval Chunks:**
+            - 5-15: Fast, focused
+            - 20-30: Balanced (recommended)
+            - 35-50: Comprehensive, slower
+            """)
+    
+    # Store settings in session state
+    if "temperature" not in st.session_state:
+        st.session_state.temperature = 0.2
+    if "top_k" not in st.session_state:
+        st.session_state.top_k = 30
+    
+    st.session_state.temperature = temperature
+    st.session_state.top_k = top_k
+    
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -211,13 +513,27 @@ with tab1:
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                mode_text = f"<div class='message-mode'>Mode: {message.get('mode', 'N/A')}</div>" if "mode" in message else ""
-                st.markdown(f"""
-                <div class="assistant-message">
-                    {message["content"]}
-                    {mode_text}
-                </div>
-                """, unsafe_allow_html=True)
+                # 출처 정보가 있으면 Perplexity 스타일로 렌더링
+                sources = message.get("sources", [])
+                source_type = message.get("source_type", "UNKNOWN")
+                
+                if sources:
+                    # Citation과 References가 포함된 보고서 형식
+                    report_html = render_report_with_citations(message["content"], sources)
+                    st.markdown(report_html, unsafe_allow_html=True)
+                    
+                    # Popover로 추가 상세 정보 제공 (선택사항)
+                    with st.expander(f"📎 View {len(sources)} Source(s) in Detail", expanded=False):
+                        render_citations_with_popover(sources)
+                else:
+                    # 출처 정보가 없으면 기본 형식
+                    mode_text = f"<div class='message-mode'>Source: {source_type} | Mode: {message.get('mode', 'N/A')}</div>" if "mode" in message else ""
+                    st.markdown(f"""
+                    <div class="report-container">
+                        {message["content"]}
+                        {mode_text}
+                    </div>
+                    """, unsafe_allow_html=True)
     
     # Clear chat button at the top
     if st.session_state.messages:
@@ -235,23 +551,35 @@ with tab1:
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         # Get assistant response
-        with st.spinner("Processing..."):
+        with st.spinner("Generating executive report..."):
             try:
+                # Prepare request with advanced parameters
+                request_data = {
+                    "question": prompt,
+                    "mode": query_mode,
+                    "temperature": st.session_state.get("temperature", 0.2),
+                    "top_k": st.session_state.get("top_k", 30)
+                }
+                
                 response = requests.post(
                     f"{API_BASE_URL}/query",
-                    json={"question": prompt, "mode": query_mode},
+                    json=request_data,
                     timeout=120
                 )
                 
                 if response.status_code == 200:
                     result = response.json()
                     answer = result.get("answer", "No response generated.")
+                    sources = result.get("sources", [])
+                    source_type = result.get("source", "UNKNOWN")
                     mode = result.get('mode', 'unknown').upper()
                     
-                    # Add assistant response to chat history
+                    # Add assistant response to chat history with sources
                     st.session_state.messages.append({
                         "role": "assistant",
                         "content": answer,
+                        "sources": sources,
+                        "source_type": source_type,
                         "mode": mode
                     })
                 else:
@@ -508,26 +836,103 @@ with tab3:
         neo4j_password = os.getenv("NEO4J_PASSWORD", "")
         
         if not neo4j_uri or not neo4j_password:
-            st.warning("Neo4j connection not configured. Please set NEO4J_URI and NEO4J_PASSWORD in your .env file.")
+            st.warning("⚠️ Neo4j connection not configured. Please set NEO4J_URI and NEO4J_PASSWORD in your .env file.")
+            st.markdown("""
+            **Setup Instructions:**
+            1. Create a Neo4j AuraDB instance at [neo4j.com/cloud/aura](https://neo4j.com/cloud/aura)
+            2. Copy your connection URI and credentials
+            3. Add to `.env` file:
+            ```
+            NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io
+            NEO4J_USERNAME=neo4j
+            NEO4J_PASSWORD=your-password
+            ```
+            """)
         else:
-            st.info(f"Connected to: {neo4j_uri}")
+            st.success(f"✅ Connected to: {neo4j_uri}")
             
-            # Query input
+            # Quick Query Buttons
+            st.markdown("#### Quick Queries")
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                if st.button("All Nodes & Edges", use_container_width=True):
+                    st.session_state["selected_query"] = "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 100"
+            with col2:
+                if st.button("Show Entities", use_container_width=True):
+                    st.session_state["selected_query"] = "MATCH (n:ENTITY) RETURN n LIMIT 100"
+            with col3:
+                if st.button("Show Communities", use_container_width=True):
+                    st.session_state["selected_query"] = "MATCH (n:COMMUNITY) RETURN n LIMIT 50"
+            with col4:
+                if st.button("Graph Stats", use_container_width=True):
+                    st.session_state["show_stats"] = True
+            
+            st.markdown("---")
+            
+            # Custom Query input
+            default_query = st.session_state.get("selected_query", "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 50")
             cypher_query = st.text_area(
-                "Enter Cypher Query",
-                value="MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 50",
+                "Custom Cypher Query",
+                value=default_query,
                 height=100,
                 help="Enter a Cypher query to visualize the graph"
             )
             
-            col1, col2 = st.columns([1, 4])
+            col1, col2, col3 = st.columns([2, 2, 2])
             with col1:
-                execute_button = st.button("Execute Query", type="primary")
+                execute_button = st.button("🔍 Execute Query", type="primary", use_container_width=True)
             with col2:
-                if st.button("Clear Graph", type="secondary"):
+                if st.button("📊 Show Database Stats", type="secondary", use_container_width=True):
+                    st.session_state["show_stats"] = True
+            with col3:
+                if st.button("🗑️ Clear Results", type="secondary", use_container_width=True):
                     if "neo4j_results" in st.session_state:
                         del st.session_state["neo4j_results"]
+                    if "show_stats" in st.session_state:
+                        del st.session_state["show_stats"]
                     st.rerun()
+            
+            # Show Database Statistics
+            if st.session_state.get("show_stats", False):
+                st.markdown("---")
+                st.markdown("#### 📊 Database Statistics")
+                try:
+                    from neo4j import GraphDatabase
+                    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_username, neo4j_password))
+                    
+                    with driver.session() as session:
+                        # Count nodes by label
+                        node_counts = session.run("CALL db.labels() YIELD label RETURN label").value()
+                        
+                        col1, col2, col3 = st.columns(3)
+                        
+                        with col1:
+                            total_nodes = session.run("MATCH (n) RETURN count(n) as count").single()["count"]
+                            st.metric("Total Nodes", f"{total_nodes:,}")
+                        
+                        with col2:
+                            total_rels = session.run("MATCH ()-[r]->() RETURN count(r) as count").single()["count"]
+                            st.metric("Total Relationships", f"{total_rels:,}")
+                        
+                        with col3:
+                            label_count = len(node_counts)
+                            st.metric("Node Types", label_count)
+                        
+                        # Show breakdown by label
+                        if node_counts:
+                            st.markdown("**Nodes by Type:**")
+                            for label in node_counts:
+                                count = session.run(f"MATCH (n:{label}) RETURN count(n) as count").single()["count"]
+                                st.text(f"  • {label}: {count:,}")
+                    
+                    driver.close()
+                    st.session_state["show_stats"] = False
+                    
+                except Exception as e:
+                    st.error(f"Failed to retrieve stats: {str(e)}")
+                
+                st.markdown("---")
             
             if execute_button:
                 with st.spinner("Executing query..."):
@@ -594,49 +999,176 @@ with tab3:
                                 
                                 # Create visualization using PyVis
                                 if nodes:
+                                    st.markdown("---")
+                                    st.markdown("#### 🔗 Graph Visualization")
+                                    st.caption("💡 Tip: Drag nodes, zoom with scroll, hover for details")
+                                    
                                     try:
                                         from pyvis.network import Network
                                         
-                                        net = Network(height="600px", width="100%", bgcolor="#ffffff", font_color="#000000")
-                                        net.barnes_hut()
+                                        # Enhanced network with physics
+                                        net = Network(
+                                            height="700px",
+                                            width="100%",
+                                            bgcolor="#fafafa",
+                                            font_color="#1a1a1a",
+                                            notebook=False,
+                                            directed=True
+                                        )
                                         
-                                        # Add nodes
+                                        # Configure physics for better layout
+                                        net.set_options("""
+                                        {
+                                          "physics": {
+                                            "enabled": true,
+                                            "barnesHut": {
+                                              "gravitationalConstant": -80000,
+                                              "centralGravity": 0.3,
+                                              "springLength": 200,
+                                              "springConstant": 0.04,
+                                              "damping": 0.09
+                                            },
+                                            "stabilization": {
+                                              "iterations": 150
+                                            }
+                                          },
+                                          "nodes": {
+                                            "shape": "dot",
+                                            "size": 20,
+                                            "font": {
+                                              "size": 14,
+                                              "face": "Tahoma"
+                                            },
+                                            "borderWidth": 2,
+                                            "shadow": true
+                                          },
+                                          "edges": {
+                                            "width": 2,
+                                            "arrows": {
+                                              "to": {
+                                                "enabled": true,
+                                                "scaleFactor": 0.5
+                                              }
+                                            },
+                                            "smooth": {
+                                              "type": "continuous"
+                                            },
+                                            "font": {
+                                              "size": 10,
+                                              "align": "middle"
+                                            }
+                                          },
+                                          "interaction": {
+                                            "hover": true,
+                                            "tooltipDelay": 100,
+                                            "navigationButtons": true,
+                                            "keyboard": true
+                                          }
+                                        }
+                                        """)
+                                        
+                                        # Color mapping for different node types
+                                        color_map = {
+                                            "ENTITY": "#3b82f6",      # Blue
+                                            "COMMUNITY": "#10b981",   # Green
+                                            "DOCUMENT": "#f59e0b",    # Orange
+                                            "CHUNK": "#8b5cf6",       # Purple
+                                            "PERSON": "#ef4444",      # Red
+                                            "ORGANIZATION": "#06b6d4", # Cyan
+                                            "LOCATION": "#84cc16",    # Lime
+                                        }
+                                        
+                                        # Add nodes with enhanced styling
                                         for node in nodes:
+                                            node_type = node.get("type", "Node")
+                                            color = color_map.get(node_type, "#6b7280")
+                                            
+                                            # Calculate size based on connections (degree)
+                                            degree = sum(1 for e in edges if e["from"] == node["id"] or e["to"] == node["id"])
+                                            size = 15 + (degree * 3)  # Bigger nodes for more connected entities
+                                            
                                             net.add_node(
                                                 node["id"],
-                                                label=str(node["label"]),
-                                                title=f"{node['type']}: {json.dumps(node['properties'], indent=2)}",
-                                                color="#3b82f6"
+                                                label=str(node["label"])[:30],  # Truncate long labels
+                                                title=f"<b>{node_type}</b><br>" + "<br>".join([f"{k}: {v}" for k, v in list(node['properties'].items())[:5]]),
+                                                color=color,
+                                                size=size
                                             )
                                         
-                                        # Add edges
+                                        # Add edges with labels
                                         for edge in edges:
                                             net.add_edge(
                                                 edge["from"],
                                                 edge["to"],
-                                                label=edge["label"],
-                                                title=json.dumps(edge["properties"], indent=2)
+                                                label=edge["label"][:20],  # Truncate long labels
+                                                title=f"<b>{edge['label']}</b><br>" + "<br>".join([f"{k}: {v}" for k, v in list(edge['properties'].items())[:3]]),
+                                                color="#94a3b8"
                                             )
                                         
                                         # Save and display
                                         net.save_graph("neo4j_graph.html")
                                         with open("neo4j_graph.html", "r", encoding="utf-8") as f:
                                             html_content = f.read()
-                                        components.html(html_content, height=600, scrolling=True)
+                                        
+                                        # Enhanced iframe styling
+                                        st.markdown("""
+                                        <style>
+                                            .neo4j-graph iframe {
+                                                border: 2px solid #e5e7eb;
+                                                border-radius: 12px;
+                                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            }
+                                        </style>
+                                        """, unsafe_allow_html=True)
+                                        
+                                        components.html(html_content, height=720, scrolling=False)
                                         
                                         # Clean up
                                         if os.path.exists("neo4j_graph.html"):
                                             os.remove("neo4j_graph.html")
                                     
+                                        # Add legend
+                                        st.markdown("---")
+                                        st.markdown("**📌 Legend:**")
+                                        legend_cols = st.columns(4)
+                                        legend_items = [
+                                            ("🔵 ENTITY", "Entities extracted from text"),
+                                            ("🟢 COMMUNITY", "Entity communities"),
+                                            ("🟠 DOCUMENT", "Source documents"),
+                                            ("🟣 CHUNK", "Text chunks"),
+                                            ("🔴 PERSON", "People"),
+                                            ("🔷 ORGANIZATION", "Organizations"),
+                                            ("🟩 LOCATION", "Locations"),
+                                        ]
+                                        for idx, (label, desc) in enumerate(legend_items):
+                                            with legend_cols[idx % 4]:
+                                                st.caption(f"{label}")
+                                    
                                     except ImportError:
-                                        st.error("PyVis not installed. Run: pip install pyvis")
+                                        st.error("❌ PyVis not installed. Run: `pip install pyvis`")
                                 
-                                # Display raw data
-                                with st.expander("View Raw Data"):
-                                    st.json({
-                                        "nodes": nodes,
-                                        "edges": edges
-                                    })
+                                # Display raw data with better formatting
+                                with st.expander("📄 View Raw Data (JSON)"):
+                                    tab1, tab2 = st.tabs(["Nodes", "Relationships"])
+                                    with tab1:
+                                        st.json(nodes)
+                                    with tab2:
+                                        st.json(edges)
+                                
+                                # Download options
+                                st.markdown("---")
+                                col1, col2 = st.columns(2)
+                                with col1:
+                                    # Download as JSON
+                                    import json as json_lib
+                                    graph_data = json_lib.dumps({"nodes": nodes, "edges": edges}, indent=2)
+                                    st.download_button(
+                                        label="⬇️ Download Graph Data (JSON)",
+                                        data=graph_data,
+                                        file_name="neo4j_graph_data.json",
+                                        mime="application/json",
+                                        use_container_width=True
+                                    )
                         
                         driver.close()
                         

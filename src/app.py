@@ -15,7 +15,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # engine 모듈에서 HybridGraphRAGEngine을 가져와요!
 from engine import HybridGraphRAGEngine
-from config import print_config, validate_config
+from config import print_config, validate_config, ROUTER_MODEL, ROUTER_TEMPERATURE, WEB_SEARCH_MAX_RESULTS, OPENAI_API_KEY, OPENAI_BASE_URL
+from search import web_search, format_search_results
+from openai import AsyncOpenAI
+from utils import get_executive_report_prompt, get_web_search_report_prompt
 
 # --- [1] 전역 변수 ---
 # engine은 "GraphRAG 엔진"이에요!
@@ -69,6 +72,10 @@ class QueryRequest(BaseModel):
     # mode는 "어떤 모드를 사용할지" 정하는 거예요. "api" 또는 "local"!
     # 기본값은 "local"이에요!
     mode: str = "local"
+    # temperature는 "응답의 창의성"을 조절해요! (0.0 = 정확, 2.0 = 창의적)
+    temperature: float = 0.2
+    # top_k는 "검색할 청크 개수"를 정해요!
+    top_k: int = 30
     
     # Pydantic v2 스타일로 예시 설정
     model_config = {
@@ -94,7 +101,139 @@ class InsertRequest(BaseModel):
         }
     }
 
-# --- [5] 루트 엔드포인트 ---
+# --- [5] Router 함수들 (Decision Layer) ---
+# 질문을 분류하고 웹 검색을 처리하는 함수들이에요!
+
+async def classify_query(question: str) -> str:
+    """
+    GPT-4o-mini를 사용하여 질문을 분류하는 Router 함수
+    
+    Args:
+        question: 사용자 질문
+    
+    Returns:
+        "GRAPH_RAG" 또는 "WEB_SEARCH"
+    """
+    try:
+        # OpenAI 클라이언트 생성
+        client = AsyncOpenAI(
+            api_key=OPENAI_API_KEY,
+            base_url=OPENAI_BASE_URL
+        )
+        
+        # 분류를 위한 시스템 프롬프트
+        system_prompt = """You are a query classifier for a financial AI system.
+
+Your task is to classify user questions into two categories:
+
+1. GRAPH_RAG: Questions about uploaded PDF documents, company financials from internal reports, historical data that was indexed
+   Examples:
+   - "What is NVIDIA's Q3 revenue?"
+   - "Summarize the uploaded report"
+   - "What are the key findings in the document?"
+   - "Show me the financial metrics"
+
+2. WEB_SEARCH: Questions requiring latest market data, real-time information, news, or information not in uploaded documents
+   Examples:
+   - "What is today's stock price?"
+   - "Latest news about Tesla"
+   - "Current inflation rate"
+   - "What happened in the market today?"
+
+Respond with ONLY ONE WORD: Either "GRAPH_RAG" or "WEB_SEARCH" - nothing else."""
+
+        # GPT-4o-mini 호출
+        response = await client.chat.completions.create(
+            model=ROUTER_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Classify this question: {question}"}
+            ],
+            temperature=ROUTER_TEMPERATURE,
+            max_tokens=10
+        )
+        
+        # 응답 추출 및 정규화
+        classification = response.choices[0].message.content.strip().upper()
+        
+        # 유효성 검사
+        if "GRAPH_RAG" in classification:
+            return "GRAPH_RAG"
+        elif "WEB_SEARCH" in classification or "WEB" in classification:
+            return "WEB_SEARCH"
+        else:
+            # 기본값: GRAPH_RAG (내부 문서 우선)
+            print(f"⚠️ 분류 결과가 명확하지 않아요: {classification}, 기본값 GRAPH_RAG 사용")
+            return "GRAPH_RAG"
+    
+    except Exception as e:
+        print(f"❌ 질문 분류 중 에러 발생: {e}")
+        # 에러 시 기본값: GRAPH_RAG
+        return "GRAPH_RAG"
+
+
+async def handle_web_search(question: str) -> str:
+    """
+    웹 검색을 수행하고 결과를 요약하는 함수
+    
+    Args:
+        question: 사용자 질문
+    
+    Returns:
+        검색 결과를 바탕으로 생성된 답변
+    """
+    try:
+        # 1. DuckDuckGo로 웹 검색
+        print(f"🔍 웹 검색 시작: {question}")
+        search_results = await web_search(question, max_results=WEB_SEARCH_MAX_RESULTS)
+        
+        if not search_results:
+            return "죄송해요, 관련된 최신 정보를 찾을 수 없었어요. 다른 질문을 해보시겠어요?"
+        
+        # 2. 검색 결과를 텍스트로 포맷
+        formatted_results = await format_search_results(search_results)
+        
+        # 3. GPT-4o-mini로 검색 결과 요약
+        client = AsyncOpenAI(
+            api_key=OPENAI_API_KEY,
+            base_url=OPENAI_BASE_URL
+        )
+        
+        synthesis_prompt = f"""Based on the following web search results, answer the user's question comprehensively.
+Include relevant data and cite sources with URLs when possible.
+
+User Question: {question}
+
+Search Results:
+{formatted_results}
+
+Provide a clear, concise answer with sources."""
+
+        response = await client.chat.completions.create(
+            model=ROUTER_MODEL,
+            messages=[
+                {"role": "system", "content": "You are a helpful financial assistant that synthesizes web search results into clear answers."},
+                {"role": "user", "content": synthesis_prompt}
+            ],
+            temperature=0.3,
+            max_tokens=1000
+        )
+        
+        answer = response.choices[0].message.content.strip()
+        
+        # 출처 정보 추가
+        sources = "\n\n📚 출처:\n"
+        for idx, result in enumerate(search_results[:3], 1):
+            sources += f"{idx}. {result['title']}\n   {result['url']}\n"
+        
+        return answer + sources
+    
+    except Exception as e:
+        print(f"❌ 웹 검색 처리 중 에러 발생: {e}")
+        return f"웹 검색 중 에러가 발생했어요: {str(e)}"
+
+
+# --- [6] 루트 엔드포인트 ---
 # @app.get("/")는 "루트 경로(/)에 GET 요청이 오면" 실행되는 함수예요!
 # 마치 "홈페이지에 접속하면" 실행되는 거예요!
 @app.get("/")
@@ -128,7 +267,7 @@ async def root():
         }
     }
 
-# --- [6] 서버 상태 확인 엔드포인트 ---
+# --- [7] 서버 상태 확인 엔드포인트 ---
 # @app.get("/health")는 "서버 상태를 확인하는" 엔드포인트예요!
 @app.get("/health")
 async def health():
@@ -139,7 +278,7 @@ async def health():
         "engine_ready": engine is not None
     }
 
-# --- [7] 그래프 통계 엔드포인트 ---
+# --- [8] 그래프 통계 엔드포인트 ---
 # @app.get("/graph_stats")는 "그래프 통계를 보여주는" 엔드포인트예요!
 @app.get("/graph_stats")
 async def graph_stats():
@@ -150,7 +289,7 @@ async def graph_stats():
     # engine.get_graph_stats()는 그래프 통계를 가져오는 거예요!
     return engine.get_graph_stats()
 
-# --- [7-2] 그래프 초기화 엔드포인트 ---
+# --- [9] 그래프 초기화 엔드포인트 ---
 # @app.post("/reset")는 "그래프를 초기화하는" 엔드포인트예요!
 @app.post("/reset",
           summary="그래프 초기화",
@@ -184,7 +323,7 @@ async def reset_graph():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"그래프 초기화 중 에러가 발생했어요: {str(e)}")
 
-# --- [7-1] 그래프 시각화 엔드포인트 ---
+# --- [10] 그래프 시각화 엔드포인트 ---
 # @app.get("/visualize")는 "그래프를 시각화하는 HTML 파일을 생성하는" 엔드포인트예요!
 @app.get("/visualize",
          summary="그래프 시각화",
@@ -217,7 +356,7 @@ async def visualize():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"그래프 시각화 중 에러가 발생했어요: {str(e)}")
 
-# --- [8] 텍스트 인덱싱 엔드포인트 ---
+# --- [11] 텍스트 인덱싱 엔드포인트 ---
 # @app.post("/insert")는 "텍스트를 인덱싱하는" 엔드포인트예요!
 # 인덱싱은 항상 OpenAI API를 사용해요! (정확한 금융 수치 추출을 위해)
 @app.post("/insert", 
@@ -260,7 +399,7 @@ async def insert(request: InsertRequest):
         print(f"❌ 인덱싱 에러:\n{error_detail}")
         raise HTTPException(status_code=500, detail=f"인덱싱 중 에러가 발생했어요: {str(e)}")
 
-# --- [9] 질문-답변 엔드포인트 ---
+# --- [12] 질문-답변 엔드포인트 (Decision Layer 통합) ---
 # @app.post("/query")는 "질문을 받아서 답변을 주는" 엔드포인트예요!
 # mode 파라미터로 "api" 또는 "local"을 선택할 수 있어요!
 @app.post("/query",
@@ -325,21 +464,106 @@ async def query(request: QueryRequest):
             f.write(json.dumps({"location":"app.py:325","message":"Query entry","data":{"question":request.question,"mode":request.mode},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H2,H5"})+'\n')
         # #endregion
         
-        # try는 "시도해봐"라는 뜻이에요!
-        # engine.aquery()는 비동기로 질문에 답을 찾는 거예요!
-        # request.mode에 따라 API 또는 LOCAL 모드를 사용해요!
-        response = await engine.aquery(request.question, mode=request.mode)
+        # --- Decision Layer (Router) ---
+        # 1단계: 질문 분류 (GRAPH_RAG vs WEB_SEARCH)
+        print(f"🤔 질문 분류 중: '{request.question}'")
+        query_type = await classify_query(request.question)
+        print(f"✅ 분류 결과: {query_type}")
+        
+        # 2단계: 분류 결과에 따라 처리
+        sources_list = []
+        
+        if query_type == "WEB_SEARCH":
+            # 웹 검색으로 처리
+            print(f"🌐 웹 검색 모드로 처리")
+            # 웹 검색 수행
+            search_results = await web_search(request.question, max_results=WEB_SEARCH_MAX_RESULTS)
+            
+            if search_results:
+                # 웹 검색 결과를 sources 형식으로 변환
+                sources_list = [
+                    {
+                        "id": idx,
+                        "file": result["title"],
+                        "chunk_id": result["url"],
+                        "excerpt": result["snippet"],
+                        "url": result["url"]
+                    }
+                    for idx, result in enumerate(search_results, 1)
+                ]
+                
+                # Report 형식 프롬프트 생성
+                report_prompt = get_web_search_report_prompt(request.question, search_results)
+                
+                # LLM으로 보고서 생성 (사용자 지정 temperature 사용)
+                client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+                llm_response = await client.chat.completions.create(
+                    model=ROUTER_MODEL,
+                    messages=[
+                        {"role": "system", "content": report_prompt},
+                        {"role": "user", "content": request.question}
+                    ],
+                    temperature=request.temperature,
+                    max_tokens=2000
+                )
+                response = llm_response.choices[0].message.content.strip()
+            else:
+                response = "죄송해요, 웹 검색 결과를 찾을 수 없었어요. 다른 질문을 해보시겠어요?"
+            
+            source = "WEB_SEARCH"
+        else:
+            # GraphRAG로 처리 (출처 정보 포함)
+            print(f"📚 GraphRAG 모드로 처리 (mode: {request.mode}, temperature: {request.temperature}, top_k: {request.top_k})")
+            
+            # return_context=True로 호출하여 출처 정보 받기 (사용자 지정 top_k 전달)
+            result = await engine.aquery(
+                request.question,
+                mode=request.mode,
+                return_context=True,
+                top_k=request.top_k
+            )
+            
+            if isinstance(result, dict):
+                # 출처 정보가 포함된 경우
+                base_answer = result.get("answer", "")
+                sources_list = result.get("sources", [])
+                
+                # Executive Report 형식 프롬프트로 재생성
+                if sources_list:
+                    report_prompt = get_executive_report_prompt(request.question, sources_list)
+                    
+                    client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+                    llm_response = await client.chat.completions.create(
+                        model=ROUTER_MODEL,
+                        messages=[
+                            {"role": "system", "content": report_prompt},
+                            {"role": "user", "content": f"Based on the sources provided, answer: {request.question}\n\nOriginal analysis: {base_answer}"}
+                        ],
+                        temperature=request.temperature,
+                        max_tokens=2000
+                    )
+                    response = llm_response.choices[0].message.content.strip()
+                else:
+                    # 출처가 없으면 원본 답변 사용
+                    response = base_answer
+            else:
+                # 하위 호환성: 문자열 응답인 경우
+                response = result
+            
+            source = "GRAPH_RAG"
         
         # #region agent log
         with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"location":"app.py:338","message":"Query response","data":{"response":response[:500] if response else None,"response_type":type(response).__name__},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H3"})+'\n')
+            f.write(json.dumps({"location":"app.py:338","message":"Query response","data":{"response":response[:500] if response else None,"response_type":type(response).__name__,"source":source},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H3"})+'\n')
         # #endregion
         
         # return은 "이걸 돌려줘"라는 뜻이에요!
         return {
             "question": request.question,
             "answer": response,
-            "mode": request.mode,
+            "sources": sources_list,  # Citation용 출처 리스트
+            "source": source,  # 어디서 답변을 가져왔는지 알려줘요!
+            "mode": request.mode if source == "GRAPH_RAG" else "N/A",  # GraphRAG일 때만 의미 있어요
             "status": "success"
         }
     except Exception as e:
@@ -351,7 +575,7 @@ async def query(request: QueryRequest):
         # except는 "만약 에러가 생기면"이라는 뜻이에요!
         raise HTTPException(status_code=500, detail=f"질문 처리 중 에러가 발생했어요: {str(e)}")
 
-# --- [10] 서버 실행 ---
+# --- [13] 서버 실행 ---
 # if __name__ == "__main__": 이건 "이 파일을 직접 실행했을 때만"이라는 뜻이에요!
 if __name__ == "__main__":
     # uvicorn.run()은 "서버를 실행하는" 거예요!

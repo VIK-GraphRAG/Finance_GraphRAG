@@ -88,7 +88,13 @@ FINANCIAL_ENTITY_TYPES = [
     "MARKET_CAP",        # 시가총액
 ]
 
-# --- [6] 현재 모드에 맞는 모델 설정 가져오기 ---
+# --- [6] Router 설정 (Decision Layer) ---
+# Router는 질문을 분류하여 GraphRAG 또는 Web Search로 보내는 거예요!
+ROUTER_MODEL = "gpt-4o-mini"  # 질문 분류용 모델 (빠르고 정확해요!)
+ROUTER_TEMPERATURE = 0.0      # 일관된 분류를 위해 0으로 설정 (항상 같은 결과)
+WEB_SEARCH_MAX_RESULTS = 5    # 웹 검색 최대 결과 수
+
+# --- [7] 현재 모드에 맞는 모델 설정 가져오기 ---
 # get_models()는 "현재 모드에 맞는 모델 설정을 가져오는" 함수예요!
 def get_models():
     # if는 "만약"이라는 뜻이에요!
@@ -99,7 +105,7 @@ def get_models():
         # LOCAL 모드면 LOCAL_MODELS를 반환해요!
         return LOCAL_MODELS
 
-# --- [7] 설정 검증 ---
+# --- [8] 설정 검증 ---
 # validate_config()는 "설정이 올바른지 확인하는" 함수예요!
 def validate_config():
     # API 모드인데 API 키가 없으면 에러를 발생시켜요!
@@ -110,7 +116,7 @@ def validate_config():
         )
     return True
 
-# --- [8] 설정 정보 출력 ---
+# --- [9] 설정 정보 출력 ---
 # print_config()는 "현재 설정을 보여주는" 함수예요!
 def print_config():
     models = get_models()

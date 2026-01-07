@@ -1,6 +1,3 @@
-#!/bin/bash
-# GraphRAG 서버 실행 스크립트 (리팩토링 V2)
-# Feature-based 구조에 맞게 업데이트됨
 
 cd /Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG
 source .venv/bin/activate

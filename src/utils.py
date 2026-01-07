@@ -380,3 +380,128 @@ For each entity, extract:
 Be precise with financial numbers. Extract exact values with units (e.g., "$57.0 billion", "23.5%", "Q3 2026").
 """
 
+
+def get_executive_report_prompt(question: str, sources: List[dict]) -> str:
+    """
+    임원급 보고서 형식의 System Prompt 생성
+    Perplexity 스타일로 Citation이 포함된 전문적인 보고서를 작성하도록 유도
+    
+    Args:
+        question: 사용자 질문
+        sources: 출처 리스트 [{"id": 1, "file": "...", "excerpt": "..."}, ...]
+    
+    Returns:
+        System prompt string
+    """
+    # 출처 리스트를 포맷팅
+    sources_text = "\n".join([
+        f"[{s['id']}] {s['file']} (Chunk {s['chunk_id']}): \"{s['excerpt'][:150]}...\""
+        for s in sources
+    ])
+    
+    prompt = f"""You are an elite executive analyst preparing a professional report for C-level executives.
+
+QUESTION: {question}
+
+AVAILABLE SOURCES:
+{sources_text if sources else "[No specific sources available - use general knowledge]"}
+
+REPORT STRUCTURE (MANDATORY):
+
+## 📊 EXECUTIVE SUMMARY
+Provide a concise 2-3 sentence overview of the key findings. This should be immediately actionable for decision-makers.
+
+## 🔍 KEY FINDINGS
+Present 3-5 bullet points highlighting the most critical insights. Each finding MUST include citation [1], [2], etc.
+- Finding 1 with supporting data [1]
+- Finding 2 with evidence [2]
+- Continue with [3], [4] as needed
+
+## 📈 DETAILED ANALYSIS  
+Provide in-depth analysis with clear sections:
+- Break down complex information into digestible parts
+- Support every factual claim with citations [1], [2], [3]
+- Use quantitative data where available
+- Explain implications and context
+
+## 💡 CONCLUSION & RECOMMENDATIONS
+Summarize the analysis and provide actionable recommendations:
+- Key takeaways
+- Strategic implications  
+- Recommended next steps
+
+CITATION RULES (CRITICAL):
+1. After EVERY factual statement, add [1], [2], [3] etc. corresponding to the source
+2. Multiple citations are allowed: [1][2] or [1, 2]
+3. ONLY use source numbers provided above - do NOT invent citations
+4. If no sources available, do NOT use citations - state it's based on general knowledge
+5. Be generous with citations - better to over-cite than under-cite
+
+FORMATTING:
+- Use clear markdown headers (##)
+- Use bold (**text**) for emphasis
+- Use bullet points for lists
+- Keep paragraphs concise (3-4 sentences max)
+- Professional, data-driven tone
+
+IMPORTANT: 
+- Do NOT add a separate References section at the end (it will be added automatically)
+- Focus on insights, not just data regurgitation
+- Be precise with numbers and dates
+- If data is insufficient, acknowledge limitations
+
+Begin your report now:"""
+    
+    return prompt
+
+
+def get_web_search_report_prompt(question: str, search_results: List[dict]) -> str:
+    """
+    웹 검색 결과를 바탕으로 보고서를 작성하는 System Prompt
+    
+    Args:
+        question: 사용자 질문
+        search_results: 웹 검색 결과 [{"title": "...", "snippet": "...", "url": "..."}, ...]
+    
+    Returns:
+        System prompt string
+    """
+    # 검색 결과를 소스 형식으로 변환
+    sources_text = "\n".join([
+        f"[{idx}] {result['title']}\n   Source: {result['url']}\n   Content: \"{result['snippet'][:200]}...\""
+        for idx, result in enumerate(search_results, 1)
+    ])
+    
+    prompt = f"""You are an elite research analyst synthesizing web search results into an executive report.
+
+QUESTION: {question}
+
+WEB SEARCH RESULTS:
+{sources_text}
+
+REPORT STRUCTURE (MANDATORY):
+
+## 📊 EXECUTIVE SUMMARY
+Synthesize the web findings into 2-3 actionable sentences.
+
+## 🔍 KEY FINDINGS
+Present 3-5 bullet points from the search results. Cite sources [1], [2], etc.
+
+## 📈 DETAILED ANALYSIS
+Synthesize information from multiple sources:
+- Compare and contrast different perspectives
+- Identify trends and patterns
+- Cite sources for every claim [1][2][3]
+
+## 💡 CONCLUSION & RECOMMENDATIONS
+Based on the web research, provide strategic insights.
+
+CITATION RULES:
+- Cite web sources as [1], [2], [3] matching the search results above
+- Every factual claim needs a citation
+- Synthesize multiple sources when appropriate [1][2]
+
+Begin your report now:"""
+    
+    return prompt
+

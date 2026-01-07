@@ -172,8 +172,10 @@ class HybridGraphRAGEngine:
         self,
         question: str,
         mode: Literal["api", "local"] | None = None,
-        auto_plan: bool = True
-    ) -> str:
+        auto_plan: bool = True,
+        return_context: bool = False,
+        top_k: int = 30
+    ) -> str | dict:
         """
         비동기로 질문에 답변을 찾는 함수
         
@@ -185,9 +187,12 @@ class HybridGraphRAGEngine:
             question: 질문 내용
             mode: "api" (OpenAI API) 또는 "local" (Ollama) - auto_plan=False일 때만 사용
             auto_plan: Planner를 사용하여 자동으로 모드 결정 (기본값: True)
+            return_context: True일 경우 답변과 함께 출처 정보 반환 (기본값: False)
+            top_k: 검색할 텍스트 청크 개수 (기본값: 30)
             
         Returns:
-            답변 텍스트
+            return_context=False: 답변 텍스트 (str)
+            return_context=True: {"answer": str, "sources": List[dict]} (dict)
         """
         # Planner를 사용하여 모드 자동 결정
         if auto_plan and mode is None:
@@ -220,22 +225,22 @@ class HybridGraphRAGEngine:
             print(f"[DEBUG] 그래프 파일이 없어요: {graphml_path}")
         
         if mode == "api":
-            print(f"질문 모드: OpenAI API")
+            print(f"질문 모드: OpenAI API (top_k: {top_k})")
             try:
                 # Global 모드: 전체 그래프에서 커뮤니티 리포트 기반 검색 (넓은 범위, revenue 같은 질문에 적합)
                 query_param = QueryParam(
                     mode='global',  # local -> global (전체 그래프 검색)
-                    top_k=30,  # 20 -> 30 (더 많은 컨텍스트)
+                    top_k=top_k,  # 사용자 지정 top_k 사용
                 )
                 response = await self.query_rag_api.aquery(question, param=query_param)
-                print(f"🔍 [DEBUG] query_rag_api.aquery() 완료!")
+                print(f"🔍 [DEBUG] query_rag_api.aquery() 완료! (top_k: {top_k})")
             except Exception as e:
                 print(f"❌ [DEBUG] query_rag_api.aquery() 에러: {type(e).__name__}: {e}")
                 import traceback
                 traceback.print_exc()
                 raise
         else:
-            print(f"💬 질문 모드: Ollama (로컬)")
+            print(f"💬 질문 모드: Ollama (로컬, top_k: {top_k})")
             # Ollama 서버 확인
             try:
                 import requests
@@ -249,10 +254,10 @@ class HybridGraphRAGEngine:
                 # Global 모드로 검색
                 query_param = QueryParam(
                     mode='global',  # 전체 그래프 검색
-                    top_k=30,
+                    top_k=top_k,  # 사용자 지정 top_k 사용
                 )
                 response = await self.query_rag_local.aquery(question, param=query_param)
-                print(f"🔍 [DEBUG] query_rag_local.aquery() 완료!")
+                print(f"🔍 [DEBUG] query_rag_local.aquery() 완료! (top_k: {top_k})")
             except Exception as e:
                 print(f"❌ [DEBUG] query_rag_local.aquery() 에러: {type(e).__name__}: {e}")
                 import traceback
@@ -264,7 +269,55 @@ class HybridGraphRAGEngine:
             print("⚠️  그래프에 데이터가 있지만 답변을 생성하지 못했어요.")
             print("💡 더 구체적인 질문을 시도해보세요!")
         
+        # return_context=True일 경우 출처 정보 추출
+        if return_context:
+            sources = await self._extract_sources()
+            return {
+                "answer": response,
+                "sources": sources
+            }
+        
         return response
+    
+    async def _extract_sources(self) -> list[dict]:
+        """
+        text_chunks KV store와 GraphML에서 출처 정보 추출
+        
+        Returns:
+            List of source dicts with id, file, chunk_id, excerpt
+        """
+        import json
+        
+        sources = []
+        text_chunks_path = os.path.join(self.working_dir, "kv_store_text_chunks.json")
+        
+        if not os.path.exists(text_chunks_path):
+            print("[DEBUG] text_chunks 파일이 없어요")
+            return sources
+        
+        try:
+            with open(text_chunks_path, 'r', encoding='utf-8') as f:
+                chunks_data = json.load(f)
+            
+            # 최대 5개의 청크를 소스로 반환 (가장 최근에 추가된 것부터)
+            chunk_items = list(chunks_data.items())[:5]
+            
+            for idx, (chunk_id, chunk_info) in enumerate(chunk_items, 1):
+                excerpt = chunk_info.get('content', '')[:300]  # 처음 300자만
+                sources.append({
+                    "id": idx,
+                    "file": "uploaded_document.pdf",  # 파일명은 나중에 메타데이터에서 추출
+                    "chunk_id": chunk_id,
+                    "excerpt": excerpt,
+                    "tokens": chunk_info.get('tokens', 0)
+                })
+            
+            print(f"[DEBUG] {len(sources)}개의 출처 추출 완료")
+            
+        except Exception as e:
+            print(f"[DEBUG] 출처 추출 중 에러: {e}")
+        
+        return sources
     
     def get_graph_stats(self) -> GraphStats:
         """
