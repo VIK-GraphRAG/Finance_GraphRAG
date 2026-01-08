@@ -6,7 +6,7 @@ GraphRAG 핵심 로직
 import os
 import asyncio
 import sys
-from typing import Optional, Literal
+from typing import Optional, Literal, Dict, List
 
 from nano_graphrag import GraphRAG
 from nano_graphrag.base import QueryParam
@@ -55,6 +55,7 @@ from utils import (
 
 from engine.planner import QueryPlanner
 from models.neo4j_models import GraphStats
+from engine.neo4j_retriever import Neo4jRetriever
 
 
 class HybridGraphRAGEngine:
@@ -102,6 +103,10 @@ class HybridGraphRAGEngine:
             cheap_model_func=ollama_model_if,
             embedding_func=openai_embedding_if,  # 인덱싱과 같은 embedding 사용!
         )
+
+        # Neo4j 기반 정밀 Retriever (근거/출처 생성용)
+        # Neo4j 연결이 없으면 QueryExecutor에서 예외가 날 수 있으니 lazy 하게 사용
+        self._neo4j_retriever: Neo4jRetriever | None = None
         
         print(f"HybridGraphRAGEngine 초기화 완료!")
         print(f"작업 디렉토리: {self.working_dir}")
@@ -194,6 +199,10 @@ class HybridGraphRAGEngine:
             return_context=False: 답변 텍스트 (str)
             return_context=True: {"answer": str, "sources": List[dict]} (dict)
         """
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(__import__('json').dumps({"location":"graphrag_engine.py:171","message":"aquery() entry","data":{"question":question,"mode":mode,"return_context":return_context,"top_k":top_k},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"})+'\n')
+        # #endregion
         # Planner를 사용하여 모드 자동 결정
         if auto_plan and mode is None:
             planner = QueryPlanner()
@@ -220,6 +229,11 @@ class HybridGraphRAGEngine:
         if os.path.exists(graphml_path):
             import networkx as nx
             G = nx.read_graphml(graphml_path)
+            # #region agent log
+            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                revenue_nodes = [n for n,d in G.nodes(data=True) if 'revenue' in str(d).lower() or 'revenue' in str(n).lower()]
+                f.write(__import__('json').dumps({"location":"graphrag_engine.py:232","message":"graph stats","data":{"nodes":G.number_of_nodes(),"edges":G.number_of_edges(),"revenue_nodes_count":len(revenue_nodes),"revenue_nodes_sample":revenue_nodes[:5]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H6"})+'\n')
+            # #endregion
             print(f"[DEBUG] 그래프 노드 수: {G.number_of_nodes()}, 엣지 수: {G.number_of_edges()}")
         else:
             print(f"[DEBUG] 그래프 파일이 없어요: {graphml_path}")
@@ -233,6 +247,10 @@ class HybridGraphRAGEngine:
                     top_k=top_k,  # 사용자 지정 top_k 사용
                 )
                 response = await self.query_rag_api.aquery(question, param=query_param)
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:236","message":"query_rag_api response","data":{"response_length":len(response) if response else 0,"response_preview":response[:200] if response else None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"})+'\n')
+                # #endregion
                 print(f"🔍 [DEBUG] query_rag_api.aquery() 완료! (top_k: {top_k})")
             except Exception as e:
                 print(f"❌ [DEBUG] query_rag_api.aquery() 에러: {type(e).__name__}: {e}")
@@ -271,23 +289,119 @@ class HybridGraphRAGEngine:
         
         # return_context=True일 경우 출처 정보 추출
         if return_context:
-            sources = await self._extract_sources()
+            ctx = await self._aretrieve_context_from_neo4j(question=question, top_sources=min(top_k, 10))
+            sources = ctx.get("sources", [])
+            # #region agent log
+            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                f.write(__import__('json').dumps({"location":"graphrag_engine.py:288","message":"context retrieval result","data":{"sources_count":len(sources),"first_source_excerpt":sources[0].get('excerpt','')[:100] if sources else None,"retrieval_backend":ctx.get("retrieval_backend")},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3"})+'\n')
+            # #endregion
             return {
                 "answer": response,
-                "sources": sources
+                "sources": sources,
+                "context": ctx.get("context", ""),
+                "retrieval_backend": ctx.get("retrieval_backend", "neo4j"),
             }
         
         return response
+
+    async def _aretrieve_context_from_neo4j(self, question: str, top_sources: int = 10) -> Dict:
+        """
+        Neo4j에서 정밀 근거를 추출해 sources/context 생성.
+        실패 시 기존 KV 기반 _extract_sources로 폴백.
+        """
+        try:
+            if self._neo4j_retriever is None:
+                self._neo4j_retriever = Neo4jRetriever()
+            # #region agent log
+            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                f.write(__import__('json').dumps({"location":"graphrag_engine.py:314","message":"before neo4j retrieval","data":{"question":question,"top_sources":top_sources},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2"})+'\n')
+            # #endregion
+            result = await asyncio.to_thread(
+                self._neo4j_retriever.retrieve,
+                question,
+                2,   # depth=2 (2-hop+)
+                50,  # limit=50 (hard LIMIT)
+                top_sources,
+            )
+            sources = result.get("sources", [])
+            # #region agent log
+            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                f.write(__import__('json').dumps({"location":"graphrag_engine.py:326","message":"neo4j retrieval result","data":{"sources_count":len(sources),"context_length":len(result.get("context",""))},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2"})+'\n')
+            # #endregion
+            
+            # Neo4j에서 소스를 못 찾았으면 KV 폴백 실행
+            if not sources or len(sources) == 0:
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:333","message":"neo4j returned empty sources, falling back to KV","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2,H3"})+'\n')
+                # #endregion
+                print(f"[Neo4jRetriever] Neo4j returned 0 sources, falling back to KV store")
+                try:
+                    sources = await self._extract_sources(question=question)
+                    # #region agent log
+                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                        f.write(__import__('json').dumps({"location":"graphrag_engine.py:340","message":"kv fallback success","data":{"sources_count":len(sources)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
+                    # #endregion
+                    return {
+                        "context": "",
+                        "sources": sources,
+                        "retrieval_backend": "kv_fallback",
+                    }
+                except Exception as e2:
+                    # #region agent log
+                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                        f.write(__import__('json').dumps({"location":"graphrag_engine.py:350","message":"kv fallback also failed","data":{"error":str(e2),"error_type":type(e2).__name__},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
+                    # #endregion
+                    sources = []
+                    return {
+                        "context": "",
+                        "sources": sources,
+                        "retrieval_backend": "kv_fallback",
+                    }
+            
+            return {
+                "context": result.get("context", ""),
+                "sources": sources,
+                "retrieval_backend": "neo4j",
+            }
+        except Exception as e:
+            # #region agent log
+            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                import traceback
+                f.write(__import__('json').dumps({"location":"graphrag_engine.py:337","message":"neo4j retrieval failed, trying fallback","data":{"error":str(e),"error_type":type(e).__name__,"traceback":traceback.format_exc()[:500]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2,H3"})+'\n')
+            # #endregion
+            print(f"[Neo4jRetriever] fallback to kv sources: {type(e).__name__}: {e}")
+            try:
+                sources = await self._extract_sources(question=question)
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:347","message":"kv fallback success","data":{"sources_count":len(sources)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
+                # #endregion
+            except Exception as e2:
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:353","message":"kv fallback also failed","data":{"error":str(e2),"error_type":type(e2).__name__},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
+                # #endregion
+                sources = []
+            return {
+                "context": "",
+                "sources": sources,
+                "retrieval_backend": "kv_fallback",
+            }
     
-    async def _extract_sources(self) -> list[dict]:
+    async def _extract_sources(self, question: str = "") -> list[dict]:
         """
         text_chunks KV store에서 출처 정보 추출
-        실제로 사용 가능한 청크만 반환 (최대 10개)
+        질문과 관련된 청크를 우선 선택 (최대 10개)
+        
+        Args:
+            question: 질문 내용 (관련 청크를 찾기 위해 사용)
         
         Returns:
             List of source dicts with id, file, chunk_id, excerpt
         """
         import json
+        import re
         
         sources = []
         text_chunks_path = os.path.join(self.working_dir, "kv_store_text_chunks.json")
@@ -311,10 +425,43 @@ class HybridGraphRAGEngine:
             with open(text_chunks_path, 'r', encoding='utf-8') as f:
                 chunks_data = json.load(f)
             
-            # 실제 사용 가능한 청크만 반환 (최대 10개)
-            chunk_items = list(chunks_data.items())[:10]
+            # 질문에서 키워드 추출 (한글/영문)
+            question_lower = question.lower()
+            keywords = []
+            # 주요 키워드 추출
+            if "엔비디아" in question or "nvidia" in question_lower:
+                keywords.extend(["nvidia", "엔비디아", "NVIDIA"])
+            if "수익" in question or "revenue" in question_lower:
+                keywords.extend(["revenue", "수익", "Revenue", "REVENUE"])
+            if "올해" in question or "2024" in question or "fiscal" in question_lower:
+                keywords.extend(["2024", "FY2024", "fiscal"])
             
-            for idx, (chunk_id, chunk_info) in enumerate(chunk_items, 1):
+            # 모든 청크를 순회하며 관련성 점수 계산
+            scored_chunks = []
+            for chunk_id, chunk_info in chunks_data.items():
+                content = chunk_info.get('content', '').lower()
+                score = 0
+                
+                # 키워드 매칭 점수 계산
+                for keyword in keywords:
+                    if keyword.lower() in content:
+                        score += 10
+                
+                # 질문의 주요 단어가 포함된 경우 추가 점수
+                question_words = re.findall(r'\b\w+\b', question_lower)
+                for word in question_words:
+                    if len(word) > 2 and word in content:
+                        score += 1
+                
+                scored_chunks.append((score, chunk_id, chunk_info))
+            
+            # 점수 순으로 정렬 (높은 점수 우선)
+            scored_chunks.sort(key=lambda x: x[0], reverse=True)
+            
+            # 상위 10개 선택
+            top_chunks = scored_chunks[:10]
+            
+            for idx, (score, chunk_id, chunk_info) in enumerate(top_chunks, 1):
                 excerpt = chunk_info.get('content', '')[:300]  # 처음 300자만
                 
                 # 파일명 결정: data_sources에서 가져오거나 기본값 사용
@@ -323,18 +470,126 @@ class HybridGraphRAGEngine:
                     # 여러 파일이 있으면 첫 번째 파일 사용 (또는 청크 ID 기반으로 매핑)
                     file_name = pdf_files[0] if len(pdf_files) == 1 else pdf_files[idx % len(pdf_files)]
                 
+                # 메타데이터 추출 (있는 경우)
+                page_number = chunk_info.get('page_number', 0)
+                original_sentence = chunk_info.get('original_sentence', excerpt)
+                
                 sources.append({
                     "id": idx,
                     "file": file_name,
                     "chunk_id": chunk_id,
                     "excerpt": excerpt,
-                    "tokens": chunk_info.get('tokens', 0)
+                    "tokens": chunk_info.get('tokens', 0),
+                    "page_number": page_number,
+                    "original_sentence": original_sentence
                 })
             
-            print(f"[DEBUG] {len(sources)}개의 출처 추출 완료")
+            print(f"[DEBUG] {len(sources)}개의 출처 추출 완료 (질문: {question[:50]}...)")
             
         except Exception as e:
             print(f"[DEBUG] 출처 추출 중 에러: {e}")
+        
+        return sources
+    
+    async def aglobal_search(self, question: str, top_k: int = 5, temperature: float = 0.2) -> Dict:
+        """
+        전체 그래프의 Community Summary를 활용한 전역 검색
+        
+        "이 모든 문서들의 공통 리스크는?" 같은 질문에 대응
+        
+        Args:
+            question: 사용자 질문
+            top_k: 반환할 커뮤니티 수
+            temperature: LLM temperature
+            
+        Returns:
+            {
+                "answer": str,
+                "sources": List[dict],
+                "search_type": "global"
+            }
+        """
+        print(f"[GLOBAL SEARCH] 전역 검색 시작: {question}")
+        
+        # nano-graphrag의 global search mode 활용
+        query_param = QueryParam(
+            mode="global",  # global mode
+            only_need_context=False,
+            top_k=top_k
+        )
+        
+        # Community reports 로드
+        community_reports = self._load_community_reports()
+        
+        # LLM으로 전체 요약 생성
+        response = await self.query_rag_api.aquery(
+            question,
+            param=query_param
+        )
+        
+        # 커뮤니티 소스 추출
+        sources = self._extract_community_sources(community_reports, top_k)
+        
+        print(f"[GLOBAL SEARCH] 완료: {len(sources)}개 커뮤니티 참조")
+        
+        return {
+            "answer": response,
+            "sources": sources,
+            "search_type": "global"
+        }
+    
+    def _load_community_reports(self) -> Dict:
+        """kv_store_community_reports.json 로드"""
+        import json
+        reports_path = os.path.join(self.working_dir, "kv_store_community_reports.json")
+        
+        if not os.path.exists(reports_path):
+            print("[DEBUG] community_reports 파일이 없어요")
+            return {}
+        
+        try:
+            with open(reports_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"[DEBUG] community_reports 로드 중 에러: {e}")
+            return {}
+    
+    def _extract_community_sources(self, community_reports: Dict, top_k: int = 5) -> List[Dict]:
+        """커뮤니티 리포트에서 소스 정보 추출"""
+        sources = []
+        
+        # 커뮤니티 리포트를 소스로 변환
+        for idx, (community_id, report_data) in enumerate(list(community_reports.items())[:top_k], 1):
+            # report_data에서 실제 텍스트 추출
+            if isinstance(report_data, dict):
+                # 'report_string' 키가 있으면 사용
+                if 'report_string' in report_data:
+                    content = report_data['report_string']
+                # 'content' 키가 있으면 사용
+                elif 'content' in report_data:
+                    content = report_data['content']
+                # 그 외의 경우 전체를 문자열로
+                else:
+                    content = str(report_data)
+            else:
+                content = str(report_data)
+            
+            # 커뮤니티 제목 추출 (첫 번째 줄의 # 제거)
+            lines = content.split('\n')
+            title = lines[0].replace('#', '').strip() if lines else "Community Summary"
+            
+            # 내용 요약 (첫 3줄 정도)
+            excerpt = '\n'.join(lines[:3]) if len(lines) > 1 else content[:300]
+            
+            sources.append({
+                "id": idx,
+                "file": f"Community {community_id}: {title[:50]}",
+                "chunk_id": community_id,
+                "excerpt": excerpt[:400],
+                "page_number": 0,
+                "original_sentence": content[:1000],  # 전체 내용 (최대 1000자)
+                "type": "community"
+            })
         
         return sources
     

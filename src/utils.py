@@ -339,6 +339,79 @@ def extract_text_from_pdf(pdf_path: str) -> str:
         raise ImportError("PyMuPDF가 설치되지 않았어요! 'pip install pymupdf'로 설치해주세요.")
 
 
+def split_into_sentences(text: str) -> List[str]:
+    """
+    텍스트를 문장 단위로 분리하는 함수
+    
+    Args:
+        text: 분리할 텍스트
+        
+    Returns:
+        문장 리스트
+    """
+    import re
+    # 간단한 문장 분리 (마침표, 느낌표, 물음표 기준)
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    return [s.strip() for s in sentences if s.strip()]
+
+
+def extract_text_from_pdf_with_metadata(pdf_path: str) -> List[Dict[str, Any]]:
+    """
+    PDF 파일에서 텍스트와 메타데이터를 함께 추출하는 함수
+    
+    Args:
+        pdf_path: PDF 파일 경로
+        
+    Returns:
+        메타데이터가 포함된 청크 리스트
+        [
+            {
+                "text": "...",
+                "page_number": 1,
+                "source_file": "report.pdf",
+                "sentence_id": "p1_s1",
+                "original_sentence": "..."
+            },
+            ...
+        ]
+    """
+    if not os.path.exists(pdf_path):
+        raise FileNotFoundError(f"PDF 파일을 찾을 수 없어요: '{pdf_path}'")
+    
+    try:
+        import fitz  # PyMuPDF
+        doc = fitz.open(pdf_path)
+        chunks_with_metadata = []
+        source_file = os.path.basename(pdf_path)
+        
+        for page_num, page in enumerate(doc, start=1):
+            page_text = page.get_text()
+            
+            if not page_text.strip():
+                continue
+            
+            # 문장 단위로 분리
+            sentences = split_into_sentences(page_text)
+            
+            for sent_id, sentence in enumerate(sentences):
+                if len(sentence.strip()) < 10:  # 너무 짧은 문장 제외
+                    continue
+                    
+                chunks_with_metadata.append({
+                    "text": sentence,
+                    "page_number": page_num,
+                    "source_file": source_file,
+                    "sentence_id": f"p{page_num}_s{sent_id}",
+                    "original_sentence": sentence
+                })
+        
+        doc.close()
+        return chunks_with_metadata
+        
+    except ImportError:
+        raise ImportError("PyMuPDF가 설치되지 않았어요! 'pip install pymupdf'로 설치해주세요.")
+
+
 # --- [5] 금융 엔티티 프롬프트 ---
 
 def get_financial_entity_prompt() -> str:
@@ -379,6 +452,59 @@ For each entity, extract:
 
 Be precise with financial numbers. Extract exact values with units (e.g., "$57.0 billion", "23.5%", "Q3 2026").
 """
+
+
+def get_strict_grounding_prompt(question: str, sources: List[dict]) -> str:
+    """
+    외부 지식 사용을 금지하고 문서 기반 답변만 강제하는 프롬프트
+    
+    Args:
+        question: 사용자 질문
+        sources: 출처 리스트 [{"id": 1, "file": "...", "page_number": 1, "excerpt": "..."}, ...]
+    
+    Returns:
+        Strict grounding system prompt
+    """
+    if not sources:
+        return f"""You are a STRICT document-based analyst.
+
+CRITICAL RULE: The provided documents contain NO information relevant to this question.
+
+QUESTION: {question}
+
+REQUIRED RESPONSE: "해당 문서들에서는 관련 정보를 찾을 수 없습니다."
+
+You MUST respond with exactly this message in Korean."""
+    
+    sources_text = "\n\n".join([
+        f"[{s['id']}] File: {s['file']}, Page: {s.get('page_number', 'N/A')}\n"
+        f"Content: {s['excerpt']}\n"
+        f"Original: {s.get('original_sentence', s['excerpt'])}"
+        for s in sources
+    ])
+    
+    return f"""You are a STRICT document-based analyst. Follow these ABSOLUTE rules:
+
+CRITICAL RULES:
+1. ONLY use information from the provided sources below
+2. DO NOT use any external knowledge or background information
+3. EVERY factual claim MUST have a citation [1], [2], etc.
+4. If information is NOT in the sources, respond: "해당 문서들에서는 관련 정보를 찾을 수 없습니다"
+5. DO NOT make assumptions or inferences beyond what is explicitly stated
+6. DO NOT add information from your training data
+
+AVAILABLE SOURCES:
+{sources_text}
+
+QUESTION: {question}
+
+RESPONSE FORMAT:
+- Use citations [1], [2] after EVERY claim
+- At the end, list all sources with: [1] filename.pdf, Page X
+- If no relevant information exists in sources, say so explicitly
+- Write in a professional, executive report style
+
+Begin your strictly grounded response:"""
 
 
 def get_executive_report_prompt(question: str, sources: List[dict]) -> str:

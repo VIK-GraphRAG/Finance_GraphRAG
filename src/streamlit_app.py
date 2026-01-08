@@ -2,18 +2,21 @@ import streamlit as st
 import requests
 import sys
 import os
-import streamlit.components.v1 as components
-import time
 import json
-from datetime import datetime
+import time
 import re
 from typing import List, Dict
 
 # .env 파일 읽기
+from dotenv import load_dotenv
+load_dotenv()
+
+# 환경 변수 읽기
 try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
+    NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+    NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+except:
     pass
 
 # 현재 파일의 폴더 경로를 추가해요!
@@ -21,85 +24,101 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 페이지 설정 - Executive Dashboard
 st.set_page_config(
-    page_title="Financial Intelligence Platform",
+    page_title="VIK AI: Executive Intelligence",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Perplexity 스타일 CSS
+# Dark Mode 스타일 CSS
 st.markdown("""
 <style>
-/* 전체 앱 스타일 */
+/* 전체 앱 다크모드 스타일 */
 .stApp {
-    background-color: #fafafa;
+    background-color: #0e1117;
+    color: #ffffff;
 }
 
-/* 보고서 컨테이너 */
+/* 모든 텍스트 기본 색상 */
+.stApp, .stApp p, .stApp span, .stApp div {
+    color: #ffffff !important;
+}
+
+/* 보고서 컨테이너 다크모드 */
 .report-container {
-    background: white;
-    padding: 2.5rem;
+    background: #1a1d29;
+    padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    margin: 1rem 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    margin: 1.5rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     line-height: 1.7;
+    border: 1px solid #2d3142;
 }
 
-/* 보고서 제목 */
 .report-container h2 {
-    color: #1a1a1a;
+    color: #ffffff !important;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     margin-bottom: 1rem;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #3d4461;
     padding-bottom: 0.5rem;
 }
 
-/* Citation 스타일 */
+.report-container p {
+    color: #e0e0e0 !important;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+/* 인라인 citation 스타일 - 호버링 가능 */
 .citation {
     display: inline-block;
-    color: #0066cc;
-    background: #e6f2ff;
-    padding: 0.1rem 0.4rem;
+    background: #4a9eff;
+    color: #ffffff;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.85em;
     font-weight: 600;
-    margin: 0 0.1rem;
-    cursor: help;
+    margin: 0 2px;
+    cursor: pointer;
     text-decoration: none;
-    transition: all 0.2s;
     position: relative;
+    transition: all 0.2s ease;
 }
 
 .citation:hover {
-    background: #0066cc;
-    color: white;
+    background: #6bb3ff;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74,158,255,0.5);
 }
 
-/* Citation Tooltip */
+/* 툴팁 다크모드 스타일 */
 .citation-tooltip {
     visibility: hidden;
     opacity: 0;
     position: absolute;
+    z-index: 1000;
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #1a1a1a;
-    color: #fff;
-    text-align: left;
-    padding: 0.75rem 1rem;
+    min-width: 320px;
+    max-width: 400px;
+    background: #1e2330;
+    border: 1px solid #3d4461;
     border-radius: 8px;
-    width: 350px;
-    max-width: 90vw;
-    font-size: 0.875rem;
-    font-weight: normal;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: opacity 0.2s, visibility 0.2s;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     pointer-events: none;
+}
+
+.citation:hover .citation-tooltip,
+.citation-tooltip:hover {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .citation-tooltip::after {
@@ -107,272 +126,337 @@ st.markdown("""
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: #1a1a1a;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e2330 transparent transparent transparent;
 }
 
-.citation:hover .citation-tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-.citation-tooltip-title {
+.tooltip-header {
     font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #fff;
-    border-bottom: 1px solid #444;
-    padding-bottom: 0.5rem;
-}
-
-.citation-tooltip-content {
-    color: #e0e0e0;
-    line-height: 1.5;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.citation-tooltip-chunk {
-    font-size: 0.8em;
-    color: #999;
-    margin-top: 0.5rem;
-}
-
-/* References 섹션 */
-.references {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #e0e0e0;
-}
-
-.references h4 {
-    color: #333;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.references ol {
-    padding-left: 1.5rem;
-}
-
-.references li {
-    margin-bottom: 1rem;
-    line-height: 1.6;
-}
-
-.references li strong {
-    color: #0066cc;
-}
-
-.references li em {
-    color: #666;
+    color: #4a9eff !important;
     font-size: 0.9em;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #3d4461;
+    padding-bottom: 4px;
 }
 
-/* Executive Summary 아이콘 */
-.report-container p:has(> strong:first-child) {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-left: 4px solid #0066cc;
+.tooltip-content {
+    font-size: 0.85em;
+    color: #c0c0c0 !important;
+    line-height: 1.4;
+}
+
+.tooltip-meta {
+    font-size: 0.75em;
+    color: #888888 !important;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid #2d3142;
+}
+
+/* References 섹션 다크모드 */
+.references {
+    background: #1a1d29;
+    border-left: 3px solid #4a9eff;
+    padding: 1rem 1.5rem;
+    margin-top: 2rem;
     border-radius: 4px;
 }
 
-/* Key Findings 리스트 */
-.report-container ul {
-    list-style: none;
-    padding-left: 0;
+.references h3 {
+    color: #ffffff !important;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 
-.report-container ul li {
-    padding-left: 1.5rem;
-    margin-bottom: 0.75rem;
-    position: relative;
+.reference-item {
+    margin-bottom: 0.8rem;
+    padding: 0.5rem;
+    background: #252936;
+    border-radius: 4px;
+    border: 1px solid #2d3142;
 }
 
-.report-container ul li:before {
-    content: "▸";
-    position: absolute;
-    left: 0;
-    color: #0066cc;
-    font-weight: bold;
-}
-
-/* 차트 메시지 스타일 개선 */
-.stChatMessage {
-    background: white !important;
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-/* 사용자 메시지 */
-[data-testid="stChatMessageContent"][data-test-user="true"] {
-    background: #f0f7ff;
-    border-left: 3px solid #0066cc;
-}
-
-/* 코드 블록 */
-.report-container code {
-    background: #f5f5f5;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
+.reference-number {
+    display: inline-block;
+    background: #4a9eff;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-right: 0.5rem;
     font-size: 0.9em;
 }
 
-/* Popover 스타일 (Streamlit native) */
-[data-baseweb="popover"] {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.reference-file {
+    font-weight: 500;
+    color: #e0e0e0 !important;
+}
+
+.reference-excerpt {
+    color: #a0a0a0 !important;
+    font-size: 0.9em;
+    margin-top: 0.3rem;
+    font-style: italic;
+}
+
+/* 채팅 메시지 다크모드 */
+.user-message {
+    background: #1e3a5f !important;
+    color: #ffffff !important;
+}
+
+.assistant-message {
+    background: #1a1d29 !important;
+    color: #ffffff !important;
+}
+
+/* Streamlit 기본 요소 다크모드 오버라이드 */
+.stMarkdown {
+    color: #ffffff !important;
+}
+
+.stTextInput input {
+    background-color: #1a1d29 !important;
+    color: #ffffff !important;
+    border: 1px solid #3d4461 !important;
+}
+
+.stTextArea textarea {
+    background-color: #1a1d29 !important;
+    color: #ffffff !important;
+    border: 1px solid #3d4461 !important;
+}
+
+.stButton button {
+    background-color: #4a9eff !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.stButton button:hover {
+    background-color: #6bb3ff !important;
+}
+
+/* 탭 스타일 다크모드 */
+.stTabs [data-baseweb="tab-list"] {
+    background-color: #1a1d29;
+}
+
+.stTabs [data-baseweb="tab"] {
+    color: #a0a0a0 !important;
+}
+
+.stTabs [aria-selected="true"] {
+    color: #4a9eff !important;
+}
+
+/* 익스팬더 다크모드 */
+.streamlit-expanderHeader {
+    background-color: #1a1d29 !important;
+    color: #ffffff !important;
+}
+
+.streamlit-expanderContent {
+    background-color: #0e1117 !important;
+    border: 1px solid #2d3142 !important;
+}
+
+/* 슬라이더 다크모드 */
+.stSlider label {
+    color: #ffffff !important;
+}
+
+/* 라디오 버튼 다크모드 */
+.stRadio label {
+    color: #ffffff !important;
+}
+
+/* 체크박스 다크모드 */
+.stCheckbox label {
+    color: #ffffff !important;
+}
+
+/* 캡션 다크모드 */
+.stCaptionContainer, .stCaption {
+    color: #a0a0a0 !important;
+}
+
+/* 파일 업로더 다크모드 */
+.stFileUploader {
+    background-color: #1a1d29 !important;
+    border: 1px solid #3d4461 !important;
+}
+
+/* 정보/경고 메시지 다크모드 */
+.stAlert {
+    background-color: #1a1d29 !important;
+    border: 1px solid #3d4461 !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # 데이터 소스 관리 파일 경로
-DATA_SOURCES_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data_sources.json")
+DATA_SOURCES_FILE = os.path.join(os.path.dirname(__file__), "data_sources.json")
 
-# 데이터 소스 로드 함수
 def load_data_sources():
-    if os.path.exists(DATA_SOURCES_FILE):
-        with open(DATA_SOURCES_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {"pdfs": [], "urls": [], "texts": []}
+    try:
+        if os.path.exists(DATA_SOURCES_FILE):
+            with open(DATA_SOURCES_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # 누락된 키가 있으면 추가
+                if "pdf" not in data:
+                    data["pdf"] = []
+                if "text" not in data:
+                    data["text"] = []
+                if "url" not in data:
+                    data["url"] = []
+                return data
+        return {"pdf": [], "text": [], "url": []}
+    except Exception as e:
+        print(f"Error loading data sources: {e}")
+        return {"pdf": [], "text": [], "url": []}
 
-# 데이터 소스 저장 함수
-def save_data_sources(data_sources):
+def save_data_sources(data):
     with open(DATA_SOURCES_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data_sources, f, ensure_ascii=False, indent=2)
-
-# 데이터 소스 추가 함수
-def add_data_source(source_type, name, content_preview=""):
-    data_sources = load_data_sources()
-    source = {
-        "name": name,
-        "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "content_preview": content_preview[:100] + "..." if len(content_preview) > 100 else content_preview
-    }
-    data_sources[source_type].append(source)
-    save_data_sources(data_sources)
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-# Citation 렌더링 함수
+def _clean_excerpt(text: str) -> str:
+    """레퍼런스에 표시할 excerpt를 사람이 읽기 좋게 정리"""
+    if not text:
+        return ""
+    # 제어문자 제거
+    text = re.sub(r'[\x00-\x1F\x7F]', ' ', str(text))
+    # 너무 깨진 문자(�) 제거
+    text = text.replace("�", " ")
+    # 공백 정리
+    text = re.sub(r'\s+', ' ', text).strip()
+    # 첫 문장만 사용 (., ?, !, 한국어 종결어미 기준)
+    sentence_split = re.split(r'(?<=[\.\?\!])\s+|(?<=[다요])\s+', text)
+    first = sentence_split[0] if sentence_split else text
+    return first[:300]
+
 def render_report_with_citations(answer: str, sources: List[Dict]) -> str:
     """
-    답변 텍스트에 Citation을 인터랙티브하게 렌더링
-    
-    Args:
-        answer: LLM 답변 (마크다운 형식)
-        sources: 출처 리스트 [{"id": 1, "file": "...", "excerpt": "...", "chunk_id": "..."}, ...]
-    
-    Returns:
-        HTML 형식의 렌더링된 보고서
+    답변 텍스트에 인라인 citation 번호를 감지하고, 
+    호버 시 툴팁을 보여주는 HTML로 변환
     """
-    if not sources:
-        # 출처가 없으면 그냥 마크다운 그대로 반환
-        return f"<div class='report-container'>{answer}</div>"
-    
-    # Citation 패턴 찾기: [1], [2], [1,2], [1][2] 등
-    citation_pattern = r'\[(\d+(?:\s*,\s*\d+)*)\]'
+    # Citation 패턴 찾기: [1], [2], etc.
+    citation_pattern = r'\[(\d+)\]'
     
     def replace_citation(match):
-        citations = match.group(1)
-        citation_nums = [int(n.strip()) for n in citations.split(',')]
+        cite_num = int(match.group(1))
+        # 해당 번호의 source 찾기
+        source = next((s for s in sources if s.get('id') == cite_num), None)
         
-        # 여러 citation을 span으로 변환
-        html_citations = []
-        for num in citation_nums:
-            # 해당 번호의 소스 찾기
-            source = next((s for s in sources if s['id'] == num), None)
-            if source:
-                file_name = source.get('file', 'Unknown source')
-                chunk_id = source.get('chunk_id', 'N/A')
-                excerpt = source.get('excerpt', '')
-                # HTML 특수문자 이스케이프
-                import html
-                file_name_escaped = html.escape(file_name)
-                excerpt_escaped = html.escape(excerpt[:200] + ('...' if len(excerpt) > 200 else ''))
-                chunk_id_escaped = html.escape(str(chunk_id))
-                
-                tooltip_html = f"""
-                <div class="citation-tooltip">
-                    <div class="citation-tooltip-title">{file_name_escaped}</div>
-                    <div class="citation-tooltip-content">{excerpt_escaped}</div>
-                    <div class="citation-tooltip-chunk">Chunk ID: {chunk_id_escaped}</div>
-                </div>
-                """
-                html_citations.append(
-                    f'<span class="citation">{tooltip_html}[{num}]</span>'
-                )
+        if source:
+            file_name = source.get('file', 'Unknown')
+            source_type = source.get('type', 'document')
+            page_num = source.get('page_number', 'N/A')
+            
+            # 원문 추출 - 딕셔너리가 아닌 실제 텍스트만
+            original = source.get('original_sentence', source.get('excerpt', ''))
+            if isinstance(original, dict):
+                # 딕셔너리인 경우 'report_string' 추출
+                original = original.get('report_string', str(original))
+            excerpt = _clean_excerpt(original)
+            
+            # Community Summary인 경우 표시 방식 조정
+            if source_type == 'community':
+                display_name = file_name.split(':')[1].strip() if ':' in file_name else file_name
+                tooltip_meta = "Community Report"
             else:
-                html_citations.append(f'<span class="citation">[{num}]</span>')
-        
-        return ''.join(html_citations)
+                display_name = file_name
+                tooltip_meta = f"Page {page_num}"
+            
+            # 툴팁이 포함된 citation 링크 생성
+            tooltip_html = f'''
+            <a href="#source-{cite_num}" class="citation">
+                [{cite_num}]
+                <div class="citation-tooltip">
+                    <div class="tooltip-header">{display_name}</div>
+                    <div class="tooltip-content">{excerpt}...</div>
+                    <div class="tooltip-meta">{tooltip_meta}</div>
+                </div>
+            </a>
+            '''
+            return tooltip_html
+        return match.group(0)
     
-    # Citation 교체
-    answer_with_citations = re.sub(citation_pattern, replace_citation, answer)
+    # Citation을 HTML로 변환
+    html_answer = re.sub(citation_pattern, replace_citation, answer)
     
     # References 섹션 생성
-    references_html = "<div class='references'><h4>References</h4><ol>"
+    references_html = '<div class="references"><h3>📚 References</h3>'
     for source in sources:
+        cite_id = source.get('id')
         file_name = source.get('file', 'Unknown')
-        chunk_id = source.get('chunk_id', 'N/A')
-        excerpt = source.get('excerpt', '')
-        url = source.get('url', '')
+        source_type = source.get('type', 'document')
+        page_num = source.get('page_number', 'N/A')
         
-        # URL이 있으면 링크로 표시
-        if url and url.startswith('http'):
-            references_html += f"<li><strong><a href='{url}' target='_blank'>{file_name}</a></strong><br>"
+        # 원문 추출 - 딕셔너리가 아닌 실제 텍스트만
+        original = source.get('original_sentence', source.get('excerpt', ''))
+        if isinstance(original, dict):
+            original = original.get('report_string', str(original))
+        excerpt = _clean_excerpt(original)
+        
+        # Community Summary인 경우 표시 방식 조정
+        if source_type == 'community':
+            display_name = file_name
+            meta_info = "Community Report"
         else:
-            references_html += f"<li><strong>{file_name}</strong> (Chunk: {chunk_id})<br>"
+            display_name = file_name
+            meta_info = f"Page {page_num}"
         
-        references_html += f"<em>{excerpt[:250]}...</em></li>"
+        references_html += f'''
+        <div class="reference-item" id="source-{cite_id}">
+            <span class="reference-number">[{cite_id}]</span>
+            <span class="reference-file">{display_name}</span> ({meta_info})
+            <div class="reference-excerpt">"{excerpt}..."</div>
+        </div>
+        '''
+    references_html += '</div>'
     
-    references_html += "</ol></div>"
+    # 전체 HTML 조합
+    full_html = f'<div class="report-container">{html_answer}{references_html}</div>'
     
-    # 전체 보고서 HTML
-    report_html = f"""
-    <div class='report-container'>
-        {answer_with_citations}
-        {references_html}
-    </div>
-    """
-    
-    return report_html
+    return full_html
 
-
-def render_citations_with_popover(sources: List[Dict]):
+def render_citations_with_popover(sources: List[Dict], message_idx: int = 0):
     """
-    Streamlit popover를 사용하여 citation 클릭 시 출처 정보 표시
-    
-    Args:
-        sources: 출처 리스트
+    출처 정보를 Streamlit Popover로 렌더링
+    message_idx: 메시지 인덱스를 포함하여 고유한 키 생성
     """
     if not sources:
         return
     
     st.markdown("---")
-    st.markdown("### 📚 References")
+    st.markdown("### 📚 Source Details")
     
     # 각 출처를 expander 또는 popover로 표시
     cols = st.columns(min(len(sources), 3))
     for idx, source in enumerate(sources):
         col_idx = idx % 3
         with cols[col_idx]:
-            with st.popover(f"[{source['id']}] {source.get('file', 'Source')[:30]}...", use_container_width=True):
+            with st.popover(f"[{source['id']}] {source.get('file', 'Source')[:25]}...", use_container_width=True):
                 st.caption(f"**File**: {source.get('file', 'Unknown')}")
+                st.caption(f"**Page**: {source.get('page_number', 'N/A')}")
                 st.caption(f"**Chunk ID**: {source.get('chunk_id', 'N/A')}")
                 
                 if source.get('url'):
                     st.caption(f"**URL**: [{source['url']}]({source['url']})")
                 
+                # 고유한 키: 메시지 인덱스 + 소스 인덱스
+                unique_key = f"excerpt_msg{message_idx}_src{idx}_{int(time.time()*1000)}"
+                
                 st.text_area(
-                    "Excerpt",
-                    value=source.get('excerpt', '')[:400],
+                    "Original Text",
+                    value=source.get('original_sentence', source.get('excerpt', ''))[:500],
                     height=150,
                     disabled=True,
-                    key=f"excerpt_{source['id']}"
+                    key=unique_key
                 )
 
 # 데이터 소스 삭제 함수
@@ -384,104 +468,54 @@ def delete_data_source(source_type, index):
         return True
     return False
 
-# Executive Header
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-    }
-    .sub-header {
-        font-size: 1.1rem;
-        color: #6b7280;
-        margin-bottom: 2rem;
-    }
-    .metric-card {
-        background: #f9fafb;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border-left: 4px solid #3b82f6;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-    .status-active {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    .status-error {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-</style>
-<div class="main-header">Financial Intelligence Platform</div>
-<div class="sub-header">Knowledge Graph Analysis & Insights</div>
-""", unsafe_allow_html=True)
-
 # API 엔드포인트
 API_BASE_URL = "http://127.0.0.1:8000"
 
+# 캐시: 백엔드 상태/질의 (규칙: st.cache_data로 무거운 호출 캐싱)
+@st.cache_data(ttl=30, show_spinner=False)
+def cached_health(api_base_url: str) -> bool:
+    try:
+        r = requests.get(f"{api_base_url}/health", timeout=5)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+
+@st.cache_data(ttl=120, show_spinner=False)
+def cached_query(api_base_url: str, payload_json: str) -> Dict:
+    payload = json.loads(payload_json)
+    r = requests.post(f"{api_base_url}/query", json=payload, timeout=120)
+    if r.status_code == 200:
+        return r.json()
+    return {"_error": f"Error {r.status_code}: {r.text}"}
+
 # System Status Bar (Top)
-col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
+col1, col2, col3 = st.columns([2, 1, 1])
 
 with col1:
-    # Server status check
-    try:
-        response = requests.get(f"{API_BASE_URL}/health", timeout=5)
-        server_connected = response.status_code == 200
-    except:
-        server_connected = False
+    st.markdown("# 📊 VIK AI: Executive Intelligence")
+    st.markdown("*Powered by Hybrid GraphRAG*")
+
+with col2:
+    server_connected = cached_health(API_BASE_URL)
     
     status_html = f"""
-    <span class="status-badge {'status-active' if server_connected else 'status-error'}">
-        {'● SYSTEM ACTIVE' if server_connected else '● SYSTEM OFFLINE'}
-    </span>
+    <div style="text-align: right; padding: 10px;">
+        <span style="color: {'#28a745' if server_connected else '#dc3545'}; font-size: 12px;">
+            ● Backend {'Connected' if server_connected else 'Disconnected'}
+        </span>
+    </div>
     """
     st.markdown(status_html, unsafe_allow_html=True)
 
-with col2:
-    # Graph stats
-    if server_connected:
-        try:
-            response = requests.get(f"{API_BASE_URL}/graph_stats", timeout=5)
-            if response.status_code == 200:
-                stats = response.json()
-                st.metric("Nodes", f"{stats.get('nodes', 0):,}", label_visibility="visible")
-        except:
-            st.metric("Nodes", "N/A")
-    else:
-        st.metric("Nodes", "N/A")
-
 with col3:
-    if server_connected:
-        try:
-            response = requests.get(f"{API_BASE_URL}/graph_stats", timeout=5)
-            if response.status_code == 200:
-                stats = response.json()
-                st.metric("Edges", f"{stats.get('edges', 0):,}", label_visibility="visible")
-        except:
-            st.metric("Edges", "N/A")
-    else:
-        st.metric("Edges", "N/A")
+    if st.button("🔄 Refresh", type="secondary"):
+        st.rerun()
 
-with col4:
-    query_mode = st.selectbox(
-        "Mode",
-        options=["api", "local"],
-        format_func=lambda x: "Cloud API" if x == "api" else "Local Model",
-        label_visibility="visible"
-    )
+st.markdown("---")
 
-st.divider()
-
-# Main Navigation
-tab1, tab2, tab3, tab4 = st.tabs(["Query", "Data Ingestion", "Data Sources", "Graph Visualization"])
+# Main Tabs
+tab1, tab2, tab3 = st.tabs(["💬 Query Interface", "📤 Data Ingestion", "📊 Data Sources"])
 
 # Tab 1: Query Interface
 with tab1:
@@ -489,6 +523,31 @@ with tab1:
     
     # Advanced Settings Expander
     with st.expander("⚙️ Advanced Settings", expanded=False):
+        # Search Mode
+        search_mode = st.radio(
+            "Search Mode",
+            ["Local (Specific)", "Global (Overview)"],
+            index=0,
+            help="Local: Search for specific entities and facts | Global: Get overview and common themes across all documents",
+            horizontal=True
+        )
+        
+        st.markdown("---")
+        
+        # 웹 검색 활성화 토글
+        enable_web_search = st.checkbox(
+            "🌐 Enable Web Search",
+            value=False,
+            help="Check this to allow AI to search the web for real-time information. Otherwise, it will ONLY use your uploaded PDF documents."
+        )
+        
+        if enable_web_search:
+            st.warning("⚠️ Web search enabled: AI may search the web for LATEST/TODAY information if needed.")
+        else:
+            st.success("✅ Document-only mode: AI will answer ONLY from your uploaded PDFs.")
+        
+        st.markdown("---")
+        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -536,15 +595,18 @@ with tab1:
         st.session_state.temperature = 0.2
     if "top_k" not in st.session_state:
         st.session_state.top_k = 30
+    if "enable_web_search" not in st.session_state:
+        st.session_state.enable_web_search = False
     
     st.session_state.temperature = temperature
     st.session_state.top_k = top_k
+    st.session_state.enable_web_search = enable_web_search
     
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
     
-    # Chat container with custom styling
+    # Chat container with dark mode styling
     st.markdown("""
     <style>
         .chat-container {
@@ -554,24 +616,28 @@ with tab1:
             margin-bottom: 1rem;
         }
         .user-message {
-            background: #e3f2fd;
+            background: #1e3a5f !important;
+            color: #ffffff !important;
             padding: 1rem;
             border-radius: 12px;
             margin: 0.5rem 0 0.5rem auto;
             max-width: 70%;
             text-align: right;
+            border: 1px solid #2d4a6f;
         }
         .assistant-message {
-            background: #f5f5f5;
+            background: #1a1d29 !important;
+            color: #ffffff !important;
             padding: 1rem;
             border-radius: 12px;
             margin: 0.5rem auto 0.5rem 0;
             max-width: 70%;
             text-align: left;
+            border: 1px solid #2d3142;
         }
         .message-mode {
             font-size: 0.75rem;
-            color: #666;
+            color: #a0a0a0 !important;
             margin-top: 0.5rem;
         }
     </style>
@@ -580,7 +646,7 @@ with tab1:
     # Display chat history with custom styling
     chat_container = st.container()
     with chat_container:
-        for message in st.session_state.messages:
+        for msg_idx, message in enumerate(st.session_state.messages):
             if message["role"] == "user":
                 st.markdown(f"""
                 <div class="user-message">
@@ -591,6 +657,17 @@ with tab1:
                 # 출처 정보가 있으면 Perplexity 스타일로 렌더링
                 sources = message.get("sources", [])
                 source_type = message.get("source_type", "UNKNOWN")
+                validation = message.get("validation", None)
+                
+                # Confidence Score 표시
+                if validation and validation.get("confidence_score") is not None:
+                    confidence = validation["confidence_score"]
+                    if confidence >= 0.9:
+                        st.success(f"Confidence: {confidence:.1%} - High reliability")
+                    elif confidence >= 0.7:
+                        st.info(f"Confidence: {confidence:.1%} - Medium reliability")
+                    else:
+                        st.warning(f"Confidence: {confidence:.1%} - Low reliability. Some citations may be invalid.")
                 
                 if sources:
                     # Citation과 References가 포함된 보고서 형식
@@ -599,7 +676,17 @@ with tab1:
                     
                     # Popover로 추가 상세 정보 제공 (선택사항)
                     with st.expander(f"📎 View {len(sources)} Source(s) in Detail", expanded=False):
-                        render_citations_with_popover(sources)
+                        render_citations_with_popover(sources, message_idx=msg_idx)
+
+                    # Evidence(클레임-근거) 표시
+                    evidence = message.get("evidence", [])
+                    if evidence:
+                        with st.expander(f"Evidence ({len(evidence)})", expanded=False):
+                            for ev in evidence[:20]:
+                                claim_id = ev.get("claim_id")
+                                claim_text = ev.get("claim_text", "")
+                                citation_ids = ev.get("citation_ids", [])
+                                st.markdown(f"- [{claim_id}] {claim_text} " + " ".join([f"[{cid}]" for cid in citation_ids]))
                 else:
                     # 출처 정보가 없으면 기본 형식
                     mode_text = f"<div class='message-mode'>Source: {source_type} | Mode: {message.get('mode', 'N/A')}</div>" if "mode" in message else ""
@@ -629,25 +716,27 @@ with tab1:
         with st.spinner("Generating executive report..."):
             try:
                 # Prepare request with advanced parameters
+                search_type = "global" if "Global" in search_mode else "local"
                 request_data = {
                     "question": prompt,
-                    "mode": query_mode,
+                    "mode": "api",
                     "temperature": st.session_state.get("temperature", 0.2),
-                    "top_k": st.session_state.get("top_k", 30)
+                    "top_k": st.session_state.get("top_k", 30),
+                    "search_type": search_type,
+                    "enable_web_search": st.session_state.get("enable_web_search", False)
                 }
                 
-                response = requests.post(
-                    f"{API_BASE_URL}/query",
-                    json=request_data,
-                    timeout=120
-                )
-                
-                if response.status_code == 200:
-                    result = response.json()
+                # 캐시된 경로 우선 (동일 질문/파라미터 반복 시 빠름)
+                payload_json = json.dumps(request_data, sort_keys=True, ensure_ascii=False)
+                result = cached_query(API_BASE_URL, payload_json)
+
+                if "_error" not in result:
                     answer = result.get("answer", "No response generated.")
                     sources = result.get("sources", [])
                     source_type = result.get("source", "UNKNOWN")
                     mode = result.get('mode', 'unknown').upper()
+                    validation = result.get("validation", None)
+                    evidence = result.get("evidence", [])
                     
                     # Add assistant response to chat history with sources
                     st.session_state.messages.append({
@@ -655,10 +744,12 @@ with tab1:
                         "content": answer,
                         "sources": sources,
                         "source_type": source_type,
-                        "mode": mode
+                        "mode": mode,
+                        "validation": validation,
+                        "evidence": evidence
                     })
                 else:
-                    error_msg = f"Error {response.status_code}: {response.text}"
+                    error_msg = result.get("_error", "Unknown error")
                     st.session_state.messages.append({
                         "role": "assistant",
                         "content": error_msg
@@ -679,7 +770,7 @@ with tab2:
     
     input_method = st.radio(
         "Select input method",
-        options=["PDF Upload", "Text Input", "URL Crawling"],
+        options=["PDF Upload", "URL Crawling"],
         horizontal=True,
         label_visibility="collapsed"
     )
@@ -688,693 +779,122 @@ with tab2:
         uploaded_file = st.file_uploader(
             "Upload PDF document",
             type=["pdf"],
-            key="pdf_uploader"
+            help="Upload a PDF file to extract and index its content"
         )
         
-        if st.button("Process PDF", type="primary", use_container_width=True):
-            if not uploaded_file:
-                st.warning("Please upload a PDF file.")
-            else:
-                progress_placeholder = st.empty()
-                status_placeholder = st.empty()
-                
-                try:
-                    # Step 1: Save file
-                    progress_placeholder.progress(0.1)
-                    status_placeholder.info("Saving PDF file...")
-                    
-                    safe_filename = uploaded_file.name.replace(" ", "_") if uploaded_file.name else "uploaded.pdf"
-                    temp_pdf_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), f"temp_{safe_filename}")
-                    
-                    with open(temp_pdf_path, "wb") as f:
-                        f.write(uploaded_file.getbuffer())
-                    
-                    # Step 2: Extract text
-                    progress_placeholder.progress(0.2)
-                    status_placeholder.info(f"Extracting text from {safe_filename}...")
-                    
-                    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                    from utils import extract_text_from_pdf
-                    text = extract_text_from_pdf(temp_pdf_path)
-                    
-                    if os.path.exists(temp_pdf_path):
-                        os.remove(temp_pdf_path)
-                    
-                    # 텍스트 검증
-                    if not text or not text.strip():
-                        status_placeholder.error("PDF에서 텍스트를 추출할 수 없습니다. 이미지 기반 PDF이거나 암호화되어 있을 수 있습니다.")
-                        progress_placeholder.empty()
-                        st.stop()
-                    
-                    if len(text.strip()) < 50:
-                        status_placeholder.warning(f"추출된 텍스트가 너무 짧습니다 ({len(text)} 문자). 계속 진행하시겠습니까?")
-                    
-                    status_placeholder.success(f"Extracted {len(text):,} characters")
-                    
-                    # Step 3: Reset graph
-                    progress_placeholder.progress(0.3)
-                    status_placeholder.info("Resetting graph...")
-                    
-                    try:
-                        reset_response = requests.post(f"{API_BASE_URL}/reset", timeout=30)
-                        if reset_response.status_code == 200:
-                            status_placeholder.success("Graph reset complete")
-                    except Exception as reset_error:
-                        status_placeholder.warning(f"Graph reset skipped: {str(reset_error)}")
-                    
-                    # Step 4: Index
-                    progress_placeholder.progress(0.4)
-                    status_placeholder.info("Indexing document... (this may take several minutes)")
-                    
-                    response = requests.post(
-                        f"{API_BASE_URL}/insert",
-                        json={"text": text},
-                        timeout=600  # 10분 타임아웃
-                    )
-                    
-                    progress_placeholder.progress(1.0)
-                    
-                    if response.status_code == 200:
-                        status_placeholder.success(f"PDF indexed successfully. ({len(text):,} characters)")
-                        add_data_source("pdfs", safe_filename, text)
-                        st.balloons()
-                    else:
-                        status_placeholder.error(f"Indexing failed: {response.status_code} - {response.text}")
-                        
-                except requests.exceptions.Timeout:
-                    status_placeholder.error("Request timed out. The document may be too large or the server is busy.")
-                except requests.exceptions.ConnectionError:
-                    status_placeholder.error("Cannot connect to server. Please ensure the FastAPI server is running.")
-                except Exception as e:
-                    status_placeholder.error(f"Error: {str(e)}")
-                    import traceback
-                    st.code(traceback.format_exc())
-                finally:
-                    if 'temp_pdf_path' in locals() and os.path.exists(temp_pdf_path):
-                        os.remove(temp_pdf_path)
+        if uploaded_file:
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.info(f"📄 {uploaded_file.name} ({uploaded_file.size / 1024:.1f} KB)")
+            with col2:
+                if st.button("🚀 Process PDF", type="primary", use_container_width=True):
+                    with st.spinner("Processing PDF document..."):
+                        try:
+                            # 파일을 임시로 저장
+                            import tempfile
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+                                tmp_file.write(uploaded_file.getvalue())
+                                tmp_path = tmp_file.name
+                            
+                            # utils.py에서 PDF 텍스트 추출
+                            from utils import extract_text_from_pdf
+                            extracted_text = extract_text_from_pdf(tmp_path)
+                            
+                            # 임시 파일 삭제
+                            os.unlink(tmp_path)
+                            
+                            if not extracted_text or not extracted_text.strip():
+                                st.error("PDF에서 텍스트를 추출할 수 없습니다. OCR이 필요한 이미지 기반 PDF일 수 있습니다.")
+                            else:
+                                # 인덱싱 요청
+                                response = requests.post(
+                                    f"{API_BASE_URL}/insert",
+                                    json={"text": extracted_text},
+                                    timeout=300
+                                )
+                                
+                                if response.status_code == 200:
+                                    # 데이터 소스 저장
+                                    data_sources = load_data_sources()
+                                    data_sources["pdf"].append({
+                                        "filename": uploaded_file.name,
+                                        "size": uploaded_file.size,
+                                        "indexed_at": time.strftime("%Y-%m-%d %H:%M:%S")
+                                    })
+                                    save_data_sources(data_sources)
+                                    
+                                    st.success(f"✅ {uploaded_file.name} successfully indexed!")
+                                else:
+                                    st.error(f"Indexing failed: {response.status_code} - {response.text}")
+                        except Exception as e:
+                            st.error(f"Error processing PDF: {str(e)}")
     
-    elif input_method == "Text Input":
-        text_input = st.text_area(
-            "Enter text to index",
-            placeholder="Example: NVIDIA reported revenue of $57.0 billion in Q3 2026...",
-            height=200,
-            key="text_input"
-        )
-        
-        if st.button("Index Text", type="primary", use_container_width=True):
-            if not text_input:
-                st.warning("Please enter text to index.")
-            else:
-                with st.spinner("Indexing in progress..."):
-                    try:
-                        response = requests.post(
-                            f"{API_BASE_URL}/insert",
-                            json={"text": text_input},
-                            timeout=300
-                        )
-                        
-                        if response.status_code == 200:
-                            st.success("Text indexed successfully.")
-                            add_data_source("texts", "Text Input", text_input)
-                        else:
-                            st.error(f"Indexing failed: {response.status_code}")
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
-    
-    elif input_method == "URL Crawling":
+    else:  # URL Crawling
         url_input = st.text_input(
             "Enter URL to crawl",
-            placeholder="Example: https://www.example.com/financial-report",
-            key="url_input"
+            placeholder="https://example.com"
         )
         
-        if st.button("Crawl URL", type="primary", use_container_width=True):
-            if not url_input:
-                st.warning("Please enter a URL.")
+        if st.button("🚀 Crawl & Index", type="primary"):
+            if url_input.strip():
+                st.info("URL crawling feature coming soon!")
             else:
-                with st.spinner("Crawling web page..."):
-                    try:
-                        from url import auto_researcher
-                        result = auto_researcher(url_input)
-                        
-                        if result.get("status") == "success":
-                            st.success("URL crawled and indexed successfully.")
-                            add_data_source("urls", url_input, result.get("text", "")[:100])
-                        else:
-                            st.error(f"Crawling failed: {result.get('error', 'Unknown error')}")
-                    except Exception as e:
-                        st.error(f"Error: {str(e)}")
+                st.warning("Please enter a URL.")
 
 # Tab 3: Data Sources
 with tab3:
     st.markdown("### Data Sources")
     
-    # Sub-tabs for Data Sources
-    source_tab1, source_tab2 = st.tabs(["Indexed Data", "Neo4j Graph"])
+    data_sources = load_data_sources()
     
-    with source_tab1:
-        data_sources = load_data_sources()
-        
-        # Summary metrics
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("PDF Documents", len(data_sources["pdfs"]))
-        with col2:
-            st.metric("URLs", len(data_sources["urls"]))
-        with col3:
-            st.metric("Text Entries", len(data_sources["texts"]))
-        
-        st.markdown("---")
-        
-        # PDF list
-        if data_sources["pdfs"]:
-            st.markdown("**PDF Documents**")
-            for idx, pdf in enumerate(data_sources["pdfs"]):
-                col1, col2, col3 = st.columns([3, 2, 1])
-                with col1:
-                    st.text(pdf['name'])
-                with col2:
-                    st.caption(pdf['added_at'])
-                with col3:
-                    if st.button("Delete", key=f"delete_pdf_{idx}"):
-                        delete_data_source("pdfs", idx)
-                        st.rerun()
-                with st.expander("Preview"):
-                    st.text(pdf.get('content_preview', 'No preview'))
-            st.markdown("---")
-        
-        # URL list
-        if data_sources["urls"]:
-            st.markdown("**URLs**")
-            for idx, url in enumerate(data_sources["urls"]):
-                col1, col2, col3 = st.columns([3, 2, 1])
-                with col1:
-                    st.text(url['name'])
-                with col2:
-                    st.caption(url['added_at'])
-                with col3:
-                    if st.button("Delete", key=f"delete_url_{idx}"):
-                        delete_data_source("urls", idx)
-                        st.rerun()
-                with st.expander("Preview"):
-                    st.text(url.get('content_preview', 'No preview'))
-            st.markdown("---")
-        
-        # Text list
-        if data_sources["texts"]:
-            st.markdown("**Text Entries**")
-            for idx, text in enumerate(data_sources["texts"]):
-                col1, col2, col3 = st.columns([3, 2, 1])
-                with col1:
-                    st.text(text['name'])
-                with col2:
-                    st.caption(text['added_at'])
-                with col3:
-                    if st.button("Delete", key=f"delete_text_{idx}"):
-                        delete_data_source("texts", idx)
-                        st.rerun()
-                with st.expander("Preview"):
-                    st.text(text.get('content_preview', 'No preview'))
-            st.markdown("---")
-        
-        # Clear all
-        if st.button("Clear All Records", type="secondary"):
-            save_data_sources({"pdfs": [], "urls": [], "texts": []})
-            st.rerun()
-    
-    with source_tab2:
-        st.markdown("### Neo4j Graph Visualization")
-        
-        # Neo4j connection info
-        neo4j_uri = os.getenv("NEO4J_URI", "")
-        neo4j_username = os.getenv("NEO4J_USERNAME", "neo4j")
-        neo4j_password = os.getenv("NEO4J_PASSWORD", "")
-        
-        if not neo4j_uri or not neo4j_password:
-            st.warning("⚠️ Neo4j connection not configured. Please set NEO4J_URI and NEO4J_PASSWORD in your .env file.")
-            st.markdown("""
-            **Setup Instructions:**
-            1. Create a Neo4j AuraDB instance at [neo4j.com/cloud/aura](https://neo4j.com/cloud/aura)
-            2. Copy your connection URI and credentials
-            3. Add to `.env` file:
-            ```
-            NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io
-            NEO4J_USERNAME=neo4j
-            NEO4J_PASSWORD=your-password
-            ```
-            """)
-        else:
-            st.success(f"✅ Connected to: {neo4j_uri}")
-            
-            # Quick Query Buttons
-            st.markdown("#### Quick Queries")
-            col1, col2, col3, col4 = st.columns(4)
-            
+    # PDF Sources
+    st.markdown("#### 📄 PDF Documents")
+    if data_sources["pdf"]:
+        for idx, source in enumerate(data_sources["pdf"]):
+            col1, col2, col3 = st.columns([3, 2, 1])
             with col1:
-                if st.button("All Nodes & Edges", use_container_width=True):
-                    st.session_state["selected_query"] = "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 100"
+                st.text(f"📄 {source['filename']}")
             with col2:
-                if st.button("Show Entities", use_container_width=True):
-                    st.session_state["selected_query"] = "MATCH (n:ENTITY) RETURN n LIMIT 100"
+                st.text(f"Size: {source['size'] / 1024:.1f} KB | Indexed: {source['indexed_at']}")
             with col3:
-                if st.button("Show Communities", use_container_width=True):
-                    st.session_state["selected_query"] = "MATCH (n:COMMUNITY) RETURN n LIMIT 50"
-            with col4:
-                if st.button("Graph Stats", use_container_width=True):
-                    st.session_state["show_stats"] = True
-            
-            st.markdown("---")
-            
-            # Custom Query input
-            default_query = st.session_state.get("selected_query", "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 50")
-            cypher_query = st.text_area(
-                "Custom Cypher Query",
-                value=default_query,
-                height=100,
-                help="Enter a Cypher query to visualize the graph"
-            )
-            
-            col1, col2, col3 = st.columns([2, 2, 2])
-            with col1:
-                execute_button = st.button("🔍 Execute Query", type="primary", use_container_width=True)
-            with col2:
-                if st.button("📊 Show Database Stats", type="secondary", use_container_width=True):
-                    st.session_state["show_stats"] = True
-            with col3:
-                if st.button("🗑️ Clear Results", type="secondary", use_container_width=True):
-                    if "neo4j_results" in st.session_state:
-                        del st.session_state["neo4j_results"]
-                    if "show_stats" in st.session_state:
-                        del st.session_state["show_stats"]
-                    st.rerun()
-            
-            # Show Database Statistics
-            if st.session_state.get("show_stats", False):
-                st.markdown("---")
-                st.markdown("#### 📊 Database Statistics")
-                try:
-                    from neo4j import GraphDatabase
-                    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_username, neo4j_password))
-                    
-                    with driver.session() as session:
-                        # Count nodes by label
-                        node_counts = session.run("CALL db.labels() YIELD label RETURN label").value()
-                        
-                        col1, col2, col3 = st.columns(3)
-                        
-                        with col1:
-                            total_nodes = session.run("MATCH (n) RETURN count(n) as count").single()["count"]
-                            st.metric("Total Nodes", f"{total_nodes:,}")
-                        
-                        with col2:
-                            total_rels = session.run("MATCH ()-[r]->() RETURN count(r) as count").single()["count"]
-                            st.metric("Total Relationships", f"{total_rels:,}")
-                        
-                        with col3:
-                            label_count = len(node_counts)
-                            st.metric("Node Types", label_count)
-                        
-                        # Show breakdown by label
-                        if node_counts:
-                            st.markdown("**Nodes by Type:**")
-                            for label in node_counts:
-                                count = session.run(f"MATCH (n:{label}) RETURN count(n) as count").single()["count"]
-                                st.text(f"  • {label}: {count:,}")
-                    
-                    driver.close()
-                    st.session_state["show_stats"] = False
-                    
-                except Exception as e:
-                    st.error(f"Failed to retrieve stats: {str(e)}")
-                
-                st.markdown("---")
-            
-            if execute_button:
-                with st.spinner("Executing query..."):
-                    try:
-                        from neo4j import GraphDatabase
-                        
-                        driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_username, neo4j_password))
-                        
-                        with driver.session() as session:
-                            result = session.run(cypher_query)
-                            records = list(result)
-                            
-                            if not records:
-                                st.warning("Query returned no results.")
-                            else:
-                                st.success(f"Query returned {len(records)} records.")
-                                
-                                # Store results in session state
-                                st.session_state["neo4j_results"] = records
-                                
-                                # Display results
-                                st.markdown("#### Query Results")
-                                
-                                # Extract nodes and relationships
-                                nodes = []
-                                edges = []
-                                node_ids = set()
-                                
-                                for record in records:
-                                    for key in record.keys():
-                                        value = record[key]
-                                        
-                                        # Check if it's a node
-                                        if hasattr(value, 'labels') and hasattr(value, 'id'):
-                                            node_id = value.id
-                                            if node_id not in node_ids:
-                                                node_ids.add(node_id)
-                                                props = dict(value)
-                                                label = list(value.labels)[0] if value.labels else "Node"
-                                                name = props.get('name', props.get('id', f"Node {node_id}"))
-                                                nodes.append({
-                                                    "id": node_id,
-                                                    "label": name,
-                                                    "type": label,
-                                                    "properties": props
-                                                })
-                                        
-                                        # Check if it's a relationship
-                                        elif hasattr(value, 'type') and hasattr(value, 'start_node') and hasattr(value, 'end_node'):
-                                            props = dict(value)
-                                            edges.append({
-                                                "from": value.start_node.id,
-                                                "to": value.end_node.id,
-                                                "label": value.type,
-                                                "properties": props
-                                            })
-                                
-                                # Display statistics
-                                col1, col2 = st.columns(2)
-                                with col1:
-                                    st.metric("Nodes", len(nodes))
-                                with col2:
-                                    st.metric("Relationships", len(edges))
-                                
-                                # Create visualization using PyVis
-                                if nodes:
-                                    st.markdown("---")
-                                    st.markdown("#### 🔗 Graph Visualization")
-                                    st.caption("💡 Tip: Drag nodes, zoom with scroll, hover for details")
-                                    
-                                    try:
-                                        from pyvis.network import Network
-                                        
-                                        # Enhanced network with physics
-                                        net = Network(
-                                            height="700px",
-                                            width="100%",
-                                            bgcolor="#fafafa",
-                                            font_color="#1a1a1a",
-                                            notebook=False,
-                                            directed=True
-                                        )
-                                        
-                                        # Configure physics for better layout
-                                        net.set_options("""
-                                        {
-                                          "physics": {
-                                            "enabled": true,
-                                            "barnesHut": {
-                                              "gravitationalConstant": -80000,
-                                              "centralGravity": 0.3,
-                                              "springLength": 200,
-                                              "springConstant": 0.04,
-                                              "damping": 0.09
-                                            },
-                                            "stabilization": {
-                                              "iterations": 150
-                                            }
-                                          },
-                                          "nodes": {
-                                            "shape": "dot",
-                                            "size": 20,
-                                            "font": {
-                                              "size": 14,
-                                              "face": "Tahoma"
-                                            },
-                                            "borderWidth": 2,
-                                            "shadow": true
-                                          },
-                                          "edges": {
-                                            "width": 2,
-                                            "arrows": {
-                                              "to": {
-                                                "enabled": true,
-                                                "scaleFactor": 0.5
-                                              }
-                                            },
-                                            "smooth": {
-                                              "type": "continuous"
-                                            },
-                                            "font": {
-                                              "size": 10,
-                                              "align": "middle"
-                                            }
-                                          },
-                                          "interaction": {
-                                            "hover": true,
-                                            "tooltipDelay": 100,
-                                            "navigationButtons": true,
-                                            "keyboard": true
-                                          }
-                                        }
-                                        """)
-                                        
-                                        # Color mapping for different node types
-                                        color_map = {
-                                            "ENTITY": "#3b82f6",      # Blue
-                                            "COMMUNITY": "#10b981",   # Green
-                                            "DOCUMENT": "#f59e0b",    # Orange
-                                            "CHUNK": "#8b5cf6",       # Purple
-                                            "PERSON": "#ef4444",      # Red
-                                            "ORGANIZATION": "#06b6d4", # Cyan
-                                            "LOCATION": "#84cc16",    # Lime
-                                        }
-                                        
-                                        # Add nodes with enhanced styling
-                                        for node in nodes:
-                                            node_type = node.get("type", "Node")
-                                            color = color_map.get(node_type, "#6b7280")
-                                            
-                                            # Calculate size based on connections (degree)
-                                            degree = sum(1 for e in edges if e["from"] == node["id"] or e["to"] == node["id"])
-                                            size = 15 + (degree * 3)  # Bigger nodes for more connected entities
-                                            
-                                            net.add_node(
-                                                node["id"],
-                                                label=str(node["label"])[:30],  # Truncate long labels
-                                                title=f"<b>{node_type}</b><br>" + "<br>".join([f"{k}: {v}" for k, v in list(node['properties'].items())[:5]]),
-                                                color=color,
-                                                size=size
-                                            )
-                                        
-                                        # Add edges with labels
-                                        for edge in edges:
-                                            net.add_edge(
-                                                edge["from"],
-                                                edge["to"],
-                                                label=edge["label"][:20],  # Truncate long labels
-                                                title=f"<b>{edge['label']}</b><br>" + "<br>".join([f"{k}: {v}" for k, v in list(edge['properties'].items())[:3]]),
-                                                color="#94a3b8"
-                                            )
-                                        
-                                        # Save and display
-                                        net.save_graph("neo4j_graph.html")
-                                        with open("neo4j_graph.html", "r", encoding="utf-8") as f:
-                                            html_content = f.read()
-                                        
-                                        # Enhanced iframe styling
-                                        st.markdown("""
-                                        <style>
-                                            .neo4j-graph iframe {
-                                                border: 2px solid #e5e7eb;
-                                                border-radius: 12px;
-                                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                                            }
-                                        </style>
-                                        """, unsafe_allow_html=True)
-                                        
-                                        components.html(html_content, height=720, scrolling=False)
-                                        
-                                        # Clean up
-                                        if os.path.exists("neo4j_graph.html"):
-                                            os.remove("neo4j_graph.html")
-                                    
-                                        # Add legend
-                                        st.markdown("---")
-                                        st.markdown("**📌 Legend:**")
-                                        legend_cols = st.columns(4)
-                                        legend_items = [
-                                            ("🔵 ENTITY", "Entities extracted from text"),
-                                            ("🟢 COMMUNITY", "Entity communities"),
-                                            ("🟠 DOCUMENT", "Source documents"),
-                                            ("🟣 CHUNK", "Text chunks"),
-                                            ("🔴 PERSON", "People"),
-                                            ("🔷 ORGANIZATION", "Organizations"),
-                                            ("🟩 LOCATION", "Locations"),
-                                        ]
-                                        for idx, (label, desc) in enumerate(legend_items):
-                                            with legend_cols[idx % 4]:
-                                                st.caption(f"{label}")
-                                    
-                                    except ImportError:
-                                        st.error("❌ PyVis not installed. Run: `pip install pyvis`")
-                                
-                                # Display raw data with better formatting
-                                with st.expander("📄 View Raw Data (JSON)"):
-                                    tab1, tab2 = st.tabs(["Nodes", "Relationships"])
-                                    with tab1:
-                                        st.json(nodes)
-                                    with tab2:
-                                        st.json(edges)
-                                
-                                # Download options
-                                st.markdown("---")
-                                col1, col2 = st.columns(2)
-                                with col1:
-                                    # Download as JSON
-                                    import json as json_lib
-                                    graph_data = json_lib.dumps({"nodes": nodes, "edges": edges}, indent=2)
-                                    st.download_button(
-                                        label="⬇️ Download Graph Data (JSON)",
-                                        data=graph_data,
-                                        file_name="neo4j_graph_data.json",
-                                        mime="application/json",
-                                        use_container_width=True
-                                    )
-                        
-                        driver.close()
-                        
-                    except Exception as e:
-                        st.error(f"Query execution failed: {str(e)}")
-                        import traceback
-                        st.code(traceback.format_exc())
-
-# Tab 4: Graph Visualization
-with tab4:
-    st.markdown("### Knowledge Graph Visualization")
-    
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        st.info("Visualize the entire knowledge graph with interactive nodes and relationships")
-    with col2:
-        if st.button("Generate Visualization", type="primary", use_container_width=True):
-            with st.spinner("Generating graph visualization..."):
-                try:
-                    # Check if graph file exists
-                    import os
-                    from config import WORKING_DIR
-                    graphml_path = os.path.join(WORKING_DIR, "graph_chunk_entity_relation.graphml")
-                    
-                    if not os.path.exists(graphml_path):
-                        st.error("No graph data found. Please index some documents first.")
-                    else:
-                        # Import visualization function
-                        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                        from visualize import visualize_graph
-                        
-                        # Generate visualization
-                        output_path = visualize_graph(
-                            working_dir=WORKING_DIR,
-                            output_file="graph_visualization_streamlit.html"
-                        )
-                        
-                        if output_path and os.path.exists(output_path):
-                            st.success("Graph visualization generated successfully!")
-                            st.session_state["graph_viz_path"] = output_path
-                        else:
-                            st.error("Failed to generate visualization.")
-                
-                except Exception as e:
-                    st.error(f"Error generating visualization: {str(e)}")
-                    import traceback
-                    st.code(traceback.format_exc())
-    
-    # Display visualization if it exists
-    if "graph_viz_path" in st.session_state and os.path.exists(st.session_state["graph_viz_path"]):
-        st.markdown("---")
-        
-        # Graph statistics
-        try:
-            import networkx as nx
-            from config import WORKING_DIR
-            graphml_path = os.path.join(WORKING_DIR, "graph_chunk_entity_relation.graphml")
-            G = nx.read_graphml(graphml_path)
-            
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                st.metric("Nodes", f"{G.number_of_nodes():,}")
-            with col2:
-                st.metric("Edges", f"{G.number_of_edges():,}")
-            with col3:
-                density = G.number_of_edges() / max(G.number_of_nodes(), 1)
-                st.metric("Density", f"{density:.2f}")
-            with col4:
-                avg_degree = sum(dict(G.degree()).values()) / max(G.number_of_nodes(), 1)
-                st.metric("Avg Degree", f"{avg_degree:.1f}")
-        except:
-            pass
-        
-        st.markdown("---")
-        st.markdown("#### Interactive Graph")
-        st.caption("💡 Tip: Drag nodes, zoom with mouse wheel, click to select")
-        
-        # Read HTML file
-        with open(st.session_state["graph_viz_path"], "r", encoding="utf-8") as f:
-            html_content = f.read()
-        
-        # Display in iframe with better styling
-        st.markdown("""
-        <style>
-            iframe {
-                border: 2px solid #e5e7eb;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        components.html(html_content, height=850, scrolling=False)
-        
-        # Download button
-        st.markdown("---")
-        col1, col2, col3 = st.columns([2, 1, 2])
-        with col2:
-            with open(st.session_state["graph_viz_path"], "rb") as f:
-                st.download_button(
-                    label="Download HTML",
-                    data=f,
-                    file_name="knowledge_graph.html",
-                    mime="text/html",
-                    use_container_width=True
-                )
+                if st.button("🗑️", key=f"del_pdf_{idx}"):
+                    if delete_data_source("pdf", idx):
+                        st.rerun()
     else:
-        st.markdown("---")
-        st.info("Click 'Generate Visualization' to create an interactive graph view.")
-        
-        # Show graph stats
-        try:
-            response = requests.get(f"{API_BASE_URL}/graph_stats", timeout=5)
-            if response.status_code == 200:
-                stats = response.json()
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    st.metric("Total Nodes", f"{stats.get('nodes', 0):,}")
-                with col2:
-                    st.metric("Total Edges", f"{stats.get('edges', 0):,}")
-                with col3:
-                    density = stats.get('edges', 0) / max(stats.get('nodes', 1), 1)
-                    st.metric("Graph Density", f"{density:.2f}")
-        except:
-            pass
-
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #9ca3af; font-size: 0.875rem; padding: 1rem 0;'>
-    Financial Intelligence Platform v2.0 | 
-    <a href='http://localhost:8000/docs' target='_blank' style='color: #6b7280; text-decoration: none;'>API Documentation</a>
-</div>
-""", unsafe_allow_html=True)
+        st.info("No PDF documents indexed yet.")
+    
+    st.markdown("---")
+    
+    # Text Sources
+    st.markdown("#### 📝 Text Inputs")
+    if data_sources["text"]:
+        for idx, source in enumerate(data_sources["text"]):
+            col1, col2, col3 = st.columns([3, 2, 1])
+            with col1:
+                st.text(f"📝 {source['preview']}")
+            with col2:
+                st.text(f"Length: {source['length']} chars | Indexed: {source['indexed_at']}")
+            with col3:
+                if st.button("🗑️", key=f"del_text_{idx}"):
+                    if delete_data_source("text", idx):
+                        st.rerun()
+    else:
+        st.info("No text inputs indexed yet.")
+    
+    st.markdown("---")
+    
+    # URL Sources
+    st.markdown("#### 🌐 URL Sources")
+    if data_sources["url"]:
+        for idx, source in enumerate(data_sources["url"]):
+            col1, col2, col3 = st.columns([3, 2, 1])
+            with col1:
+                st.text(f"🌐 {source['url']}")
+            with col2:
+                st.text(f"Indexed: {source['indexed_at']}")
+            with col3:
+                if st.button("🗑️", key=f"del_url_{idx}"):
+                    if delete_data_source("url", idx):
+                        st.rerun()
+    else:
+        st.info("No URLs indexed yet.")

@@ -28,6 +28,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 from utils import extract_text_from_pdf
+from models.neo4j_models import GraphStats
+from engine.executor import QueryExecutor
 
 
 class Neo4jDatabase:
@@ -103,16 +105,22 @@ class Neo4jDatabase:
         SET n.name = $name,
             n.type = $type,
             n.description = $description,
-            n.source = $source
+            n.source = $source,
+            n.source_file = $source_file,
+            n.page_number = $page_number,
+            n.original_sentence = $original_sentence
         """
         
         # 노드 데이터에서 속성 추출 (타입 안전성 보장)
-        params: Dict[str, str] = {
+        params: Dict[str, str | int] = {
             "node_id": str(node_id),
             "name": str(node_data.get("entity_name", node_id)),
             "type": str(node_data.get("entity_type", "UNKNOWN")),
             "description": str(node_data.get("description", "")),
-            "source": str(node_data.get("source_id", ""))
+            "source": str(node_data.get("source_id", "")),
+            "source_file": str(node_data.get("source_file", "")),
+            "page_number": int(node_data.get("page_number", 0)),
+            "original_sentence": str(node_data.get("original_sentence", ""))
         }
         
         # 쿼리 실행
@@ -147,7 +155,10 @@ class Neo4jDatabase:
         MERGE (a)-[r:{rel_type}]->(b)
         SET r.weight = $weight,
             r.description = $description,
-            r.source = $source
+            r.source = $source,
+            r.source_file = $source_file,
+            r.page_number = $page_number,
+            r.original_sentence = $original_sentence
         """
         
         # 타입 안전성 보장
@@ -155,12 +166,15 @@ class Neo4jDatabase:
         if not isinstance(weight, (int, float)):
             weight = 1.0
         
-        params: Dict[str, str | float] = {
+        params: Dict[str, str | float | int] = {
             "source_id": str(source_id),
             "target_id": str(target_id),
             "weight": float(weight),
             "description": str(rel_data.get("description", "")),
-            "source": str(rel_data.get("source_id", ""))
+            "source": str(rel_data.get("source_id", "")),
+            "source_file": str(rel_data.get("source_file", "")),
+            "page_number": int(rel_data.get("page_number", 0)),
+            "original_sentence": str(rel_data.get("original_sentence", ""))
         }
         
         # 쿼리 실행
@@ -248,18 +262,16 @@ class Neo4jDatabase:
         
         print("🗑️ Neo4j의 모든 데이터가 삭제되었어요!")
     
-    def get_stats(self) -> Dict[str, int]:
-        """Neo4j의 통계를 가져오는 함수예요!"""
-        with self.driver.session() as session:
-            # 노드 수 조회
-            node_result = session.run("MATCH (n) RETURN count(n) as count")
-            node_count = node_result.single()["count"]
-            
-            # 관계 수 조회
-            rel_result = session.run("MATCH ()-[r]->() RETURN count(r) as count")
-            rel_count = rel_result.single()["count"]
-        
-        return {"nodes": node_count, "relationships": rel_count}
+    def get_stats(self) -> GraphStats:
+        """
+        Neo4j의 통계를 가져오는 함수예요!
+        규칙: Neo4j response는 Pydantic 모델로 반환 (raw dict 접근 금지)
+        """
+        executor = QueryExecutor(uri=self.uri, username=self.username, password=self.password)
+        try:
+            return executor.get_graph_stats()
+        finally:
+            executor.close()
 
 
     def parse_pdf_to_text(self, pdf_path: str) -> str:
@@ -280,7 +292,7 @@ Neo4jDriver = Neo4jDatabase
 
 
 # 헬퍼 함수 (하위 호환성 유지)
-def export_to_neo4j(graphml_path: str, clear_before: bool = False) -> Dict[str, Any]:
+def export_to_neo4j(graphml_path: str, clear_before: bool = False) -> Dict[str, str | int | None]:
     """
     GraphML 파일을 Neo4j에 업로드하는 헬퍼 함수 (하위 호환성)
     

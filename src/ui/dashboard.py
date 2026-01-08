@@ -124,12 +124,12 @@ with col1:
 with col2:
     # Graph stats
     if server_connected:
-        try:
+    try:
             response = requests.get(f"{API_BASE_URL}/graph_stats", timeout=5)
-            if response.status_code == 200:
-                stats = response.json()
+        if response.status_code == 200:
+            stats = response.json()
                 st.metric("Nodes", f"{stats.get('nodes', 0):,}", label_visibility="visible")
-        except:
+    except:
             st.metric("Nodes", "N/A")
     else:
         st.metric("Nodes", "N/A")
@@ -153,9 +153,9 @@ with col4:
         format_func=lambda x: "Cloud API" if x == "api" else "Local Model",
         label_visibility="visible"
     )
-
-st.divider()
-
+    
+    st.divider()
+    
 # Main Navigation
 tab1, tab2, tab3 = st.tabs(["Query", "Data Ingestion", "Data Sources"])
 
@@ -379,9 +379,9 @@ with tab3:
     
     # Summary metrics
     col1, col2, col3 = st.columns(3)
-    with col1:
+        with col1:
         st.metric("PDF Documents", len(data_sources["pdfs"]))
-    with col2:
+        with col2:
         st.metric("URLs", len(data_sources["urls"]))
     with col3:
         st.metric("Text Entries", len(data_sources["texts"]))
@@ -400,7 +400,7 @@ with tab3:
             with col3:
                 if st.button("Delete", key=f"delete_pdf_{idx}"):
                     delete_data_source("pdfs", idx)
-                    st.rerun()
+                        st.rerun()
             with st.expander("Preview"):
                 st.text(pdf.get('content_preview', 'No preview'))
         st.markdown("---")
@@ -417,7 +417,7 @@ with tab3:
             with col3:
                 if st.button("Delete", key=f"delete_url_{idx}"):
                     delete_data_source("urls", idx)
-                    st.rerun()
+                        st.rerun()
             with st.expander("Preview"):
                 st.text(url.get('content_preview', 'No preview'))
         st.markdown("---")
@@ -434,7 +434,7 @@ with tab3:
             with col3:
                 if st.button("Delete", key=f"delete_text_{idx}"):
                     delete_data_source("texts", idx)
-                    st.rerun()
+                        st.rerun()
             with st.expander("Preview"):
                 st.text(text.get('content_preview', 'No preview'))
         st.markdown("---")
