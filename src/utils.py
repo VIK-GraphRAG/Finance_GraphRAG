@@ -492,6 +492,8 @@ CRITICAL RULES:
 4. If information is NOT in the sources, respond: "해당 문서들에서는 관련 정보를 찾을 수 없습니다"
 5. DO NOT make assumptions or inferences beyond what is explicitly stated
 6. DO NOT add information from your training data
+7. DO NOT generate HTML, XML, or any markup code - use PLAIN TEXT only
+8. DO NOT include any HTML tags like <a>, <div>, or any other markup
 
 AVAILABLE SOURCES:
 {sources_text}
@@ -500,11 +502,12 @@ QUESTION: {question}
 
 RESPONSE FORMAT:
 - Use citations [1], [2] after EVERY claim
+- PLAIN TEXT ONLY - no HTML or markup
 - At the end, list all sources with: [1] filename.pdf, Page X
 - If no relevant information exists in sources, say so explicitly
 - Write in a professional, executive report style
 
-Begin your strictly grounded response:"""
+Begin your strictly grounded response (PLAIN TEXT ONLY):"""
 
 
 def get_executive_report_prompt(question: str, sources: List[dict]) -> str:
@@ -569,14 +572,16 @@ FORMATTING:
 - Use bullet points for lists
 - Keep paragraphs concise (3-4 sentences max)
 - Professional, data-driven tone
+- PLAIN TEXT ONLY - absolutely NO HTML tags or markup
 
 IMPORTANT: 
 - Do NOT add a separate References section at the end (it will be added automatically)
+- Do NOT generate HTML code (<a>, <div>, etc.) - text only
 - Focus on insights, not just data regurgitation
 - Be precise with numbers and dates
 - If data is insufficient, acknowledge limitations
 
-Begin your report now:"""
+Begin your report now (PLAIN TEXT, NO HTML):"""
     
     return prompt
 
