@@ -12,12 +12,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 환경 변수 읽기
-try:
-    NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-    NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-    NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
-except:
-    pass
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
 
 # 현재 파일의 폴더 경로를 추가해요!
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
