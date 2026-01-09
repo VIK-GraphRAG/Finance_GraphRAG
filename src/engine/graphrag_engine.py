@@ -303,7 +303,7 @@ class HybridGraphRAGEngine:
             }
         
         return response
-
+    
     async def _aretrieve_context_from_neo4j(self, question: str, top_sources: int = 10) -> Dict:
         """
         Neo4j에서 정밀 근거를 추출해 sources/context 생성.
