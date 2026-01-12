@@ -618,6 +618,22 @@ with tab1:
     
     # Advanced Settings Expander
     with st.expander("Advanced Settings", expanded=False):
+        # LLM Mode Selection
+        llm_mode = st.radio(
+            "LLM Mode",
+            ["API (OpenAI)", "LOCAL (Ollama)"],
+            index=0,
+            help="API: Use OpenAI GPT-4o-mini (faster, more accurate) | LOCAL: Use Ollama Qwen2.5-Coder-3B (private, offline)",
+            horizontal=True
+        )
+        
+        if llm_mode == "API (OpenAI)":
+            st.info("🌐 API Mode: Using OpenAI GPT-4o-mini for high-quality responses")
+        else:
+            st.info("🏠 LOCAL Mode: Using Ollama Qwen2.5-Coder-3B for privacy-first analysis")
+        
+        st.markdown("---")
+        
         # Search Mode
         search_mode = st.radio(
             "Search Mode",
@@ -702,11 +718,14 @@ with tab1:
         st.session_state.top_k = 30
     if "enable_web_search" not in st.session_state:
         st.session_state.enable_web_search = False
+    if "llm_mode" not in st.session_state:
+        st.session_state.llm_mode = "api"
     
     st.session_state.temperature = temperature
     st.session_state.top_k = top_k
     st.session_state.enable_web_search = enable_web_search
     st.session_state.use_multi_agent = use_multi_agent
+    st.session_state.llm_mode = "api" if "API" in llm_mode else "local"
     
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -846,9 +865,10 @@ with tab1:
             try:
                 # Prepare request with advanced parameters
                 search_type = "global" if "Global" in search_mode else "local"
+                llm_mode_value = st.session_state.get("llm_mode", "api")
                 request_data = {
                     "question": prompt,
-                    "mode": "api",
+                    "mode": llm_mode_value,
                     "temperature": st.session_state.get("temperature", 0.2),
                     "top_k": st.session_state.get("top_k", 30),
                     "search_type": search_type,
