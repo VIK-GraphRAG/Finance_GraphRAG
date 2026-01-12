@@ -1,17 +1,19 @@
-# FPT IS - 1st Week
+>>>>> Project Concept
 
-## TEAM. VIK
+VIK AI is a **Graph-RAG based Financial Report Analyzer** designed to help users efficiently analyze large financial documents.  
+The system combines **document retrieval** with **graph-based reasoning** to generate **accurate and explainable answers** from financial PDFs.
+
+Unlike traditional AI tools that act as black boxes, VIK AI structures financial information into connected entities and relationships, enabling deeper insights and multi-document reasoning while running **locally for data privacy**.
 
 ---
 
-## 직급/계급도 
+>>>>> 👥 Team Members
 
-테스터 : 경리 정민서
+- **Laukik Landage** – Project Manager  
+- **Gyutae Kim** – Developer  
+- **Juyong Song** – Developer  
+- **Minseo Jeong** – Tester  
+- **Anh thu** – Business Analyst  
 
-기획, 개발 : 송대리
-
-백앤드 : 인턴 김대리
-
-프론트앤드 : 로사원
 
 <https://mobility.fpt.edu.vn/>
