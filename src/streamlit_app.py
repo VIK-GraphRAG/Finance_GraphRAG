@@ -403,31 +403,6 @@ def render_report_with_citations(answer: str, sources: List[Dict]) -> str:
                 f'</a>'
             )
         return match.group(0)
-    
-    # #region agent log
-    import json as _json
-    try:
-        cite_matches = list(re.finditer(citation_pattern, answer or ""))
-        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-            f.write(_json.dumps({
-                "location": "streamlit_app.py:render_report_with_citations",
-                "message": "render_report_with_citations input",
-                "data": {
-                    "answer_len": len(answer) if answer else 0,
-                    "answer_has_html": ("<a href" in (answer or "")) or ("<div" in (answer or "")),
-                    "answer_has_sources_section": "Sources:" in (answer or "") or "References:" in (answer or ""),
-                    "sources_count": len(sources) if sources else 0,
-                    "citation_count_in_answer": len(cite_matches),
-                },
-                "timestamp": __import__('time').time() * 1000,
-                "sessionId": "debug-session",
-                "runId": "run1",
-                "hypothesisId": "H3,H7"
-            }) + "\n")
-    except Exception:
-        pass
-    # #endregion
-
     # Citation을 HTML로 변환
     html_answer = re.sub(citation_pattern, replace_citation, answer)
     
@@ -800,45 +775,11 @@ with tab1:
                     else:
                         st.warning(f"Confidence: {confidence:.1%} - Low reliability. Some citations may be invalid.")
                 
-                if sources:
-                    # #region agent log
-                    import json
-                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                        f.write(json.dumps({"location":"streamlit_app.py:754","message":"Before render_report_with_citations","data":{"content_preview":message["content"][:500],"has_html_in_content":"<a href" in message["content"] or "<div" in message["content"],"sources_count":len(sources)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3,H4"})+'\n')
-                    # #endregion
-                    
+                if sources:                    
                     # LLM이 텍스트로 'Sources:' 섹션을 붙이는 경우 제거 후 렌더링
                     cleaned_content = _strip_llm_sources_section(message["content"])
                     # Citation과 References가 포함된 보고서 형식
-                    report_html = render_report_with_citations(cleaned_content, sources)
-                    
-                    # #region agent log
-                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                        f.write(json.dumps({"location":"streamlit_app.py:757","message":"After render_report_with_citations","data":{"report_html_preview":report_html[:500],"html_length":len(report_html)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3"})+'\n')
-                    # #endregion
-                    
-                    # #region agent log
-                    import json as _json
-                    try:
-                        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                            f.write(_json.dumps({
-                                "location": "streamlit_app.py:769",
-                                "message": "Rendering report_html via st.markdown",
-                                "data": {
-                                    "unsafe_allow_html": True,
-                                    "has_div": "<div" in report_html,
-                                    "has_anchor": "<a href" in report_html,
-                                    "html_len": len(report_html),
-                                },
-                                "timestamp": __import__('time').time() * 1000,
-                                "sessionId": "debug-session",
-                                "runId": "run1",
-                                "hypothesisId": "H3"
-                            }) + "\n")
-                    except Exception:
-                        pass
-                    # #endregion
-                    st.markdown(report_html, unsafe_allow_html=True)
+                    report_html = render_report_with_citations(cleaned_content, sources)                    st.markdown(report_html, unsafe_allow_html=True)
                     
                     # Popover로 추가 상세 정보 제공 (선택사항)
                     with st.expander(f"View {len(sources)} Source(s) in Detail", expanded=False):
@@ -929,14 +870,7 @@ with tab1:
                     # Multi-Agent 추가 필드
                     recommendation = result.get("recommendation", None)
                     insights = result.get("insights", [])
-                    processing_steps = result.get("processing_steps", [])
-                    
-                    # #region agent log
-                    import json
-                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                        f.write(json.dumps({"location":"streamlit_app.py:827","message":"API response received","data":{"answer_preview":answer[:500],"has_html_in_answer":"<a href" in answer or "<div" in answer,"sources_count":len(sources),"source_type":source_type,"mode":mode},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H4,H5"})+'\n')
-                    # #endregion
-                    
+                    processing_steps = result.get("processing_steps", [])                    
                     # Add assistant response to chat history with sources
                     st.session_state.messages.append({
                         "role": "assistant",
