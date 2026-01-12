@@ -779,7 +779,8 @@ with tab1:
                     # LLM이 텍스트로 'Sources:' 섹션을 붙이는 경우 제거 후 렌더링
                     cleaned_content = _strip_llm_sources_section(message["content"])
                     # Citation과 References가 포함된 보고서 형식
-                    report_html = render_report_with_citations(cleaned_content, sources)                    st.markdown(report_html, unsafe_allow_html=True)
+                    report_html = render_report_with_citations(cleaned_content, sources)
+                    st.markdown(report_html, unsafe_allow_html=True)
                     
                     # Popover로 추가 상세 정보 제공 (선택사항)
                     with st.expander(f"View {len(sources)} Source(s) in Detail", expanded=False):
@@ -870,7 +871,8 @@ with tab1:
                     # Multi-Agent 추가 필드
                     recommendation = result.get("recommendation", None)
                     insights = result.get("insights", [])
-                    processing_steps = result.get("processing_steps", [])                    
+                    processing_steps = result.get("processing_steps", [])
+                    
                     # Add assistant response to chat history with sources
                     st.session_state.messages.append({
                         "role": "assistant",
