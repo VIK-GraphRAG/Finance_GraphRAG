@@ -29,7 +29,7 @@ COPY data/ ./data/
 COPY mcp-config.json .
 COPY data_sources.json .
 COPY README.md .
-COPY SCHEMA.md .
+COPY schema.md .
 
 # Create necessary directories
 RUN mkdir -p logs storage/graph_storage

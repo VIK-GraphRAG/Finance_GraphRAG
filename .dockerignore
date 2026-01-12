@@ -46,8 +46,8 @@ temp_*.pdf
 *.html
 !graph_visualization_streamlit.html
 
-# Data sources
-data_sources.json
+# Data sources (allow data_sources.json for Docker)
+# data_sources.json
 src/data_sources.json
 
 # Environment
@@ -63,6 +63,7 @@ Thumbs.db
 *.md
 !README.md
 !schema.md
+!SCHEMA.md
 
 # Test files
 test_*
