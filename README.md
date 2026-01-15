@@ -112,11 +112,15 @@ MIT License - See LICENSE file for details
 ## 🕸️ Graph Visualization
 
 ### 실시간 그래프 시각화
+메인 Streamlit UI의 **"🕸️ Graph Visualizer"** 탭에서 바로 사용 가능합니다!
+
 ```bash
-streamlit run src/graph_visualizer.py --server.port 8502
+./start.sh
+# 또는
+streamlit run src/streamlit_app.py --server.port 8501
 ```
 
-Visit: http://localhost:8502
+Visit: http://localhost:8501 → **Graph Visualizer 탭**
 
 ### 기능
 - **All Nodes**: 전체 그래프 보기
@@ -136,17 +140,26 @@ Visit: http://localhost:8502
 - 클릭으로 연결된 노드 확인
 - 줌/팬으로 그래프 탐색
 - 물리 시뮬레이션으로 자동 배치
+- 실시간 노드 검색 및 필터링
 
 ---
 
 ## 🧠 Multi-Hop Reasoning System
 
-### 멀티홉 추론 UI 실행
+### 통합된 인터페이스
+모든 기능이 **하나의 Streamlit 앱 (Port 8501)** 에 통합되었습니다!
+
 ```bash
-streamlit run src/reasoning_ui.py --server.port 8503
+./start.sh
 ```
 
-Visit: http://localhost:8503
+Visit: http://localhost:8501
+
+**탭 구조:**
+- 📊 **Query Interface**: 질문 & 답변
+- 📥 **Data Ingestion**: PDF 업로드 & 인덱싱
+- 📁 **Data Sources**: 데이터 소스 관리
+- 🕸️ **Graph Visualizer**: 지식 그래프 시각화
 
 ### 핵심 기능
 
