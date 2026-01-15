@@ -40,3 +40,4 @@ langchain-community>=0.1.0  # Community integrations
 
 # MCP Integration
 mcp>=0.9.0
+yfinance
