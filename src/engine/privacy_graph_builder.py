@@ -4,10 +4,12 @@ Refactored to use modular components:
 - KnowledgeExtractor (Ollama → JSON)
 - CypherTranslator (JSON → Cypher)
 - Neo4jClient (Cypher → Neo4j)
+- PDFParallelProcessor (Async parallel PDF processing with GPT-4o-mini)
 """
 
 import gc
 import time
+import asyncio
 from typing import Dict, List, Any, Generator, Optional
 import sys
 import os
@@ -27,6 +29,7 @@ from config import (
 from engine.extractor import KnowledgeExtractor
 from engine.translator import CypherTranslator
 from db.neo4j_client import Neo4jClient
+from engine.pdf_parallel_processor import PDFParallelProcessor
 
 try:
     import psutil
@@ -285,6 +288,99 @@ class PrivacyGraphBuilder:
         """
         chunks = ingestor.ingest_file(filepath)
         return await self.build_graph_sequential(chunks)
+    
+    async def build_graph_from_pdf_parallel(
+        self,
+        pdf_path: str,
+        max_concurrent: int = 5,
+        progress_callback: Optional[callable] = None
+    ) -> Dict[str, Any]:
+        """
+        Build graph from PDF using async parallel processing with GPT-4o-mini
+        
+        Args:
+            pdf_path: Path to PDF file
+            max_concurrent: Maximum concurrent API calls (default: 5 for 8GB RAM)
+            progress_callback: Optional async callback(page_num, status, message) for Streamlit updates
+            
+        Returns:
+            Statistics dict with processing results
+        """
+        print(f"🚀 Starting parallel PDF processing: {pdf_path}")
+        print(f"⚡ Max concurrent: {max_concurrent} pages")
+        start_time = time.time()
+        
+        # Initialize PDF processor
+        processor = PDFParallelProcessor(
+            max_concurrent=max_concurrent,
+            model="gpt-4o-mini",
+            timeout=60
+        )
+        
+        # Process all pages in parallel
+        results = await processor.process_pdf(pdf_path, progress_callback)
+        
+        # Convert results to graph and store in Neo4j
+        total_entities = 0
+        total_relationships = 0
+        total_queries = 0
+        
+        for page_result in results:
+            if page_result["status"] != "success":
+                print(f"⚠️  Page {page_result['page_num']} failed: {page_result['error']}")
+                self.stats["errors"] += 1
+                continue
+            
+            # Prepare metadata
+            metadata = {
+                "source": pdf_path,
+                "format": "pdf",
+                "page_number": page_result["page_num"],
+                "extraction_method": "gpt-4o-mini-parallel"
+            }
+            
+            # Build graph data
+            graph_data = {
+                "entities": page_result["entities"],
+                "relationships": page_result["relationships"]
+            }
+            
+            # Generate Cypher queries
+            queries = self.build_cypher_queries(graph_data, metadata)
+            
+            # Execute queries
+            if queries and self.neo4j_client:
+                success = await self.execute_queries(queries)
+                total_queries += success
+                print(f"✅ Page {page_result['page_num']}: {success}/{len(queries)} queries executed")
+            
+            total_entities += len(page_result["entities"])
+            total_relationships += len(page_result["relationships"])
+            self.stats["chunks_processed"] += 1
+        
+        elapsed = time.time() - start_time
+        
+        # Update stats
+        self.stats["entities_extracted"] += total_entities
+        self.stats["relationships_extracted"] += total_relationships
+        self.stats["queries_executed"] += total_queries
+        
+        # Print summary
+        print(f"\n✅ PDF processing completed in {elapsed:.1f}s")
+        print(f"📊 Statistics:")
+        print(f"   Total Pages: {processor.stats['total_pages']}")
+        print(f"   Processed: {processor.stats['processed_pages']}")
+        print(f"   Failed: {processor.stats['failed_pages']}")
+        print(f"   Entities: {total_entities}")
+        print(f"   Relationships: {total_relationships}")
+        print(f"   Queries Executed: {total_queries}")
+        print(f"   Errors: {self.stats['errors']}")
+        
+        return {
+            **self.stats,
+            "pdf_stats": processor.get_stats(),
+            "elapsed_time": elapsed
+        }
 
 
 # Test function

@@ -145,6 +145,7 @@ class FactorNode(BaseModel):
     model_config = {"extra": "allow"}
 
 
+
 class RegionNode(BaseModel):
     """Region 노드 - 지역"""
     id: str = Field(..., description="노드 고유 ID")
@@ -153,6 +154,57 @@ class RegionNode(BaseModel):
     code: Optional[str] = Field(None, description="지역 코드 (US, CN, ASIA)")
     source: Optional[str] = Field(None, description="데이터 출처")
     
+    model_config = {"extra": "allow"}
+
+
+# --- US Tech Giants Specific Node Models ---
+
+class ProductNode(BaseModel):
+    """Product 노드 - 제품/서비스"""
+    id: str = Field(..., description="노드 고유 ID")
+    name: str = Field(..., description="제품 이름")
+    type: str = Field(..., description="제품 타입 (product)")
+    status: Optional[str] = Field(None, description="상태 (active, discontinued, rumored)")
+    launch_date: Optional[str] = Field(None, description="출시일")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class RegulationNode(BaseModel):
+    """Regulation 노드 - 규제"""
+    id: str = Field(..., description="노드 고유 ID")
+    name: str = Field(..., description="규제 이름")
+    severity: Optional[str] = Field(None, description="심각도")
+    status: Optional[str] = Field(None, description="진행 상태")
+    jurisdiction: Optional[str] = Field(None, description="관할 구역")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class CatalystNode(BaseModel):
+    """Catalyst 노드 - 촉매제"""
+    id: str = Field(..., description="노드 고유 ID")
+    name: str = Field(..., description="촉매제 이름")
+    impact_horizon: Optional[str] = Field(None, description="영향 기간")
+    sentiment: Optional[str] = Field(None, description="센티먼트")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class RiskNode(BaseModel):
+    """Risk 노드 - 리스크"""
+    id: str = Field(..., description="노드 고유 ID")
+    name: str = Field(..., description="리스크 이름")
+    severity: Optional[str] = Field(None, description="심각도")
+    probability: Optional[str] = Field(None, description="발생 확률")
+    category: Optional[str] = Field(None, description="리스크 카테고리")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class TechNode(BaseModel):
+    """Tech 노드 - 기술"""
+    id: str = Field(..., description="노드 고유 ID")
+    name: str = Field(..., description="기술 이름")
+    type: Optional[str] = Field(None, description="기술 타입")
+    maturity: Optional[str] = Field(None, description="성숙도")
+    source: Optional[str] = Field(None, description="데이터 출처")
     model_config = {"extra": "allow"}
 
 
@@ -206,5 +258,39 @@ class LocatedInRelationship(BaseModel):
     timestamp: Optional[str] = Field(None, description="타임스탬프")
     source: Optional[str] = Field(None, description="데이터 출처")
     
+    model_config = {"extra": "allow"}
+
+
+# --- US Tech Giants Specific Relationships ---
+
+class CompetesWithRelationship(BaseModel):
+    """COMPETES_WITH 관계 - Actor vs Actor / Product vs Product"""
+    type: str = Field("COMPETES_WITH", description="관계 타입")
+    source_id: str = Field(..., description="Source ID")
+    target_id: str = Field(..., description="Target ID")
+    intensity: Optional[str] = Field(None, description="경쟁 강도 (high, medium, low)")
+    domain: Optional[str] = Field(None, description="경쟁 영역")
+    timestamp: Optional[str] = Field(None, description="타임스탬프")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class DependsOnRelationship(BaseModel):
+    """DEPENDS_ON 관계 - Product -> Tech (기술 의존)"""
+    type: str = Field("DEPENDS_ON", description="관계 타입")
+    source_id: str = Field(..., description="Product ID")
+    target_id: str = Field(..., description="Tech ID")
+    dependency_type: Optional[str] = Field(None, description="의존 유형 (core, optional)")
+    timestamp: Optional[str] = Field(None, description="타임스탬프")
+    source: Optional[str] = Field(None, description="데이터 출처")
+    model_config = {"extra": "allow"}
+
+class AffectsRelationship(BaseModel):
+    """AFFECTS 관계 - Regulation -> Actor/Product"""
+    type: str = Field("AFFECTS", description="관계 타입")
+    source_id: str = Field(..., description="Regulation ID")
+    target_id: str = Field(..., description="Target ID")
+    impact_type: Optional[str] = Field(None, description="영향 유형 (restriction, compliance_cost)")
+    timestamp: Optional[str] = Field(None, description="타임스탬프")
+    source: Optional[str] = Field(None, description="데이터 출처")
     model_config = {"extra": "allow"}
 

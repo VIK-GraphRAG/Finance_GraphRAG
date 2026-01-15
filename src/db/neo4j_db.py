@@ -29,7 +29,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 from utils import extract_text_from_pdf
 from models.neo4j_models import GraphStats
-from engine.executor import QueryExecutor
 
 
 class Neo4jDatabase:
@@ -267,6 +266,7 @@ class Neo4jDatabase:
         Neo4j의 통계를 가져오는 함수예요!
         규칙: Neo4j response는 Pydantic 모델로 반환 (raw dict 접근 금지)
         """
+        from engine.executor import QueryExecutor
         executor = QueryExecutor(uri=self.uri, username=self.username, password=self.password)
         try:
             return executor.get_graph_stats()

@@ -36,10 +36,25 @@ class EntityClassifier:
 5. Region (지역): 국가, 대륙, 시장
    예: "미국", "아시아", "신흥시장", "유럽", "중국"
 
-6. None: 위 카테고리에 해당하지 않음
+6. Product (제품/서비스): 기업이 제공하는 제품, 서비스, 플랫폼
+   예: "iPhone", "Azure", "ChatGPT", "AWS", "Vision Pro"
+
+7. Regulation (규제/소송): 정부 규제, 법적 소송, 반독점 조사
+   예: "EU AI법", "반독점 소송", "GDPR", "FTC 조사"
+
+8. Catalyst (촉매제): 주가나 실적에 긍정/부정적 영향을 줄 수 있는 이벤트나 요소
+   예: "AI 붐", "신제품 출시", "파트너십 체결", "코로나 팬데믹"
+
+9. Risk (리스크): 기업이나 시장에 위협이 되는 요소
+   예: "공급망 차질", "환율 변동", "경쟁 심화", "기술 유출"
+
+10. Tech (기술/칩): 핵심 기술, 반도체 칩, 아키텍처
+    예: "H100", "CUDA", "LLM", "3nm 공정", "Generative AI"
+
+11. None: 위 카테고리에 해당하지 않음
 
 응답 형식 (JSON만):
-{{"category": "Event/Actor/Asset/Factor/Region/None", "confidence": 0.0-1.0, "reasoning": "분류 이유"}}
+{{"category": "Event/Actor/Asset/Factor/Region/Product/Regulation/Catalyst/Risk/Tech/None", "confidence": 0.0-1.0, "reasoning": "분류 이유"}}
 """
     
     def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
@@ -166,7 +181,10 @@ class EntityClassifier:
         Returns:
             Neo4j 노드 타입 (Event, Actor, Asset, Factor, Region) 또는 None
         """
-        valid_categories = ["Event", "Actor", "Asset", "Factor", "Region"]
+        valid_categories = [
+            "Event", "Actor", "Asset", "Factor", "Region", 
+            "Product", "Regulation", "Catalyst", "Risk", "Tech"
+        ]
         
         if category in valid_categories:
             return category
@@ -279,6 +297,40 @@ class EntityClassifier:
             base_properties.update({
                 "type": entity_data.get("type", region_type),
                 "code": entity_data.get("code", region_code)
+            })
+
+        # --- US Tech Giants Specific Categories ---
+        elif category == "Product":
+            base_properties.update({
+                "type": "product",
+                "status": entity_data.get("status", "active"),  # active, discontinued, rumored
+                "launch_date": entity_data.get("launch_date", "")
+            })
+
+        elif category == "Regulation":
+             base_properties.update({
+                "severity": entity_data.get("severity", "medium"), # high, medium, low
+                "status": entity_data.get("status", "ongoing"),    # ongoing, settled, proposed
+                "jurisdiction": entity_data.get("jurisdiction", "global")
+            })
+
+        elif category == "Catalyst":
+            base_properties.update({
+                "impact_horizon": entity_data.get("impact_horizon", "short_term"), # short_term, mid_term, long_term
+                "sentiment": entity_data.get("sentiment", "positive") # positive, negative, neutral
+            })
+
+        elif category == "Risk":
+            base_properties.update({
+                "severity": entity_data.get("severity", "high"),
+                "probability": entity_data.get("probability", "medium"),
+                "category": entity_data.get("category", "market") # market, operational, regulatory
+            })
+
+        elif category == "Tech":
+            base_properties.update({
+                "type": entity_data.get("type", "hardware"), # hardware, software, architecture
+                "maturity": entity_data.get("maturity", "emerging") # emerging, mature, legacy
             })
         
         return base_properties

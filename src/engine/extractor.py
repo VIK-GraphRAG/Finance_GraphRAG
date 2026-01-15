@@ -29,7 +29,7 @@ class KnowledgeExtractor:
                  model: str = None,
                  base_url: str = None,
                  max_retries: int = 3,
-                 timeout: int = 60):
+                 timeout: int = 180):
         """
         Initialize the knowledge extractor
         
@@ -84,9 +84,13 @@ Required JSON format:
 Entity Types:
 - COMPANY: Business organizations
 - PERSON: Individuals (CEOs, executives, employees)
-- PRODUCT: Products or services
+- PRODUCT: Products, services, platforms (e.g., iPhone, Azure)
 - LOCATION: Geographic locations
 - FINANCIAL_METRIC: Revenue, profit, market cap, etc.
+- REGULATION: Laws, lawsuits, antitrust investigations
+- CATALYST: Events affecting stock price (AI boom, pandemic)
+- RISK: Threats to business (supply chain, competition)
+- TECH: Core technologies, chips, architectures (e.g., H100, CUDA)
 
 Common Relationship Types:
 - SUPPLIES, PURCHASES, COMPETES_WITH (business operations)
@@ -94,6 +98,9 @@ Common Relationship Types:
 - HAS_DEBT, OWNS_ASSET, INVESTS_IN (financial)
 - LOCATED_IN, OPERATES_IN (geographic)
 - PRODUCES, MANUFACTURES (production)
+- AFFECTS (regulation -> company/product)
+- DEPENDS_ON (product -> tech)
+- IMPACTS (catalyst/risk -> company/metric)
 
 Text to analyze (max 500 characters):
 {text[:500]}
@@ -124,6 +131,7 @@ JSON output:"""
         
         for attempt in range(self.max_retries):
             try:
+                print(f"🤖 Calling Ollama ({self.model}) - Attempt {attempt + 1}/{self.max_retries}, timeout={self.timeout}s")
                 response = await asyncio.wait_for(
                     self.client.chat(
                         model=self.model,
@@ -144,6 +152,7 @@ JSON output:"""
                     ),
                     timeout=self.timeout
                 )
+                print(f"✅ Ollama response received")
                 
                 # Extract content from response
                 content = response.get("message", {}).get("content", "")
