@@ -102,3 +102,31 @@ python -m black src/
 ## 📝 License
 
 MIT License - See LICENSE file for details
+
+## 🕸️ Graph Visualization
+
+### 실시간 그래프 시각화
+```bash
+streamlit run src/graph_visualizer.py --server.port 8502
+```
+
+Visit: http://localhost:8502
+
+### 기능
+- **All Nodes**: 전체 그래프 보기
+- **Company Focus**: 특정 기업 중심 네트워크
+- **Risk Analysis**: 리스크 관계 시각화
+- **Custom Query**: Cypher 쿼리 직접 입력
+
+### 색상 구분
+- 🔴 Company (기업)
+- 🔵 Country (국가)
+- 🟢 Industry (산업)
+- 🟠 MacroIndicator (거시경제)
+- 🟣 FinancialMetric (재무지표)
+
+### 인터랙티브 기능
+- 노드 드래그로 위치 조정
+- 클릭으로 연결된 노드 확인
+- 줌/팬으로 그래프 탐색
+- 물리 시뮬레이션으로 자동 배치
