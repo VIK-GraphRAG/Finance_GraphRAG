@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import requests
 import sys
 import os
@@ -656,7 +657,7 @@ with col3:
 st.markdown("---")
 
 # Main Tabs
-tab1, tab2, tab3 = st.tabs(["Query Interface", "Data Ingestion", "Data Sources"])
+tab1, tab2, tab3, tab4 = st.tabs(["Query Interface", "Data Ingestion", "Data Sources", "🕸️ Graph Visualizer"])
 
 # Tab 1: Query Interface
 with tab1:
@@ -1272,5 +1273,322 @@ with tab3:
                         st.rerun()
     else:
         st.info("No URLs indexed yet.")
+
+# Tab 4: Graph Visualizer
+with tab4:
+    st.markdown("### 🕸️ Knowledge Graph Visualizer")
+    st.markdown("실시간 지식 그래프 네트워크를 탐색하세요")
+    
+    # Helper functions for graph visualization
+    def fetch_graph_data(query: str = None, limit: int = 100):
+        """Fetch graph data from Neo4j"""
+        from neo4j import GraphDatabase
+        
+        if not query:
+            query = f"MATCH (n)-[r]->(m) RETURN n, r, m LIMIT {limit}"
+        
+        try:
+            driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+            nodes = {}
+            edges = []
+            
+            with driver.session() as session:
+                result = session.run(query)
+                
+                for record in result:
+                    # Process source node
+                    if 'n' in record:
+                        n = record['n']
+                        node_id = n.element_id
+                        if node_id not in nodes:
+                            nodes[node_id] = {
+                                'id': node_id,
+                                'label': n.get('name', str(n.element_id)[:8]),
+                                'title': f"{list(n.labels)[0] if n.labels else 'Node'}: {n.get('name', 'Unknown')}",
+                                'group': list(n.labels)[0] if n.labels else 'default',
+                                'properties': dict(n)
+                            }
+                    
+                    # Process target node
+                    if 'm' in record:
+                        m = record['m']
+                        node_id = m.element_id
+                        if node_id not in nodes:
+                            nodes[node_id] = {
+                                'id': node_id,
+                                'label': m.get('name', str(m.element_id)[:8]),
+                                'title': f"{list(m.labels)[0] if m.labels else 'Node'}: {m.get('name', 'Unknown')}",
+                                'group': list(m.labels)[0] if m.labels else 'default',
+                                'properties': dict(m)
+                            }
+                    
+                    # Process relationship
+                    if 'r' in record:
+                        r = record['r']
+                        edges.append({
+                            'from': record['n'].element_id,
+                            'to': record['m'].element_id,
+                            'label': r.type,
+                            'title': f"{r.type}: {dict(r)}",
+                            'arrows': 'to'
+                        })
+            
+            driver.close()
+            return list(nodes.values()), edges
+        except Exception as e:
+            st.error(f"Neo4j 연결 오류: {e}")
+            return [], []
+    
+    def create_vis_html(nodes, edges):
+        """Create vis.js HTML for graph visualization"""
+        
+        colors = {
+            'Company': '#FF6B6B',
+            'Country': '#4ECDC4',
+            'Industry': '#45B7D1',
+            'MacroIndicator': '#FFA07A',
+            'FinancialMetric': '#98D8C8',
+            'default': '#95A5A6'
+        }
+        
+        for node in nodes:
+            group = node.get('group', 'default')
+            node['color'] = colors.get(group, colors['default'])
+            node['shape'] = 'dot'
+            node['size'] = 20
+        
+        nodes_json = json.dumps(nodes)
+        edges_json = json.dumps(edges)
+        
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+            <style>
+                body {{
+                    margin: 0;
+                    padding: 0;
+                    background-color: #0e1117;
+                }}
+                #mynetwork {{
+                    width: 100%;
+                    height: 700px;
+                    border: 1px solid #2d3142;
+                    background-color: #1a1d29;
+                }}
+                .legend {{
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(30, 35, 48, 0.9);
+                    padding: 15px;
+                    border-radius: 8px;
+                    color: white;
+                    font-family: monospace;
+                    font-size: 12px;
+                    border: 1px solid #4a9eff;
+                }}
+                .legend-item {{
+                    display: flex;
+                    align-items: center;
+                    margin: 5px 0;
+                }}
+                .legend-color {{
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div id="mynetwork"></div>
+            <div class="legend">
+                <div style="font-weight: bold; margin-bottom: 10px;">📊 Node Types</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FF6B6B;"></div>
+                    <span>Company</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ECDC4;"></div>
+                    <span>Country</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #45B7D1;"></div>
+                    <span>Industry</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFA07A;"></div>
+                    <span>MacroIndicator</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #98D8C8;"></div>
+                    <span>FinancialMetric</span>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                var nodes = new vis.DataSet({nodes_json});
+                var edges = new vis.DataSet({edges_json});
+                
+                var container = document.getElementById('mynetwork');
+                var data = {{
+                    nodes: nodes,
+                    edges: edges
+                }};
+                
+                var options = {{
+                    nodes: {{
+                        font: {{
+                            color: '#ffffff',
+                            size: 14
+                        }},
+                        borderWidth: 2,
+                        borderWidthSelected: 4
+                    }},
+                    edges: {{
+                        width: 2,
+                        color: {{
+                            color: '#4a9eff',
+                            highlight: '#6bb3ff',
+                            hover: '#6bb3ff'
+                        }},
+                        font: {{
+                            color: '#ffffff',
+                            size: 12,
+                            background: 'rgba(30, 35, 48, 0.8)'
+                        }},
+                        smooth: {{
+                            type: 'continuous'
+                        }}
+                    }},
+                    physics: {{
+                        enabled: true,
+                        barnesHut: {{
+                            gravitationalConstant: -8000,
+                            centralGravity: 0.3,
+                            springLength: 150,
+                            springConstant: 0.04
+                        }},
+                        stabilization: {{
+                            iterations: 150
+                        }}
+                    }},
+                    interaction: {{
+                        hover: true,
+                        tooltipDelay: 200,
+                        navigationButtons: true,
+                        keyboard: true
+                    }}
+                }};
+                
+                var network = new vis.Network(container, data, options);
+                
+                network.on("stabilizationIterationsDone", function () {{
+                    network.setOptions({{ physics: false }});
+                }});
+                
+                network.on("selectNode", function(params) {{
+                    var nodeId = params.nodes[0];
+                    var connectedNodes = network.getConnectedNodes(nodeId);
+                    console.log("Selected:", nodes.get(nodeId).label);
+                    console.log("Connected to:", connectedNodes.map(id => nodes.get(id).label));
+                }});
+            </script>
+        </body>
+        </html>
+        """
+        
+        return html
+    
+    # Sidebar controls in expander
+    with st.expander("⚙️ Visualization Settings", expanded=True):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            viz_mode = st.selectbox(
+                "Visualization Mode",
+                ["All Nodes", "Company Focus", "Risk Analysis", "Custom Query"],
+                help="Choose what to visualize"
+            )
+        
+        with col2:
+            limit = st.slider("Max Nodes", 10, 500, 100, 10)
+        
+        if viz_mode == "Company Focus":
+            company = st.selectbox(
+                "Select Company",
+                ["Nvidia", "TSMC", "AMD", "Intel", "Samsung Electronics"]
+            )
+        
+        if viz_mode == "Custom Query":
+            custom_query = st.text_area(
+                "Cypher Query",
+                "MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 50",
+                height=100
+            )
+        
+        refresh = st.button("🔄 Refresh Graph", type="primary", use_container_width=True)
+    
+    # Generate query based on mode
+    query = None
+    if viz_mode == "All Nodes":
+        query = f"MATCH (n)-[r]->(m) RETURN n, r, m LIMIT {limit}"
+    elif viz_mode == "Company Focus":
+        query = f"""
+        MATCH (c:Company {{name: '{company}'}})-[r*1..2]-(related)
+        WITH c, r, related
+        MATCH (c)-[direct_r]-(related)
+        RETURN c as n, direct_r as r, related as m
+        LIMIT {limit}
+        """
+    elif viz_mode == "Risk Analysis":
+        query = f"""
+        MATCH (m:MacroIndicator)-[r1:IMPACTS|AFFECTS]->(target)
+        MATCH (target)-[r2:OPERATES_IN|LOCATED_IN]-(entity)
+        RETURN m as n, r1 as r, target as m
+        UNION
+        MATCH (target)-[r2]-(entity)
+        WHERE target:Country OR target:Industry
+        RETURN target as n, r2 as r, entity as m
+        LIMIT {limit}
+        """
+    elif viz_mode == "Custom Query":
+        query = custom_query
+    
+    # Fetch and display graph
+    with st.spinner("🔍 Fetching graph data..."):
+        nodes, edges = fetch_graph_data(query, limit)
+    
+    # Metrics
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("📍 Nodes", len(nodes))
+    with col2:
+        st.metric("🔗 Edges", len(edges))
+    with col3:
+        density = len(edges) / max(len(nodes), 1)
+        st.metric("📊 Density", f"{density:.2f}")
+    
+    if nodes and edges:
+        # Create and display visualization
+        html = create_vis_html(nodes, edges)
+        components.html(html, height=750, scrolling=False)
+        
+        # Show node details
+        with st.expander("📋 Node Details (First 10)"):
+            node_data = {
+                node['label']: {
+                    'type': node['group'],
+                    'properties': node.get('properties', {})
+                }
+                for node in nodes[:10]
+            }
+            st.json(node_data)
+    else:
+        st.warning("⚠️ No graph data found")
+        st.info("💡 Run seed_financial_data.py to populate the graph")
+        st.code("python3 seed_financial_data.py", language="bash")
 
 
