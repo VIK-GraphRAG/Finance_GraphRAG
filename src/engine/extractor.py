@@ -16,7 +16,7 @@ except ImportError:
     OLLAMA_AVAILABLE = False
     print("⚠️  ollama not installed. Install with: pip install ollama")
 
-from config import OLLAMA_BASE_URL, LOCAL_MODELS
+from ..config import OLLAMA_BASE_URL, LOCAL_MODELS
 
 
 class KnowledgeExtractor:

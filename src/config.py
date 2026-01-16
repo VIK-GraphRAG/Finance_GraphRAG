@@ -65,6 +65,12 @@ TAVILY_API_KEY: str = os.getenv("TAVILY_API_KEY", "")
 MCP_CONFIG_PATH: str = os.getenv("MCP_CONFIG_PATH", "mcp-config.json")
 MCP_LAZY_LOAD: bool = os.getenv("MCP_LAZY_LOAD", "true").lower() in ("true", "1", "yes")
 
+# Perplexity API configuration (for real-time web search)
+PERPLEXITY_API_KEY: str = os.getenv("PERPLEXITY_API_KEY", "")
+PERPLEXITY_BASE_URL: str = "https://api.perplexity.ai"
+PERPLEXITY_MODEL: str = os.getenv("PERPLEXITY_MODEL", "llama-3.1-sonar-small-128k-online")
+PERPLEXITY_MAX_RESULTS: int = int(os.getenv("PERPLEXITY_MAX_RESULTS", "5"))
+
 # Domain schema configuration (Event-Actor-Asset-Factor-Region)
 ENABLE_DOMAIN_SCHEMA: bool = os.getenv("ENABLE_DOMAIN_SCHEMA", "true").lower() in ("true", "1", "yes")
 DOMAIN_CLASSIFICATION_MODEL: str = os.getenv("DOMAIN_CLASSIFICATION_MODEL", "gpt-4o-mini")
