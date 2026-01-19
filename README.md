@@ -1,232 +1,342 @@
-# VIK AI - Privacy-First Financial GraphRAG
+# Finance GraphRAG 🚀
 
-Enterprise-grade financial intelligence system powered by knowledge graphs.
+**Knowledge Graph-Based Financial Analysis System**  
+반도체 및 금융 산업 분석을 위한 GraphRAG 시스템
 
-## 🚀 Quick Start
+[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109-green.svg)](https://fastapi.tiangolo.com/)
+[![Neo4j](https://img.shields.io/badge/Neo4j-5.15-red.svg)](https://neo4j.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.31-orange.svg)](https://streamlit.io/)
+
+---
+
+## 📊 프로젝트 개요
+
+이 프로젝트는 **Neo4j 그래프 데이터베이스**와 **Large Language Models (LLMs)**를 결합하여 복잡한 금융/반도체 산업 분석을 수행하는 시스템입니다.
+
+### ✨ 주요 기능
+
+- 🔍 **GraphRAG**: 지식 그래프 기반 검색 및 추론
+- 🤖 **Multi-Agent System**: 질문 분해 → 정보 수집 → 분석 → 리포트 작성
+- 📄 **PDF Processing**: OpenAI GPT-4o-mini를 사용한 고품질 엔티티 추출
+- 💾 **Persistent Storage**: Neo4j에 영구 저장 (세션 종료 후에도 유지)
+- 🎨 **Interactive UI**: Streamlit 기반 사용자 인터페이스
+- 📈 **Graph Visualization**: 실시간 그래프 시각화
+- 📝 **Citation System**: 모든 답변에 출처 번호 참조
+
+---
+
+## 🗂️ 프로젝트 구조
+
+```
+Finance_GraphRAG/
+├── 📄 설정 파일
+│   ├── .env, requirements.txt
+│   ├── docker-compose.yml
+│   └── Dockerfile
+│
+├── 💻 src/                 # 메인 소스 코드
+│   ├── app.py             # FastAPI 서버
+│   ├── streamlit_app.py   # Streamlit UI
+│   ├── agents/            # Multi-Agent 시스템
+│   ├── engine/            # GraphRAG 엔진
+│   ├── db/                # Neo4j 데이터베이스
+│   └── utils/             # 유틸리티
+│
+├── 🧪 scripts/            # 관리 스크립트
+│   ├── upload/            # PDF 업로드
+│   ├── seed/              # 데이터 시딩
+│   ├── test/              # 테스트
+│   └── utils/             # 유틸리티
+│
+├── 📊 data/baseline/      # Baseline 데이터
+│   └── *.pdf              # 반도체/금융 PDF
+│
+└── 📚 문서
+    ├── README.md          # 이 파일
+    ├── PROJECT_STRUCTURE.md
+    └── README_UPLOAD.md
+```
+
+📖 **상세 구조**: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) 참조
+
+---
+
+## 🚀 빠른 시작
+
+### 1️⃣ 환경 설정
 
 ```bash
-# 1. Install dependencies
+# 저장소 클론
+cd /Users/gyuteoi/Desktop/Finance_GraphRAG
+
+# 환경 변수 설정
+cp .env.example .env
+# .env 파일을 열어서 API 키 입력
+```
+
+### 2️⃣ Docker로 실행 (권장)
+
+```bash
+# Docker Compose로 모든 서비스 시작
+docker-compose up -d
+
+# 로그 확인
+docker-compose logs -f
+```
+
+### 3️⃣ 직접 실행
+
+```bash
+# Python 의존성 설치
 pip install -r requirements.txt
 
-# 2. Start Neo4j (Docker)
-docker run -d \
-  --name neo4j \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/password \
-  neo4j:latest
+# Neo4j 시작 (별도 설치 필요)
+# 또는 docker-compose up -d neo4j
 
-# 3. Configure environment
-cp .env.backup .env
-# Edit .env with your settings
-
-# 4. Start services
-./start.sh
+# 서버 시작
+./restart.sh
 ```
 
-Visit: http://localhost:8501
+### 4️⃣ 접속
 
-## ✨ Features
+- **Streamlit UI**: http://localhost:8501
+- **FastAPI Docs**: http://localhost:8000/docs
+- **Neo4j Browser**: http://localhost:7474
 
-- **Privacy-First**: Offline processing with local LLMs (Ollama)
-- **Graph Intelligence**: Neo4j-powered knowledge graph
-- **Multi-Hop Reasoning**: 2-3 hop logical inference for hidden insights
-- **Data Integration**: Merge PDF + CSV + JSON into unified knowledge graph
-- **Multi-Agent**: Collaborative AI agents for deep analysis
-- **8GB RAM Optimized**: Efficient memory management
-- **Real-time Analysis**: Fast query processing with caching
-- **Path Visualization**: Interactive reasoning path display
+---
 
-## 📦 Architecture
+## 📊 데이터 업로드
 
-```
-src/
-├── agents/          # Multi-agent system (Analyst, Planner, Writer)
-├── engine/          # Graph processing engine
-│   ├── extractor.py       # Entity/Relationship extraction
-│   ├── translator.py      # JSON → Cypher
-│   ├── integrator.py      # PDF + CSV + JSON integration
-│   ├── reasoner.py        # Multi-hop reasoning engine
-│   ├── graphrag_engine.py # Core engine
-│   └── privacy_graph_builder.py # Privacy-optimized builder
-├── db/              # Neo4j integration
-├── mcp/             # External tool integration
-├── streamlit_app.py # Web UI
-└── reasoning_ui.py  # Multi-hop reasoning UI
-```
-
-## 🔧 Configuration
-
-Key environment variables in `.env`:
+### PDF 파일 업로드
 
 ```bash
-# Mode
-RUN_MODE=API              # API (OpenAI) or LOCAL (Ollama)
-PRIVACY_MODE=true         # Enable privacy-first mode
+# 작은 PDF 빠르게 업로드 (4개)
+python scripts/upload/quick_upload_pdfs.py
 
-# OpenAI
+# 모든 baseline PDF 업로드
+python scripts/upload/upload_baseline_pdfs.py
+```
+
+### 기본 데이터 시딩
+
+```bash
+# 반도체 온톨로지 시딩
+python scripts/seed/seed_semiconductor.py
+
+# 금융 데이터 시딩
+python scripts/seed/seed_financial_data.py
+```
+
+📖 **상세 가이드**: [README_UPLOAD.md](README_UPLOAD.md) 참조
+
+---
+
+## 💡 사용 예시
+
+### 1. Streamlit UI에서 질문하기
+
+1. http://localhost:8501 접속
+2. **Query 탭** 선택
+3. 질문 입력: "Nvidia의 supply chain risk는 무엇인가?"
+4. 결과 확인 (citation 번호 포함)
+
+### 2. FastAPI로 질문하기
+
+```bash
+curl -X POST "http://localhost:8000/query" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "What are the risks in TSMC supply chain?",
+    "mode": "local",
+    "search_type": "local"
+  }'
+```
+
+### 3. Multi-Agent 모드 사용
+
+```bash
+curl -X POST "http://localhost:8000/agentic-query" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Analyze Nvidia H100 GPU supply chain dependencies"
+  }'
+```
+
+---
+
+## 🏗️ 시스템 아키텍처
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+│  Streamlit  │────▶│   FastAPI    │────▶│   Neo4j     │
+│     UI      │     │   Backend    │     │   Database  │
+└─────────────┘     └──────────────┘     └─────────────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │ Multi-Agent  │
+                    │   System     │
+                    └──────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+   ┌─────────┐      ┌──────────┐      ┌──────────┐
+   │ Planner │      │Collector │      │ Analyst  │
+   └─────────┘      └──────────┘      └──────────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   Writer     │
+                    │  (Reporter)  │
+                    └──────────────┘
+```
+
+### 데이터 흐름
+
+```
+PDF Upload → Entity Extraction → Neo4j Storage
+                                      ↓
+User Query → Query Analysis → Neo4j Retrieval → Reasoning → Report
+                                                              ↓
+                                                      Citation [1][2][3]
+```
+
+---
+
+## 🧪 테스트
+
+### 시스템 테스트
+
+```bash
+# Neo4j 연결 테스트
+python scripts/test/test_neo4j_direct.py
+
+# 백엔드 테스트
+python scripts/test/test_backend.py
+
+# 전체 시스템 테스트
+python scripts/test/test_full_system.py
+```
+
+### 데이터 확인
+
+```bash
+# Neo4j 데이터 확인
+python scripts/utils/check_neo4j_data.py
+
+# 데이터베이스 뷰어
+python scripts/utils/view_database.py
+```
+
+---
+
+## 📝 환경 변수
+
+`.env` 파일에 다음 변수를 설정하세요:
+
+```bash
+# OpenAI API
 OPENAI_API_KEY=sk-...
+OPENAI_BASE_URL=https://api.openai.com/v1
 
-# Neo4j
+# Perplexity API (옵션)
+PERPLEXITY_API_KEY=pplx-...
+
+# Neo4j Database
 NEO4J_URI=bolt://localhost:7687
-NEO4J_PASSWORD=password
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your_password
 
-# Ollama (for Privacy Mode)
-OLLAMA_BASE_URL=http://localhost:11434
-```
+# LLM Models
+LLM_MODEL=gpt-4o-mini
+EMBEDDING_MODEL=text-embedding-3-small
 
-## 📊 Usage
-
-### PDF Analysis
-1. Go to "Data Ingestion" tab
-2. Upload PDF document
-3. System extracts entities and builds knowledge graph
-
-### Query Interface
-1. Go to "Query Interface" tab
-2. Ask questions about your data
-3. Get citation-backed answers with confidence scores
-
-### Advanced Settings
-- **Temperature**: Control creativity (0.0-2.0)
-- **Retrieval Chunks**: Number of context chunks (5-50)
-- **Web Search**: Enable real-time web data
-- **Multi-Agent**: Use collaborative AI pipeline
-
-## 🛠️ Development
-
-```bash
-# Run tests
-python -m pytest tests/
-
-# Check lints
-python -m flake8 src/
-
-# Format code
-python -m black src/
-```
-
-## 📝 License
-
-MIT License - See LICENSE file for details
-
-## 🕸️ Graph Visualization
-
-### 실시간 그래프 시각화
-메인 Streamlit UI의 **"🕸️ Graph Visualizer"** 탭에서 바로 사용 가능합니다!
-
-```bash
-./start.sh
-# 또는
-streamlit run src/streamlit_app.py --server.port 8501
-```
-
-Visit: http://localhost:8501 → **Graph Visualizer 탭**
-
-### 기능
-- **All Nodes**: 전체 그래프 보기
-- **Company Focus**: 특정 기업 중심 네트워크
-- **Risk Analysis**: 리스크 관계 시각화
-- **Custom Query**: Cypher 쿼리 직접 입력
-
-### 색상 구분
-- 🔴 Company (기업)
-- 🔵 Country (국가)
-- 🟢 Industry (산업)
-- 🟠 MacroIndicator (거시경제)
-- 🟣 FinancialMetric (재무지표)
-
-### 인터랙티브 기능
-- 노드 드래그로 위치 조정
-- 클릭으로 연결된 노드 확인
-- 줌/팬으로 그래프 탐색
-- 물리 시뮬레이션으로 자동 배치
-- 실시간 노드 검색 및 필터링
-
----
-
-## 🧠 Multi-Hop Reasoning System
-
-### 통합된 인터페이스
-모든 기능이 **하나의 Streamlit 앱 (Port 8501)** 에 통합되었습니다!
-
-```bash
-./start.sh
-```
-
-Visit: http://localhost:8501
-
-**탭 구조:**
-- 📊 **Query Interface**: 질문 & 답변
-- 📥 **Data Ingestion**: PDF 업로드 & 인덱싱
-- 📁 **Data Sources**: 데이터 소스 관리
-- 🕸️ **Graph Visualizer**: 지식 그래프 시각화
-
-### 핵심 기능
-
-#### 1. 데이터 통합 (Data Integration)
-- **PDF + CSV + JSON** 통합 인덱싱
-- 엔티티 자동 병합 (예: 'NVDA' → 'Nvidia')
-- 지표 데이터 연결
-
-#### 2. 멀티홉 추론 (Multi-Hop Reasoning)
-- **2-3 hop** 논리적 추론 체인
-- A → B → C → D 인과관계 분석
-- 숨겨진 리스크 발견
-
-#### 3. 추론 경로 시각화
-- 인터랙티브 경로 그래프
-- 노드 및 관계 상세 정보
-- 신뢰도 기반 색상 코딩
-
-### 사용 예시
-
-```python
-# 질문: "How does Taiwan tension affect Nvidia?"
-
-# 추론 결과:
-💡 Because Nvidia depends on TSMC (high criticality), 
-   and TSMC is located in Taiwan, and Taiwan faces 
-   geopolitical tension, therefore Nvidia is exposed 
-   to significant supply chain disruption risk.
-
-📊 Confidence: 85%
-
-🔗 Reasoning Path:
-   Taiwan Strait Tension → Taiwan → TSMC → Nvidia
-```
-
-### 고급 사용법
-
-자세한 내용은 [Multi-Hop Reasoning Guide](MULTIHOP_REASONING_GUIDE.md) 참조
-
-### API 사용
-```python
-import asyncio
-from engine.reasoner import MultiHopReasoner
-
-async def analyze():
-    reasoner = MultiHopReasoner()
-    result = await reasoner.reason(
-        question="Nvidia의 공급망 리스크는?",
-        max_hops=3
-    )
-    print(result['inference'])
-    reasoner.close()
-
-asyncio.run(analyze())
+# Privacy Mode (옵션)
+PRIVACY_MODE=false
 ```
 
 ---
 
-## 🧪 Testing
+## 📚 문서
 
-### 멀티홉 시스템 테스트
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - 프로젝트 구조 상세 설명
+- [README_UPLOAD.md](README_UPLOAD.md) - PDF 업로드 가이드
+- [scripts/README.md](scripts/README.md) - Scripts 사용법
+- [prd.md](prd.md) - 제품 요구사항 문서
+
+---
+
+## 🔧 개발
+
+### 새로운 Agent 추가
+
+1. `src/agents/`에 새 에이전트 클래스 생성
+2. `BaseAgent` 상속
+3. `execute()` 메서드 구현
+4. `langgraph_workflow.py`에 통합
+
+### 새로운 엔드포인트 추가
+
+1. `src/app.py`에 FastAPI 라우터 추가
+2. `src/streamlit_app.py`에 UI 컴포넌트 추가
+
+---
+
+## 🐛 트러블슈팅
+
+### Neo4j 연결 실패
+
 ```bash
-python test_multihop_system.py
+# Docker 컨테이너 확인
+docker-compose ps
+
+# Neo4j 로그 확인
+docker-compose logs neo4j
+
+# Neo4j 재시작
+docker-compose restart neo4j
 ```
 
-테스트 항목:
-1. ✅ Entity Resolver - 엔티티 이름 정규화
-2. ✅ Data Integrator - CSV/JSON 통합
-3. ✅ Multi-Hop Reasoner - 추론 엔진
-4. ✅ End-to-End - 전체 워크플로우
+### API 서버 오류
+
+```bash
+# 로그 확인
+tail -f logs/*.log
+
+# 서버 재시작
+./restart.sh
+```
+
+### PDF 업로드 실패
+
+```bash
+# 단일 PDF 테스트
+python scripts/upload/test_upload_one_pdf.py
+
+# API 서버 상태 확인
+curl http://localhost:8000/health
+```
+
+---
+
+## 🤝 기여
+
+이 프로젝트는 개인 프로젝트입니다. 
+
+---
+
+## 📄 라이선스
+
+이 프로젝트는 개인 사용을 위한 것입니다.
+
+---
+
+## 📞 문의
+
+문제가 발생하면 Issue를 생성하거나 로그를 확인하세요.
+
+---
+
+**Last Updated**: 2026-01-19  
+**Version**: 2.0 (Refactored Structure)
