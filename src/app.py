@@ -950,11 +950,11 @@ async def ingest_pdf(file: UploadFile = File(...)):
         
         extractor = KnowledgeExtractor()
         
-        chunk_size = 500
+        chunk_size = 1000  # 500 → 1000으로 증가 (요청 횟수 50% 감소)
         chunks = [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
         
         # 청크 수 제한 (처리 시간 단축)
-        max_chunks = 30  # 최대 30개 청크만 처리 (약 15,000자)
+        max_chunks = 20  # 최대 20개 청크 (약 20,000자, 청크 크기 증가로 커버량 유지)
         if len(chunks) > max_chunks:
             print(f"⚠️ 청크 수 제한: {len(chunks)} → {max_chunks} (처리 시간 단축)")
             chunks = chunks[:max_chunks]
@@ -962,18 +962,29 @@ async def ingest_pdf(file: UploadFile = File(...)):
         all_entities = []
         all_relationships = []
 
-        print(f"🔒 Processing {len(chunks)} chunks with Local Ollama...")
+        print(f"🔒 Processing {len(chunks)} chunks with Local Ollama (parallel)...")
 
-        for i, chunk in enumerate(chunks):
-            if i > 0 and i % 5 == 0:
-                print(f"   Progress: {i}/{len(chunks)} chunks ({i*100//len(chunks)}%)")
+        # 병렬 처리로 속도 향상 (동시에 3개씩 처리)
+        import asyncio
+        batch_size = 3
+        
+        for batch_start in range(0, len(chunks), batch_size):
+            batch = chunks[batch_start:batch_start + batch_size]
+            print(f"   Progress: {batch_start}/{len(chunks)} chunks ({batch_start*100//len(chunks)}%)")
             
+            # 배치 내 청크들을 동시 처리
+            tasks = [extractor.extract_entities(chunk) for chunk in batch]
             try:
-                extracted = await extractor.extract_entities(chunk)
-                all_entities.extend(extracted.get("entities", []))
-                all_relationships.extend(extracted.get("relationships", []))
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                
+                for i, result in enumerate(results):
+                    if isinstance(result, Exception):
+                        print(f"⚠️ Chunk {batch_start + i} failed: {result}")
+                        continue
+                    all_entities.extend(result.get("entities", []))
+                    all_relationships.extend(result.get("relationships", []))
             except Exception as e:
-                print(f"⚠️ Chunk {i} extraction failed: {e}")
+                print(f"⚠️ Batch processing failed: {e}")
                 continue
 
         print(f"✅ Extracted {len(all_entities)} entities, {len(all_relationships)} relationships")
