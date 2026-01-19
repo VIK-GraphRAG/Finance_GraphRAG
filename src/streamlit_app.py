@@ -148,15 +148,38 @@ with tab1:
                     
                     # Display answer
                     st.markdown("### Analysis Result")
-                    st.markdown(f'<div class="report-container">{answer}</div>', unsafe_allow_html=True)
                     
-                    # Display sources
+                    # Citation 번호를 클릭 가능한 링크로 변환
+                    formatted_answer = answer
                     if sources:
-                        with st.expander(f"Sources ({len(sources)})"):
-                            for i, source in enumerate(sources[:5], 1):
-                                st.markdown(f"**[{i}]** {source.get('file', 'Unknown')}")
-                                if source.get('excerpt'):
-                                    st.caption(source['excerpt'][:200] + "...")
+                        import re
+                        # [1], [2] 같은 citation을 강조 표시
+                        for i in range(1, len(sources) + 1):
+                            formatted_answer = formatted_answer.replace(
+                                f'[{i}]', 
+                                f'<sup><strong><a href="#source{i}" style="color: #4a9eff; text-decoration: none;">[{i}]</a></strong></sup>'
+                            )
+                    
+                    st.markdown(f'<div class="report-container">{formatted_answer}</div>', unsafe_allow_html=True)
+                    
+                    # Display sources with anchors
+                    if sources:
+                        st.markdown("---")
+                        st.markdown("### 📚 참조 자료")
+                        for i, source in enumerate(sources, 1):
+                            source_id = f"source{i}"
+                            st.markdown(
+                                f'<div id="{source_id}" style="padding: 0.5rem; margin: 0.5rem 0; background: #1e2330; border-left: 3px solid #4a9eff; border-radius: 4px;">'
+                                f'<strong style="color: #4a9eff;">[{i}]</strong> '
+                                f'<span style="color: #e0e0e0;">{source.get("file", "Unknown")}</span>',
+                                unsafe_allow_html=True
+                            )
+                            if source.get('url'):
+                                st.markdown(f'&nbsp;&nbsp;&nbsp;&nbsp;🔗 <a href="{source["url"]}" target="_blank" style="color: #4a9eff;">{source["url"]}</a>', unsafe_allow_html=True)
+                            if source.get('excerpt'):
+                                excerpt = source['excerpt'][:300] + "..." if len(source['excerpt']) > 300 else source['excerpt']
+                                st.markdown(f'&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #a0a0a0; font-size: 0.9rem;">{excerpt}</span>', unsafe_allow_html=True)
+                            st.markdown('</div>', unsafe_allow_html=True)
                 
                 elif response.status_code == 500:
                     st.error("서버 처리 중 오류가 발생했습니다.")

@@ -127,19 +127,21 @@ Your task is to generate comprehensive, professional analysis reports following 
 - Analyze current market conditions based on latest news and trends
 - Discuss recent developments and announcements
 - Provide real-time market intelligence
-- Cite sources when available
+- **IMPORTANT: Cite sources using [1], [2], [3] format when referencing specific information**
 
 ## [Supply Chain Analysis]
 - Examine supply chain relationships and dependencies
 - Identify multi-hop causal relationships (e.g., A → B → C impact chains)
 - Analyze upstream and downstream effects
 - Discuss strategic partnerships and vulnerabilities
+- **IMPORTANT: Cite sources using [1], [2], [3] format when referencing specific information**
 
 ## [Risk & Outlook]
 - Identify key risks (geopolitical, technological, financial)
 - Provide forward-looking outlook
 - Discuss potential scenarios and their implications
 - Offer strategic recommendations
+- **IMPORTANT: Cite sources using [1], [2], [3] format when referencing specific information**
 
 Guidelines:
 - Use professional, analytical tone
@@ -147,7 +149,10 @@ Guidelines:
 - Avoid speculation without basis
 - Clearly distinguish between facts and analysis
 - Use markdown formatting for readability
-- Keep each section focused and concise"""
+- Keep each section focused and concise
+- **CRITICAL: When referencing information from sources, ALWAYS use citation numbers [1], [2], etc.**
+- **CRITICAL: Only cite sources that are actually provided in the context**
+- **CRITICAL: Each factual claim should be supported by a citation number**"""
     
     def _build_user_prompt(
         self,
@@ -173,6 +178,8 @@ Guidelines:
             "---\n"
         ]
         
+        source_counter = 0
+        
         # Add graph context
         if graph_context:
             prompt_parts.append("**Knowledge Graph Context:**")
@@ -189,9 +196,10 @@ Guidelines:
             
             citations = web_search_results.get("citations", [])
             if citations:
-                prompt_parts.append("\n**Sources:**")
+                prompt_parts.append("\n**Available Sources (use these numbers for citations):**")
                 for i, url in enumerate(citations[:5], 1):
-                    prompt_parts.append(f"{i}. {url}")
+                    prompt_parts.append(f"[{i}] {url}")
+                    source_counter = i
             
             prompt_parts.append("\n---\n")
         
@@ -201,7 +209,11 @@ Guidelines:
             prompt_parts.append(additional_context)
             prompt_parts.append("\n---\n")
         
-        prompt_parts.append("\nGenerate a comprehensive analysis report following the 4-section structure.")
+        prompt_parts.append("\n**Instructions:**")
+        prompt_parts.append("Generate a comprehensive analysis report following the 4-section structure.")
+        if source_counter > 0:
+            prompt_parts.append(f"IMPORTANT: When citing information, use the source numbers [1] through [{source_counter}] listed above.")
+            prompt_parts.append("Example: 'According to recent reports [1], TSMC announced...'")
         
         return "\n".join(prompt_parts)
     

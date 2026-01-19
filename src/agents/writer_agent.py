@@ -30,11 +30,13 @@ class WriterAgent(BaseAgent):
 4. 최종 제언 (BUY/HOLD/SELL)
 
 작성 규칙:
-- 모든 주장에 [Source N] 인용 포함
+- **CRITICAL**: 모든 사실적 주장에 [1], [2], [3] 등의 숫자 형식으로 출처 인용 필수
+- 예시: "TSMC의 2024년 매출은 690억 달러를 기록했습니다 [1]."
 - 전문 금융 용어 사용 (현금 흐름, 리스크 헤지 등)
 - 평문 출력 (HTML 금지)
 - 수치는 소수점 2자리까지
 - 객관적이고 균형 잡힌 시각
+- 제공된 출처 번호만 사용 (없는 번호 사용 금지)
 
 출력 형식 (JSON):
 {
@@ -144,11 +146,14 @@ class WriterAgent(BaseAgent):
         # 인사이트 요약
         insights_summary = "\n".join([f"- {insight}" for insight in insights[:5]])
         
-        # 소스 목록
+        # 소스 목록 (숫자만 사용하도록 명확히)
         sources_list = "\n".join([
             f"[{s.get('id', i+1)}] {s.get('file', 'Unknown')} (Page {s.get('page', 'N/A')})"
             for i, s in enumerate(sources[:10])
         ])
+        
+        # 사용 가능한 citation 번호 범위 명시
+        max_citation_num = min(len(sources), 10)
         
         # 추론 경로 (있는 경우)
         reasoning_section = ""
@@ -165,14 +170,16 @@ class WriterAgent(BaseAgent):
 핵심 인사이트:
 {insights_summary}
 
-출처:
+출처 (사용 가능한 citation 번호: [1]~[{max_citation_num}]):
 {sources_list}{reasoning_section}
 
 위 정보를 바탕으로 투자자용 전문 리포트를 작성하세요.
 
 요구사항:
 1. 구조: 요약 → 상세 분석 → 투자 리스크 → 최종 제언
-2. 모든 주장에 [N] 형태로 출처 인용
+2. **CRITICAL**: 모든 사실적 주장 뒤에 반드시 [1], [2], [3] 등의 숫자 citation 추가
+   - 예시: "TSMC의 매출은 690억 달러입니다 [1]."
+   - 위에 나열된 출처 번호 [1]~[{max_citation_num}]만 사용
 3. 전문 금융 용어 사용
 4. 평문 출력 (HTML 금지)
 5. 투자 제언: BUY/HOLD/SELL 중 하나

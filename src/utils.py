@@ -460,29 +460,35 @@ You MUST respond with exactly this message in Korean."""
         for s in sources
     ])
     
+    max_citation_num = len(sources)
+    
     return f"""You are a STRICT document-based analyst. Follow these ABSOLUTE rules:
 
 CRITICAL RULES:
 1. ONLY use information from the provided sources below
 2. DO NOT use any external knowledge or background information
-3. EVERY factual claim MUST have a citation [1], [2], etc.
-4. If information is NOT in the sources, respond: "해당 문서들에서는 관련 정보를 찾을 수 없습니다"
-5. DO NOT make assumptions or inferences beyond what is explicitly stated
-6. DO NOT add information from your training data
-7. DO NOT generate HTML, XML, or any markup code - use PLAIN TEXT only
-8. DO NOT include any HTML tags like <a>, <div>, or any other markup
+3. **EVERY factual claim MUST have a citation in [1], [2], [3] format immediately after the claim**
+4. Available citation numbers: [1] through [{max_citation_num}] ONLY
+5. Citation example: "TSMC의 2024년 매출은 690억 달러입니다 [1]."
+6. If information is NOT in the sources, respond: "해당 문서들에서는 관련 정보를 찾을 수 없습니다"
+7. DO NOT make assumptions or inferences beyond what is explicitly stated
+8. DO NOT add information from your training data
+9. DO NOT generate HTML, XML, or any markup code - use PLAIN TEXT only
+10. DO NOT include any HTML tags like <a>, <div>, or any other markup
 
-AVAILABLE SOURCES:
+AVAILABLE SOURCES (use these numbers [1]-[{max_citation_num}] for citations):
 {sources_text}
 
 QUESTION: {question}
 
 RESPONSE FORMAT:
-- Use citations [1], [2] after EVERY claim
+- After EVERY factual statement, immediately add the citation number: [1], [2], [3], etc.
+- Example: "Nvidia의 H100 GPU는 4nm 공정으로 제조됩니다 [1]. TSMC가 이를 생산하며 [2], 연간 생산량은 50만 개입니다 [3]."
 - PLAIN TEXT ONLY - no HTML or markup
 - DO NOT add a "Sources:" or "References:" section - citations in text are sufficient
 - If no relevant information exists in sources, say so explicitly
 - Write in a professional, executive report style
+- Be generous with citations - cite frequently to build trust
 
 Begin your strictly grounded response (PLAIN TEXT ONLY, NO SOURCES SECTION):"""
 
@@ -501,15 +507,17 @@ def get_executive_report_prompt(question: str, sources: List[dict]) -> str:
     """
     # 출처 리스트를 포맷팅
     sources_text = "\n".join([
-        f"[{s['id']}] {s['file']} (Chunk {s['chunk_id']}): \"{s['excerpt'][:150]}...\""
+        f"[{s['id']}] {s['file']} (Chunk {s.get('chunk_id', 'N/A')}): \"{s['excerpt'][:150]}...\""
         for s in sources
     ])
+    
+    max_citation_num = len(sources) if sources else 0
     
     prompt = f"""You are an elite executive analyst preparing a professional report for C-level executives.
 
 QUESTION: {question}
 
-AVAILABLE SOURCES:
+AVAILABLE SOURCES (Citation numbers: [1] to [{max_citation_num}]):
 {sources_text if sources else "[No specific sources available - use general knowledge]"}
 
 REPORT STRUCTURE (MANDATORY):
@@ -518,7 +526,7 @@ REPORT STRUCTURE (MANDATORY):
 Provide a concise 2-3 sentence overview of the key findings. This should be immediately actionable for decision-makers.
 
 ## KEY FINDINGS
-Present 3-5 bullet points highlighting the most critical insights. Each finding MUST include citation [1], [2], etc.
+Present 3-5 bullet points highlighting the most critical insights. **EVERY finding MUST include citation [1], [2], etc.**
 - Finding 1 with supporting data [1]
 - Finding 2 with evidence [2]
 - Continue with [3], [4] as needed
@@ -526,7 +534,8 @@ Present 3-5 bullet points highlighting the most critical insights. Each finding 
 ## DETAILED ANALYSIS  
 Provide in-depth analysis with clear sections:
 - Break down complex information into digestible parts
-- Support every factual claim with citations [1], [2], [3]
+- **Support EVERY factual claim with citations [1], [2], [3]**
+- Example: "TSMC announced 690억 달러 revenue [1]."
 - Use quantitative data where available
 - Explain implications and context
 
@@ -537,11 +546,14 @@ Summarize the analysis and provide actionable recommendations:
 - Recommended next steps
 
 CITATION RULES (CRITICAL):
-1. After EVERY factual statement, add [1], [2], [3] etc. corresponding to the source
-2. Multiple citations are allowed: [1][2] or [1, 2]
-3. ONLY use source numbers provided above - do NOT invent citations
-4. If no sources available, do NOT use citations - state it's based on general knowledge
-5. Be generous with citations - better to over-cite than under-cite
+1. After EVERY factual statement, immediately add [1], [2], [3] etc. corresponding to the source
+2. Available citation range: [1] through [{max_citation_num}] ONLY
+3. Citation placement: "Statement here [1]." NOT "Statement here. [1]"
+4. Multiple citations allowed: [1][2] or [1, 2]
+5. ONLY use source numbers provided above - do NOT invent citations
+6. If no sources available, do NOT use citations - state it's based on general knowledge
+7. **Be generous with citations - better to over-cite than under-cite**
+8. Cite specific data points, quotes, and factual claims
 
 FORMATTING:
 - Use clear markdown headers (##)
@@ -557,8 +569,9 @@ IMPORTANT:
 - Focus on insights, not just data regurgitation
 - Be precise with numbers and dates
 - If data is insufficient, acknowledge limitations
+- Every paragraph should have at least one citation if it contains factual information
 
-Begin your report now (PLAIN TEXT, NO HTML):"""
+Begin your report now (PLAIN TEXT, NO HTML, CITE FREQUENTLY):"""
     
     return prompt
 
