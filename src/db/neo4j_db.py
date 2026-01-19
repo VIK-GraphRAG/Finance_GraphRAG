@@ -29,6 +29,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 from utils import extract_text_from_pdf
 from models.neo4j_models import GraphStats
+try:
+    from utils.error_logger import droneLogError
+except Exception:
+    def droneLogError(message: str, error: Exception | None = None) -> None:
+        return
 
 
 class Neo4jDatabase:
@@ -89,6 +94,24 @@ class Neo4jDatabase:
         if self.driver:
             self.driver.close()
             print("🔌 Neo4j 연결이 종료되었어요.")
+
+    def execute_query(self, query: str, params: Optional[Dict[str, str | int | float]] = None) -> None:
+        """
+        Execute raw Cypher query
+
+        Args:
+            query: Cypher query string
+            params: Optional parameters for the query
+        """
+        try:
+            with self.driver.session() as session:
+                if params:
+                    session.run(query, **params)
+                else:
+                    session.run(query)
+        except Exception as e:
+            droneLogError("Neo4j query execution failed", e)
+            raise
     
     def create_node(self, node_id: str, node_data: Dict[str, str | float | int]) -> None:
         """

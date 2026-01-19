@@ -11,16 +11,23 @@ SECURITY POLICY:
 import json
 import csv
 import re
-from typing import Dict, List, Any, Set, Tuple
+from typing import Dict, List, Any, Set, Tuple, Optional
 from pathlib import Path
 from neo4j import GraphDatabase
+from datetime import datetime
 
 try:
+    from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+    from engine.connection_check import check_local_model_before_processing
+except ImportError:
     from ..config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
     from .connection_check import check_local_model_before_processing
-except ImportError:
-    from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
-    from connection_check import check_local_model_before_processing
+
+try:
+    from utils.error_logger import droneLogError
+except Exception:
+    def droneLogError(message: str, error: Exception | None = None) -> None:
+        return
 
 
 class EntityResolver:
@@ -129,10 +136,14 @@ class DataIntegrator:
     """
     
     def __init__(self):
-        self.driver = GraphDatabase.driver(
-            NEO4J_URI,
-            auth=(NEO4J_USERNAME, NEO4J_PASSWORD)
-        )
+        try:
+            self.driver = GraphDatabase.driver(
+                NEO4J_URI,
+                auth=(NEO4J_USERNAME, NEO4J_PASSWORD)
+            )
+        except Exception as e:
+            droneLogError("Neo4j driver initialization failed", e)
+            raise
         self.resolver = EntityResolver()
         self.stats = {
             'entities_merged': 0,
@@ -141,6 +152,49 @@ class DataIntegrator:
             'json_records': 0,
             'pdf_chunks': 0
         }
+
+    def sanitizeLabel(self, label: str) -> str:
+        """
+        Sanitize Neo4j label to avoid injection
+        """
+        cleanLabel = re.sub(r'[^A-Za-z0-9_]', '', str(label))
+        return cleanLabel if cleanLabel else "Entity"
+
+    def sanitizeRelType(self, relType: str) -> str:
+        """
+        Sanitize Neo4j relationship type to avoid injection
+        """
+        cleanRelType = re.sub(r'[^A-Za-z0-9_]', '', str(relType).upper())
+        return cleanRelType if cleanRelType else "RELATED"
+
+    def normalizeEntityType(self, entityType: str) -> str:
+        """
+        Normalize entity type to Neo4j label
+        """
+        typeMap = {
+            "COMPANY": "Company",
+            "PERSON": "Person",
+            "PRODUCT": "Product",
+            "LOCATION": "Location",
+            "FINANCIAL_METRIC": "FinancialMetric",
+            "REGULATION": "Regulation",
+            "CATALYST": "Catalyst",
+            "RISK": "Risk",
+            "TECH": "Technology"
+        }
+        return typeMap.get(str(entityType).upper(), "Entity")
+
+    def filterProperties(self, properties: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Filter properties to Neo4j-safe primitive values
+        """
+        safeProps: Dict[str, Any] = {}
+        for key, value in properties.items():
+            if isinstance(value, (str, int, float, bool)):
+                safeProps[key] = value
+            else:
+                safeProps[key] = str(value)
+        return safeProps
     
     def close(self):
         """Close Neo4j connection"""
@@ -383,6 +437,94 @@ class DataIntegrator:
             self.stats['pdf_chunks'] += 1
         
         print(f"✅ Merged {self.stats['pdf_chunks']} PDF entities")
+
+    def ingestPdfGraph(
+        self,
+        graphData: Dict[str, Any],
+        sourceFile: str,
+        sourceLabel: str
+    ) -> Dict[str, int]:
+        """
+        Ingest PDF graph data (entities + relationships) into Neo4j
+
+        Args:
+            graphData: Dict with 'entities' and 'relationships'
+            sourceFile: Original PDF filename
+            sourceLabel: Source label for provenance
+        """
+        try:
+            entities = graphData.get("entities", [])
+            relationships = graphData.get("relationships", [])
+            localStats = {
+                "entitiesMerged": 0,
+                "relationshipsCreated": 0
+            }
+
+            with self.driver.session() as session:
+                for entity in entities:
+                    name = entity.get("name")
+                    if not name:
+                        continue
+
+                    entityType = self.normalizeEntityType(entity.get("type", "Entity"))
+                    label = self.sanitizeLabel(entityType)
+                    rawProps = entity.get("properties", {}) if isinstance(entity.get("properties"), dict) else {}
+                    properties = self.filterProperties(rawProps)
+                    canonicalName = self.resolver.resolve(name)
+
+                    query = f"""
+                    MERGE (e:{label} {{name: $name}})
+                    SET e += $props,
+                        e.source = $source,
+                        e.source_label = $sourceLabel,
+                        e.source_file = $sourceFile,
+                        e.updated_at = datetime()
+                    """
+                    session.run(
+                        query,
+                        name=canonicalName,
+                        props=properties,
+                        source="pdf",
+                        sourceLabel=sourceLabel,
+                        sourceFile=sourceFile
+                    )
+                    localStats["entitiesMerged"] += 1
+
+                for rel in relationships:
+                    source = rel.get("source")
+                    target = rel.get("target")
+                    if not source or not target:
+                        continue
+
+                    relType = self.sanitizeRelType(rel.get("type", "RELATED"))
+                    rawRelProps = rel.get("properties", {}) if isinstance(rel.get("properties"), dict) else {}
+                    relProps = self.filterProperties(rawRelProps)
+
+                    query = f"""
+                    MERGE (a {{name: $source}})
+                    MERGE (b {{name: $target}})
+                    MERGE (a)-[r:{relType}]->(b)
+                    SET r += $props,
+                        r.source = $sourceLabel,
+                        r.source_file = $sourceFile,
+                        r.updated_at = datetime()
+                    """
+                    session.run(
+                        query,
+                        source=self.resolver.resolve(source),
+                        target=self.resolver.resolve(target),
+                        props=relProps,
+                        sourceLabel=sourceLabel,
+                        sourceFile=sourceFile
+                    )
+                    localStats["relationshipsCreated"] += 1
+
+            self.stats["entities_merged"] += localStats["entitiesMerged"]
+            self.stats["relationships_created"] += localStats["relationshipsCreated"]
+            return localStats
+        except Exception as e:
+            droneLogError("PDF graph ingestion failed", e)
+            raise
     
     def link_metrics_to_entities(
         self,

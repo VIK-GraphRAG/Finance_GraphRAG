@@ -252,7 +252,7 @@ with tab2:
                     response = requests.post(
                         f"{API_BASE_URL}/ingest_pdf",
                         files=files,
-                        timeout=600  # 10분으로 증가 (Ollama 처리 시간)
+                        timeout=300
                     )
                     
                     if response.status_code == 200:
@@ -307,7 +307,7 @@ with tab3:
                     response = requests.post(
                         f"{API_BASE_URL}/ingest_pdf_db",
                         files={"file": pdf_db_file},
-                        timeout=600  # 10분으로 증가
+                        timeout=300
                     )
                     if response.status_code == 200:
                         result = response.json()
@@ -331,6 +331,132 @@ with tab3:
 # CSV/JSON upload sections removed per user request
 
 # Tab 4: Graph Visualization (moved from old tab 4)
+old_tab4_content_start = """
+# Old CSV upload code removed
+    
+    #if "CSV" in upload_type:
+    #    st.markdown("### 📊 CSV 파일 업로드")
+        st.markdown("**예시 형식**: Company, Revenue, MarketCap, Country")
+        
+        csv_file = st.file_uploader(
+            "CSV 파일 선택",
+            type=['csv'],
+            help="회사 정보, 재무 데이터 등을 포함한 CSV 파일"
+        )
+        
+        if csv_file:
+            st.info(f"📎 File: {csv_file.name} ({csv_file.size / 1024:.1f} KB)")
+            
+            # CSV 미리보기
+            import pandas as pd
+            try:
+                df = pd.read_csv(csv_file)
+                st.markdown("#### 📋 데이터 미리보기 (처음 5행)")
+                st.dataframe(df.head(), use_container_width=True)
+                
+                # 컬럼 매핑 설정
+                st.markdown("#### 🔧 컬럼 매핑 설정")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    entity_col = st.selectbox("엔티티 이름 컬럼", df.columns, help="회사명, 인물명 등")
+                    entity_type = st.selectbox("엔티티 타입", ["Company", "Person", "Technology", "Country"], help="노드 타입")
+                
+                with col2:
+                    property_cols = st.multiselect("속성 컬럼", df.columns, help="Revenue, MarketCap 등")
+                
+                if st.button("🚀 CSV 데이터베이스에 업로드", type="primary"):
+                    with st.spinner("🔒 로컬 데이터베이스에 업로드 중..."):
+                        try:
+                            # CSV를 JSON으로 변환하여 백엔드로 전송
+                            csv_data = df.to_dict(orient='records')
+                            
+                            response = requests.post(
+                                f"{API_BASE_URL}/upload_csv",
+                                json={
+                                    "data": csv_data,
+                                    "entity_column": entity_col,
+                                    "entity_type": entity_type,
+                                    "property_columns": property_cols
+                                },
+                                timeout=120
+                            )
+                            
+                            if response.status_code == 200:
+                                result = response.json()
+                                st.success(f"✅ {result.get('nodes_created', 0)}개 노드 생성 완료!")
+                                
+                                col_m1, col_m2 = st.columns(2)
+                                with col_m1:
+                                    st.metric("생성된 노드", result.get('nodes_created', 0))
+                                with col_m2:
+                                    st.metric("생성된 관계", result.get('relationships_created', 0))
+                            else:
+                                st.error(f"❌ 업로드 실패: {response.status_code}")
+                        except Exception as e:
+                            st.error(f"❌ Error: {str(e)}")
+            except Exception as e:
+                st.error(f"❌ CSV 파일 읽기 오류: {str(e)}")
+    
+    else:  # JSON
+        st.markdown("### 📦 JSON 파일 업로드")
+        st.markdown("**예시 형식**: `{\"companies\": [{\"name\": \"Nvidia\", \"revenue\": 60.9}]}`")
+        
+        json_file = st.file_uploader(
+            "JSON 파일 선택",
+            type=['json'],
+            help="구조화된 JSON 데이터"
+        )
+        
+        if json_file:
+            st.info(f"📎 File: {json_file.name} ({json_file.size / 1024:.1f} KB)")
+            
+            try:
+                import json
+                json_data = json.load(json_file)
+                
+                # JSON 미리보기
+                st.markdown("#### 📋 데이터 미리보기")
+                st.json(json_data)
+                
+                # JSON 스키마 설정
+                st.markdown("#### 🔧 스키마 설정")
+                
+                root_key = st.text_input("루트 키", value="companies", help="데이터 배열의 키 (없으면 비워두기)")
+                entity_key = st.text_input("엔티티 키", value="name", help="엔티티 이름을 나타내는 키")
+                entity_type_json = st.selectbox("엔티티 타입", ["Company", "Person", "Technology", "Country"])
+                
+                if st.button("🚀 JSON 데이터베이스에 업로드", type="primary"):
+                    with st.spinner("🔒 로컬 데이터베이스에 업로드 중..."):
+                        try:
+                            response = requests.post(
+                                f"{API_BASE_URL}/upload_json",
+                                json={
+                                    "data": json_data,
+                                    "root_key": root_key if root_key else None,
+                                    "entity_key": entity_key,
+                                    "entity_type": entity_type_json
+                                },
+                                timeout=120
+                            )
+                            
+                            if response.status_code == 200:
+                                result = response.json()
+                                st.success(f"✅ {result.get('nodes_created', 0)}개 노드 생성 완료!")
+                                
+                                col_m1, col_m2 = st.columns(2)
+                                with col_m1:
+                                    st.metric("생성된 노드", result.get('nodes_created', 0))
+                                with col_m2:
+                                    st.metric("생성된 관계", result.get('relationships_created', 0))
+                            else:
+                                st.error(f"❌ 업로드 실패: {response.status_code}")
+                        except Exception as e:
+                            st.error(f"❌ Error: {str(e)}")
+            except Exception as e:
+                st.error(f"❌ JSON 파일 읽기 오류: {str(e)}")
+
+# Tab 4: Graph Visualization
 with tab4:
             try:
                 # Query for database stats
