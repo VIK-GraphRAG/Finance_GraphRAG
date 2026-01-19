@@ -1,0 +1,248 @@
+{
+  "supply_chain": {
+    "tiers": [
+      {
+        "tier": 1,
+        "name": "Equipment Suppliers",
+        "companies": [
+          {
+            "name": "ASML",
+            "ticker": "ASML",
+            "country": "Netherlands",
+            "role": "EUV Lithography Equipment",
+            "market_share": "100%",
+            "key_products": ["EUV Systems", "DUV Systems"],
+            "annual_capacity": "60 EUV systems",
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "Applied Materials",
+            "ticker": "AMAT",
+            "country": "USA",
+            "role": "Deposition & Etching Equipment",
+            "market_share": "25%",
+            "criticality": "HIGH"
+          }
+        ]
+      },
+      {
+        "tier": 2,
+        "name": "Foundries",
+        "companies": [
+          {
+            "name": "TSMC",
+            "ticker": "TSM",
+            "country": "Taiwan",
+            "role": "Advanced Chip Manufacturing",
+            "market_share": "60%",
+            "key_technologies": ["3nm", "5nm", "7nm"],
+            "major_customers": ["Nvidia", "AMD", "Apple", "Qualcomm"],
+            "dependencies": ["ASML"],
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "Samsung Foundry",
+            "ticker": "005930.KS",
+            "country": "South Korea",
+            "role": "Advanced Chip Manufacturing",
+            "market_share": "15%",
+            "key_technologies": ["3nm GAA", "5nm"],
+            "dependencies": ["ASML"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Intel Foundry",
+            "ticker": "INTC",
+            "country": "USA",
+            "role": "Emerging Foundry Player",
+            "market_share": "5%",
+            "key_technologies": ["Intel 18A", "Intel 20A"],
+            "dependencies": ["ASML"],
+            "criticality": "MEDIUM"
+          }
+        ]
+      },
+      {
+        "tier": 3,
+        "name": "Chip Designers",
+        "companies": [
+          {
+            "name": "Nvidia",
+            "ticker": "NVDA",
+            "country": "USA",
+            "role": "GPU & AI Accelerator Design",
+            "market_share": "80% (AI chips)",
+            "key_products": ["H100", "H200", "Blackwell", "Hopper"],
+            "dependencies": ["TSMC"],
+            "major_customers": ["Microsoft", "Amazon", "Google", "Meta"],
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "AMD",
+            "ticker": "AMD",
+            "country": "USA",
+            "role": "CPU & GPU Design",
+            "market_share": "15% (AI chips)",
+            "key_products": ["MI300", "EPYC", "Radeon"],
+            "dependencies": ["TSMC"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Qualcomm",
+            "ticker": "QCOM",
+            "country": "USA",
+            "role": "Mobile & Edge AI Chips",
+            "dependencies": ["TSMC", "Samsung"],
+            "criticality": "MEDIUM"
+          }
+        ]
+      },
+      {
+        "tier": 4,
+        "name": "Cloud Service Providers",
+        "companies": [
+          {
+            "name": "Microsoft Azure",
+            "ticker": "MSFT",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "AMD"],
+            "gpu_deployment": "100,000+ H100s",
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Amazon AWS",
+            "ticker": "AMZN",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "AMD", "Custom Silicon"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Google Cloud",
+            "ticker": "GOOGL",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "TPU (Custom)"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Meta",
+            "ticker": "META",
+            "country": "USA",
+            "role": "AI Research Infrastructure",
+            "dependencies": ["Nvidia"],
+            "gpu_deployment": "350,000+ GPUs planned",
+            "criticality": "MEDIUM"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "ASML",
+        "to": "TSMC",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV lithography systems for 3nm and below",
+        "dependency_level": "CRITICAL",
+        "lead_time": "18 months"
+      },
+      {
+        "from": "ASML",
+        "to": "Samsung Foundry",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV systems for GAA technology",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "ASML",
+        "to": "Intel Foundry",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV systems for Intel 18A/20A",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "TSMC",
+        "to": "Nvidia",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces H100, H200, Blackwell GPUs",
+        "dependency_level": "CRITICAL",
+        "capacity_allocation": "90% of advanced chips"
+      },
+      {
+        "from": "TSMC",
+        "to": "AMD",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces MI300 and EPYC chips",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "TSMC",
+        "to": "Apple",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces A-series and M-series chips",
+        "dependency_level": "CRITICAL"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Microsoft Azure",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "H100/H200 GPU supply",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Amazon AWS",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "GPU supply for AWS instances",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Google Cloud",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "GPU supply for GCP",
+        "dependency_level": "MEDIUM"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Meta",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "Large-scale GPU deployments",
+        "dependency_level": "HIGH"
+      }
+    ],
+    "risk_factors": [
+      {
+        "name": "Taiwan Strait Geopolitical Risk",
+        "impact_level": "CRITICAL",
+        "affected_entities": ["TSMC", "Nvidia", "AMD", "Apple"],
+        "description": "Military tensions could disrupt TSMC operations, affecting 60% of global advanced chip supply"
+      },
+      {
+        "name": "ASML Export Controls",
+        "impact_level": "HIGH",
+        "affected_entities": ["ASML", "TSMC", "Samsung"],
+        "description": "US/Dutch export restrictions on EUV systems to China"
+      },
+      {
+        "name": "Power Supply Constraints",
+        "impact_level": "HIGH",
+        "affected_entities": ["TSMC", "Samsung", "Intel"],
+        "description": "Advanced fabs require massive power (1-2 GW per fab)"
+      },
+      {
+        "name": "Talent Shortage",
+        "impact_level": "MEDIUM",
+        "affected_entities": ["All semiconductor companies"],
+        "description": "Global shortage of semiconductor engineers"
+      }
+    ]
+  },
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-01-16",
+    "source": "Tech-Analyst GraphRAG Baseline Data",
+    "coverage": "Semiconductor Supply Chain (Focus: AI Chips)"
+  }
+}

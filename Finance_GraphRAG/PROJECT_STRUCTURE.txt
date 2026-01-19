@@ -1,0 +1,149 @@
+Finance_GraphRAG 프로젝트 구조
+=================================
+
+루트 디렉토리
+-------------
+.
+├── README.md              # 프로젝트 설명 및 사용법
+├── requirements.txt       # Python 패키지 의존성
+├── .env                   # 환경 변수 (API 키, 비밀번호)
+├── .gitignore            # Git 제외 파일 목록
+├── start.sh              # 서버 시작 스크립트
+├── restart.sh            # 서버 재시작 스크립트
+├── deploy.sh             # 배포 스크립트
+├── Dockerfile            # Docker 이미지 빌드
+└── docker-compose.yml    # Docker 서비스 구성
+
+주요 폴더
+---------
+
+src/                      # 소스 코드
+├── app.py               # FastAPI 백엔드 (API 엔드포인트)
+├── streamlit_app.py     # Streamlit UI (사용자 인터페이스)
+├── config.py            # 설정 관리
+├── utils.py             # 유틸리티 함수
+├── agents/              # Multi-Agent 시스템
+│   ├── master_agent.py      # 마스터 에이전트
+│   ├── analyst_agent.py     # 분석 에이전트
+│   ├── planner_agent.py     # 계획 에이전트
+│   ├── writer_agent.py      # 작성 에이전트
+│   └── langgraph_workflow.py # LangGraph 워크플로우
+├── engine/              # 그래프 처리 엔진
+│   ├── graphrag_engine.py   # 메인 엔진
+│   ├── query_processor.py   # 스마트 쿼리 처리 (멀티홉 + Perplexity 폴백)
+│   ├── reasoner.py          # 멀티홉 추론 엔진
+│   ├── integrator.py        # 데이터 통합 (PDF + CSV + JSON)
+│   ├── local_worker.py      # PDF 로컬 처리
+│   ├── extractor.py         # 엔티티/관계 추출
+│   └── translator.py        # JSON → Cypher 변환
+├── db/                  # 데이터베이스
+│   └── neo4j_db.py         # Neo4j 연결 및 쿼리
+└── mcp/                 # 외부 도구 통합
+    ├── manager.py          # MCP 매니저
+    └── tools.py            # MCP 도구
+
+scripts/                  # 유틸리티 스크립트
+├── batch_upload.py          # 일괄 업로드
+├── manage_neo4j.py          # DB 관리 (백업/복원/통계)
+├── reset_and_load_baseline.py  # DB 초기화 및 baseline 로드
+├── load_baseline_simple.py  # 간단한 baseline 로더
+└── seed_*.py                # 데이터 시딩 스크립트
+
+tests/                    # 테스트 파일
+├── test_backend.py          # 백엔드 테스트
+├── test_full_system.py      # 전체 시스템 테스트
+└── test_multihop_system.py  # 멀티홉 추론 테스트
+
+data/                     # 데이터 파일
+└── baseline/            # 베이스라인 데이터 (영구 그래프)
+    ├── *.csv           # 경제 지표, 기업 데이터
+    ├── *.pdf           # 산업 리포트, 공급망 문서
+    └── *.json          # 구조화된 데이터
+
+docs/                     # 문서
+└── prd.md               # 제품 요구사항 문서
+
+logs/                     # 로그 파일
+└── drone_error.log      # 에러 로그
+
+backups/                  # 데이터베이스 백업
+└── neo4j_backup_*.json  # Neo4j 백업 파일
+
+evaluator/                # 평가 도구
+├── test_bench.py        # 테스트 벤치
+├── test_cases.json      # 테스트 케이스
+└── evaluation_report.json  # 평가 리포트
+
+lib/                      # 외부 라이브러리
+├── vis-9.1.2/           # Vis.js 그래프 시각화
+└── tom-select/          # Tom Select UI
+
+
+주요 컴포넌트 역할
+==================
+
+1. FastAPI 백엔드 (src/app.py)
+   - REST API 엔드포인트 제공
+   - /query_multihop: 멀티홉 쿼리 + Perplexity 폴백
+   - /ingest_pdf: PDF 업로드 (임시/영구)
+   - /upload_csv, /upload_json: 데이터 업로드
+   - /load_base_data: 베이스 데이터 로드
+
+2. Streamlit UI (src/streamlit_app.py)
+   - 사용자 인터페이스
+   - Query: 질문 입력 및 결과 표시
+   - PDF Upload: 임시/영구 PDF 업로드
+   - Database Upload: CSV/JSON 직접 업로드
+   - Graph Visualization: 그래프 시각화 (영구 + 임시 오버레이)
+
+3. Query Processor (src/engine/query_processor.py)
+   - 스마트 쿼리 처리
+   - Neo4j 멀티홉 추론 우선
+   - Perplexity API 조건부 폴백:
+     * 시간 민감성 질문 (오늘, 최신)
+     * 변동 수치 (주가, 환율)
+     * 결과 없음 또는 불확실
+   - Citations 자동 추가
+
+4. Data Integrator (src/engine/integrator.py)
+   - PDF + CSV + JSON 통합
+   - 엔티티 중복 제거
+   - 임시/영구 노드 분리 관리
+
+5. Multi-Hop Reasoner (src/engine/reasoner.py)
+   - 2-3 홉 논리 추론
+   - A → B → C 인과관계 분석
+   - 추론 경로 추적
+
+
+데이터 흐름
+===========
+
+1. 베이스 그래프 생성 (1회)
+   data/baseline/*.csv → API → Neo4j (영구)
+   data/baseline/*.pdf → API → Neo4j (영구)
+
+2. 사용자 PDF 업로드 (일회성)
+   사용자 PDF → LocalWorker → Neo4j (임시, temporary=true)
+
+3. 질문 처리
+   질문 → Neo4j 멀티홉 추론 → 답변
+   (결과 없음) → Perplexity API → 답변 + Citations
+
+4. 그래프 시각화
+   Neo4j (영구 + 임시) → Vis.js → 인터랙티브 그래프
+
+
+현재 상태
+=========
+
+데이터베이스: 36,647 노드
+- Technology: 23,159
+- Company: 7,486  
+- Indicator: 6,002
+- Relationships: 0
+
+서버:
+- Backend: http://localhost:8000
+- Frontend: http://localhost:8501
+- Neo4j: bolt://localhost:7687

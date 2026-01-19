@@ -1,0 +1,98 @@
+{
+  "csv": [
+    {
+      "file": "DXY 06~26년.csv",
+      "status": "success",
+      "nodes": 5225,
+      "type": "Company"
+    },
+    {
+      "file": "CPIAUCS미국 월별 소비자물가지수.csv",
+      "status": "success",
+      "nodes": 948,
+      "type": "Company"
+    },
+    {
+      "file": "1990~2026 vix_index.csv",
+      "status": "success",
+      "nodes": 9102,
+      "type": "Company"
+    },
+    {
+      "file": "bigtech capex.csv",
+      "status": "success",
+      "nodes": 23159,
+      "type": "Technology"
+    },
+    {
+      "file": "Fred WALCL 중앙은행 현긍보유량.csv",
+      "status": "success",
+      "nodes": 1205,
+      "type": "Company"
+    },
+    {
+      "file": "fear-greed-2011-2023.csv",
+      "status": "success",
+      "nodes": 3252,
+      "type": "Company"
+    },
+    {
+      "file": "semiconductor tariff.csv",
+      "status": "error",
+      "error": "'utf-8' codec can't decode byte 0xf2 in position 17: invalid continuation byte"
+    },
+    {
+      "file": "FedFundsRate 연준금리 54~26년.csv",
+      "status": "success",
+      "nodes": 858,
+      "type": "Company"
+    },
+    {
+      "file": "sox_index.csv",
+      "status": "success",
+      "nodes": 19,
+      "type": "Company"
+    }
+  ],
+  "json": [
+    {
+      "file": "upload_report.json",
+      "status": "success",
+      "nodes": 0,
+      "type": "Company"
+    },
+    {
+      "file": "supply_chain_mapping.json",
+      "status": "success",
+      "nodes": 0,
+      "type": "Company"
+    }
+  ],
+  "pdf": [
+    {
+      "file": "supply_chain_mapping.pdf",
+      "status": "success",
+      "entities": 16,
+      "sensitive": 0
+    },
+    {
+      "file": "Gold_Dollar_correlation.pdf",
+      "status": "success",
+      "entities": 3,
+      "sensitive": 0
+    },
+    {
+      "file": "whartonPDF_Crisis_timeline .pdf",
+      "status": "success",
+      "entities": 17,
+      "sensitive": 0
+    },
+    {
+      "file": "tech_roadmap.pdf",
+      "status": "success",
+      "entities": 31,
+      "sensitive": 0
+    }
+  ],
+  "errors": []
+}

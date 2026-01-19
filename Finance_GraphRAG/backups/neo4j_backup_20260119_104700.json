@@ -1,0 +1,5788 @@
+{
+  "metadata": {
+    "export_time": "2026-01-19T10:47:02.025132",
+    "uri": "bolt://localhost:7687",
+    "node_count": 38986,
+    "relationship_count": 472
+  },
+  "nodes": [
+    {
+      "id": 0,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906705",
+        "ticker": "NVDA",
+        "format": "txt",
+        "focus": "AI and computing",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T14:00:00.906702",
+        "char_count": 497,
+        "industry": "Technology",
+        "operating_expenses": "$6.7 billion",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "products": "['Blackwell', 'DGX Spark', 'BlueField', 'GeForce', 'NVIDIA DRIVE AGX Hyperion', 'NVIDIA IGX Thor', 'NVIDIA Omniverse', 'NVIDIA RTX PRO', 'NVQLink', 'Spectrum-X', 'TensorRT', 'NVLink Fusion']",
+        "revenue": "$51.2 billion",
+        "page_number": 10,
+        "fiscal_year": "2026",
+        "name": "NVIDIA",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 1,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T08:25:14.089211",
+        "format": "txt",
+        "name": "NVDA",
+        "created_at": "2026-01-15T08:25:14.089208",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "0-8"
+      }
+    },
+    {
+      "id": 2,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-14T20:31:23.769874",
+        "format": "txt",
+        "name": "Blackwell",
+        "created_at": "2026-01-14T20:31:23.769589",
+        "char_count": 421,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "9-12"
+      }
+    },
+    {
+      "id": 3,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T14:00:30.113665",
+        "role": "founder",
+        "page_number": 1,
+        "format": "txt",
+        "name": "Jensen Huang",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T14:00:30.113656",
+        "char_count": 270,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpoqu0rt91.txt",
+        "title": "CEO",
+        "lines": "0-1"
+      }
+    },
+    {
+      "id": 4,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T08:25:59.872108",
+        "format": "txt",
+        "name": "AI",
+        "created_at": "2026-01-15T08:25:59.872105",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "13-18"
+      }
+    },
+    {
+      "id": 5,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 35,
+        "last_updated": "2026-01-15T13:08:29.056976",
+        "page_number": 9,
+        "format": "pdf",
+        "name": "GAAP",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:29.056974",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "1376-1507"
+      }
+    },
+    {
+      "id": 6,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 6,
+        "last_updated": "2026-01-15T08:30:01.184594",
+        "format": "txt",
+        "name": "non-GAAP",
+        "created_at": "2026-01-15T08:30:01.184592",
+        "char_count": 417,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "112-118"
+      }
+    },
+    {
+      "id": 7,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "amount": "$57,006",
+        "last_updated": "2026-01-15T13:08:26.054981",
+        "page_number": 4,
+        "fiscal_year": "2025",
+        "format": "pdf",
+        "name": "Revenue",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.054975",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 8,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:35:52.248662",
+        "format": "txt",
+        "name": "GAAP",
+        "created_at": "2026-01-14T20:35:52.248660",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 9,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:35:52.248680",
+        "format": "txt",
+        "name": "non-GAAP",
+        "created_at": "2026-01-14T20:35:52.248679",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 10,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:35:52.248697",
+        "format": "txt",
+        "name": "gross margins",
+        "created_at": "2026-01-14T20:35:52.248696",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 11,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:35:52.248727",
+        "name": "operating expenses",
+        "format": "txt",
+        "created_at": "2026-01-14T20:35:52.248725",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 12,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 6,
+        "last_updated": "2026-01-15T08:30:01.184620",
+        "name": "$500 million",
+        "format": "txt",
+        "created_at": "2026-01-15T08:30:01.184619",
+        "char_count": 417,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "112-118"
+      }
+    },
+    {
+      "id": 13,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 6,
+        "last_updated": "2026-01-15T08:30:01.184638",
+        "name": "17.0%",
+        "format": "txt",
+        "created_at": "2026-01-15T08:30:01.184637",
+        "char_count": 417,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "112-118"
+      }
+    },
+    {
+      "id": 14,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T14:00:30.113871",
+        "name": "Data Center",
+        "format": "txt",
+        "created_at": "2026-01-15T14:00:30.113851",
+        "char_count": 270,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpoqu0rt91.txt",
+        "lines": "0-1"
+      }
+    },
+    {
+      "id": 15,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 6,
+        "last_updated": "2026-01-14T20:37:52.801664",
+        "name": "Third-quarter revenue",
+        "format": "txt",
+        "created_at": "2026-01-14T20:37:52.801659",
+        "char_count": 417,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "112-118"
+      }
+    },
+    {
+      "id": 16,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:38:29.336402",
+        "name": "GAAP gross margins",
+        "format": "txt",
+        "created_at": "2026-01-14T20:38:29.336400",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 17,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-14T20:38:29.336479",
+        "name": "non-GAAP gross margins",
+        "format": "txt",
+        "created_at": "2026-01-14T20:38:29.336476",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 18,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940623",
+        "name": "Operating expenses",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940621",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 19,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-15T08:30:33.383313",
+        "name": "NVIDIA Blackwell",
+        "format": "txt",
+        "created_at": "2026-01-15T08:30:33.383247",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 20,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-14T20:38:50.334644",
+        "name": "SemiAnalysis",
+        "format": "txt",
+        "created_at": "2026-01-14T20:38:50.334643",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 21,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-15T13:08:22.064596",
+        "page_number": 2,
+        "partnership_type": "strategic",
+        "name": "OpenAI",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.064588",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 22,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-15T13:08:22.064671",
+        "page_number": 2,
+        "partnership_type": "collaboration",
+        "name": "Google Cloud",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.064665",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 23,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T13:08:22.064738",
+        "page_number": 2,
+        "partnership_type": "collaboration",
+        "name": "Microsoft",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.064732",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 24,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906735",
+        "page_number": 2,
+        "partnership_type": "collaboration",
+        "format": "txt",
+        "name": "Oracle",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T14:00:00.906732",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 25,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-15T13:08:22.064869",
+        "page_number": 2,
+        "partnership_type": "collaboration",
+        "format": "pdf",
+        "name": "xAI",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.064863",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 26,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 8,
+        "last_updated": "2026-01-15T08:30:50.337471",
+        "format": "txt",
+        "name": "Anthropic",
+        "created_at": "2026-01-15T08:30:50.337468",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "124-129"
+      }
+    },
+    {
+      "id": 27,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001728",
+        "page_number": 2,
+        "collaboration_type": "joint development",
+        "format": "txt",
+        "name": "Intel",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:58:49.001726",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 28,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 7,
+        "last_updated": "2026-01-15T08:30:33.383371",
+        "format": "txt",
+        "name": "SemiAnalysis",
+        "created_at": "2026-01-15T08:30:33.383368",
+        "char_count": 482,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "119-123"
+      }
+    },
+    {
+      "id": 29,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T08:31:09.440403",
+        "name": "Energy",
+        "format": "txt",
+        "created_at": "2026-01-15T08:31:09.440217",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 30,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T13:08:22.065130",
+        "page_number": 2,
+        "name": "Solstice",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.065124",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 31,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T13:08:22.065218",
+        "page_number": 2,
+        "name": "Equinox",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.065211",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 32,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T13:08:22.065280",
+        "page_number": 2,
+        "performance": "highest",
+        "name": "NVIDIA Blackwell",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.065274",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 33,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T08:31:09.440512",
+        "name": "TSMC's Arizona facility",
+        "format": "txt",
+        "created_at": "2026-01-15T08:31:09.440510",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 34,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 9,
+        "last_updated": "2026-01-15T13:08:22.065344",
+        "page_number": 2,
+        "name": "NVIDIA Rubin CPX",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.065339",
+        "char_count": 427,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "130-134"
+      }
+    },
+    {
+      "id": 35,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "compute_capacity": "1 gigawatt",
+        "chunk_index": 8,
+        "last_updated": "2026-01-15T13:08:22.064936",
+        "page_number": 2,
+        "name": "Anthropic",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:22.064930",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "124-129"
+      }
+    },
+    {
+      "id": 36,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T08:31:41.464318",
+        "name": "NVQLink™",
+        "format": "txt",
+        "created_at": "2026-01-15T08:31:41.464313",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 37,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T08:31:41.464348",
+        "format": "txt",
+        "name": "Arm",
+        "created_at": "2026-01-15T08:31:41.464347",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 38,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T08:31:41.464367",
+        "name": "Neoverse platform",
+        "format": "txt",
+        "created_at": "2026-01-15T08:31:41.464365",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 39,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T08:31:41.464394",
+        "format": "txt",
+        "name": "Meta",
+        "created_at": "2026-01-15T08:31:41.464393",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 40,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 10,
+        "last_updated": "2026-01-15T08:31:41.464447",
+        "format": "txt",
+        "name": "NVIDIA Spectrum-X™ Ethernet network switches",
+        "created_at": "2026-01-15T08:31:41.464445",
+        "char_count": 474,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "135-141"
+      }
+    },
+    {
+      "id": 41,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150532",
+        "name": "Omniverse™ DSX",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150525",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 42,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150583",
+        "name": "BlueField-4",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150579",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 43,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150625",
+        "name": "CoreWeave",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150622",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 44,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150666",
+        "name": "Dell Technologies",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150662",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 45,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150707",
+        "format": "txt",
+        "name": "Oracle Cloud Infrastructure",
+        "created_at": "2026-01-15T08:32:27.150704",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 46,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150772",
+        "name": "Palo Alto Networks",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150768",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 47,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150832",
+        "name": "Red Hat",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150828",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 48,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 11,
+        "last_updated": "2026-01-15T08:32:27.150871",
+        "name": "VAST Data",
+        "format": "txt",
+        "created_at": "2026-01-15T08:32:27.150868",
+        "char_count": 407,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "142-146"
+      }
+    },
+    {
+      "id": 49,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.982947",
+        "format": "txt",
+        "name": "Nokia",
+        "created_at": "2026-01-14T20:42:51.982467",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 50,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983475",
+        "format": "txt",
+        "name": "Booz Allen",
+        "created_at": "2026-01-14T20:42:51.983473",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 51,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983504",
+        "format": "txt",
+        "name": "Cisco",
+        "created_at": "2026-01-14T20:42:51.983501",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 52,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983524",
+        "format": "txt",
+        "name": "MITRE",
+        "created_at": "2026-01-14T20:42:51.983522",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 53,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983543",
+        "format": "txt",
+        "name": "ODC",
+        "created_at": "2026-01-14T20:42:51.983541",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 54,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983563",
+        "format": "txt",
+        "name": "T-Mobile",
+        "created_at": "2026-01-14T20:42:51.983561",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 55,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 12,
+        "last_updated": "2026-01-14T20:42:51.983582",
+        "name": "Palantir Technologies",
+        "format": "txt",
+        "created_at": "2026-01-14T20:42:51.983580",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "147-151"
+      }
+    },
+    {
+      "id": 56,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 13,
+        "last_updated": "2026-01-14T20:43:37.480026",
+        "name": "MLPerf Inference v5.1",
+        "format": "txt",
+        "created_at": "2026-01-14T20:43:37.479662",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "152-157"
+      }
+    },
+    {
+      "id": 57,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 13,
+        "last_updated": "2026-01-14T20:43:37.480142",
+        "format": "txt",
+        "name": "Nscale",
+        "created_at": "2026-01-14T20:43:37.480140",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "152-157"
+      }
+    },
+    {
+      "id": 58,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 13,
+        "last_updated": "2026-01-14T20:43:37.480177",
+        "name": "Deutsche Telekom",
+        "format": "txt",
+        "created_at": "2026-01-14T20:43:37.480175",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "152-157"
+      }
+    },
+    {
+      "id": 59,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 13,
+        "last_updated": "2026-01-14T20:43:37.480160",
+        "format": "txt",
+        "name": "U.K.",
+        "created_at": "2026-01-14T20:43:37.480158",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "152-157"
+      }
+    },
+    {
+      "id": 60,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339639",
+        "name": "South Korea government",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:10.339637",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 61,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339665",
+        "name": "Hyundai Motor Group",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:10.339663",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 62,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339682",
+        "name": "Samsung Electronics",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:10.339681",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 63,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339699",
+        "format": "txt",
+        "name": "SK Group",
+        "created_at": "2026-01-14T20:44:10.339697",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 64,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339715",
+        "format": "txt",
+        "name": "NAVER Cloud",
+        "created_at": "2026-01-14T20:44:10.339714",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 65,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339739",
+        "name": "Gaming and AI PC",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:10.339737",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 66,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339755",
+        "format": "txt",
+        "name": "Borderlands 4",
+        "created_at": "2026-01-14T20:44:10.339754",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 67,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339772",
+        "format": "txt",
+        "name": "Battlefield 6",
+        "created_at": "2026-01-14T20:44:10.339771",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 68,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 14,
+        "last_updated": "2026-01-14T20:44:10.339788",
+        "format": "txt",
+        "name": "ARC Raiders",
+        "created_at": "2026-01-14T20:44:10.339787",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "158-165"
+      }
+    },
+    {
+      "id": 69,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 13,
+        "last_updated": "2026-01-14T20:43:37.480087",
+        "name": "NVIDIA Blackwell Ultra",
+        "format": "txt",
+        "created_at": "2026-01-14T20:43:37.480084",
+        "char_count": 461,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "152-157"
+      }
+    },
+    {
+      "id": 70,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.565920",
+        "format": "txt",
+        "name": "GeForce",
+        "created_at": "2026-01-14T20:44:34.565685",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 71,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.565969",
+        "format": "txt",
+        "name": "NVIDIA RTX",
+        "created_at": "2026-01-14T20:44:34.565967",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 72,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.565997",
+        "name": "GeForce Gamer Festival",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:34.565995",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 73,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.566021",
+        "name": "Seoul, South Korea",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:34.566019",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 74,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.566038",
+        "format": "txt",
+        "name": "NVIDIA Blueprint for 3D object generation",
+        "created_at": "2026-01-14T20:44:34.566037",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 75,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 15,
+        "last_updated": "2026-01-14T20:44:34.566227",
+        "format": "txt",
+        "name": "RTX-optimized NVIDIA TensorRT™",
+        "created_at": "2026-01-14T20:44:34.566225",
+        "char_count": 465,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "166-173"
+      }
+    },
+    {
+      "id": 76,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 16,
+        "last_updated": "2026-01-14T20:44:21.690193",
+        "name": "DGX Spark™",
+        "format": "txt",
+        "created_at": "2026-01-14T20:44:21.690188",
+        "char_count": 464,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "174-180"
+      }
+    },
+    {
+      "id": 77,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 16,
+        "last_updated": "2026-01-14T20:44:21.690218",
+        "format": "txt",
+        "name": "DRIVE AGX Hyperion™ 10",
+        "created_at": "2026-01-14T20:44:21.690216",
+        "char_count": 464,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "174-180"
+      }
+    },
+    {
+      "id": 78,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 16,
+        "last_updated": "2026-01-14T20:45:30.073282",
+        "name": "Automotive and Robotics",
+        "format": "txt",
+        "created_at": "2026-01-14T20:45:30.073280",
+        "char_count": 464,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "174-180"
+      }
+    },
+    {
+      "id": 79,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-14T20:45:07.977487",
+        "format": "txt",
+        "name": "Uber",
+        "created_at": "2026-01-14T20:45:07.977485",
+        "char_count": 488,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpefwg2mly.txt",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 80,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384442",
+        "page_number": 3,
+        "name": "Agility Robotics",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384441",
+        "char_count": 488,
+        "industry": "Robotics",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 81,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384461",
+        "page_number": 3,
+        "name": "Amazon Robotics",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384459",
+        "char_count": 488,
+        "industry": "Robotics",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 82,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384477",
+        "page_number": 3,
+        "name": "Belden",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384476",
+        "char_count": 488,
+        "industry": "Manufacturing",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 83,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384494",
+        "page_number": 3,
+        "name": "Caterpillar",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384493",
+        "char_count": 488,
+        "industry": "Manufacturing",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 84,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384511",
+        "page_number": 3,
+        "name": "Foxconn",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384509",
+        "char_count": 488,
+        "industry": "Electronics",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 85,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384527",
+        "page_number": 3,
+        "name": "Figure",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384526",
+        "char_count": 488,
+        "industry": "Robotics",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 86,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384544",
+        "page_number": 3,
+        "name": "Lucid Motors",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384542",
+        "char_count": 488,
+        "industry": "Automotive",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 87,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384561",
+        "page_number": 3,
+        "name": "Skild AI",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384559",
+        "char_count": 488,
+        "industry": "AI",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 88,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384577",
+        "page_number": 3,
+        "name": "Toyota",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384576",
+        "char_count": 488,
+        "industry": "Automotive",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 89,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906122",
+        "page_number": 3,
+        "format": "txt",
+        "name": "TSMC",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T14:00:00.881688",
+        "char_count": 497,
+        "location": "Arizona",
+        "industry": "Semiconductors",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 90,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 17,
+        "last_updated": "2026-01-15T13:08:24.384610",
+        "page_number": 3,
+        "name": "Wistron",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384608",
+        "char_count": 488,
+        "industry": "Manufacturing",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "181-186"
+      }
+    },
+    {
+      "id": 91,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 16,
+        "last_updated": "2026-01-15T13:08:24.384346",
+        "page_number": 3,
+        "name": "NVIDIA DGX Spark™",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384343",
+        "char_count": 464,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "174-180"
+      }
+    },
+    {
+      "id": 92,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 16,
+        "last_updated": "2026-01-15T13:08:24.384368",
+        "page_number": 3,
+        "format": "pdf",
+        "name": "NVIDIA DRIVE AGX Hyperion™ 10",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384367",
+        "char_count": 464,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "174-180"
+      }
+    },
+    {
+      "id": 93,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 18,
+        "last_updated": "2026-01-15T13:08:24.384407",
+        "page_number": 3,
+        "format": "pdf",
+        "name": "PTC",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384405",
+        "char_count": 498,
+        "industry": "Software",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "187-194"
+      }
+    },
+    {
+      "id": 94,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 18,
+        "last_updated": "2026-01-15T13:08:24.384425",
+        "page_number": 3,
+        "name": "Siemens",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384423",
+        "char_count": 498,
+        "industry": "Engineering",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "187-194"
+      }
+    },
+    {
+      "id": 95,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 18,
+        "last_updated": "2026-01-14T20:49:09.843555",
+        "format": "txt",
+        "name": "NVIDIA Omniverse™-powered digital twin workflows",
+        "created_at": "2026-01-14T20:49:09.843553",
+        "char_count": 498,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "187-194"
+      }
+    },
+    {
+      "id": 96,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 18,
+        "last_updated": "2026-01-15T13:08:24.384626",
+        "page_number": 3,
+        "name": "NVIDIA IGX Thor™",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:24.384625",
+        "char_count": 498,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "187-194"
+      }
+    },
+    {
+      "id": 97,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T13:56:14.535534",
+        "page_number": 3,
+        "name": "Colette Kress",
+        "format": "txt",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:56:14.535531",
+        "char_count": 478,
+        "company": "NVIDIA",
+        "position": "CFO",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "0-14"
+      }
+    },
+    {
+      "id": 98,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 19,
+        "last_updated": "2026-01-14T20:49:41.373924",
+        "name": "analysts and investors",
+        "format": "txt",
+        "created_at": "2026-01-14T20:49:41.373920",
+        "char_count": 410,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "195-198"
+      }
+    },
+    {
+      "id": 99,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 19,
+        "last_updated": "2026-01-14T20:49:41.373958",
+        "format": "txt",
+        "name": "conference call",
+        "created_at": "2026-01-14T20:49:41.373955",
+        "char_count": 410,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "195-198"
+      }
+    },
+    {
+      "id": 100,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 19,
+        "last_updated": "2026-01-14T20:49:41.373998",
+        "format": "txt",
+        "name": "webcast",
+        "created_at": "2026-01-14T20:49:41.373995",
+        "char_count": 410,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "195-198"
+      }
+    },
+    {
+      "id": 101,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 19,
+        "last_updated": "2026-01-14T20:49:41.374030",
+        "name": "investor relations website",
+        "format": "txt",
+        "created_at": "2026-01-14T20:49:41.374027",
+        "char_count": 410,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "195-198"
+      }
+    },
+    {
+      "id": 102,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 39,
+        "ticker": "NVDA",
+        "last_updated": "2026-01-15T13:08:29.056867",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:29.056859",
+        "char_count": 460,
+        "industry": "AI and accelerated computing",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 9,
+        "fiscal_year": "2025",
+        "name": "NVIDIA CORPORATION",
+        "lines": "1740-1782"
+      }
+    },
+    {
+      "id": 103,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 23,
+        "last_updated": "2026-01-15T08:41:08.689439",
+        "format": "txt",
+        "name": "CONDENSED CONSOLIDATED STATEMENTS OF INCOME",
+        "created_at": "2026-01-15T08:41:08.689437",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "213-251"
+      }
+    },
+    {
+      "id": 104,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 21,
+        "last_updated": "2026-01-14T20:50:46.738821",
+        "format": "txt",
+        "name": "stock-based compensation expense",
+        "created_at": "2026-01-14T20:50:46.738819",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "205-208"
+      }
+    },
+    {
+      "id": 105,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 21,
+        "last_updated": "2026-01-14T20:50:46.738845",
+        "format": "txt",
+        "name": "acquisition-related and other costs",
+        "created_at": "2026-01-14T20:50:46.738844",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpdm21s2pk.txt",
+        "lines": "205-208"
+      }
+    },
+    {
+      "id": 106,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940524",
+        "format": "txt",
+        "name": "October",
+        "created_at": "2026-01-15T08:41:53.940271",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 107,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903030",
+        "format": "txt",
+        "name": "third parties",
+        "created_at": "2026-01-15T08:48:24.903027",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 108,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903073",
+        "format": "txt",
+        "name": "manufacture, assemble, package and test NVIDIA’s products",
+        "created_at": "2026-01-15T08:48:24.903070",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 109,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903097",
+        "format": "txt",
+        "name": "technological development and competition",
+        "created_at": "2026-01-15T08:48:24.903095",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 110,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903122",
+        "format": "txt",
+        "name": "new products and technologies or enhancements to NVIDIA’s existing product and technologies",
+        "created_at": "2026-01-15T08:48:24.903120",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 111,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903153",
+        "format": "txt",
+        "name": "market acceptance of NVIDIA’s products or NVIDIA’s partners’ products",
+        "created_at": "2026-01-15T08:48:24.903151",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 112,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903174",
+        "format": "txt",
+        "name": "design, manufacturing or software defects",
+        "created_at": "2026-01-15T08:48:24.903173",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 113,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903197",
+        "format": "txt",
+        "name": "changes in consumer preferences or demands",
+        "created_at": "2026-01-15T08:48:24.903195",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 114,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 44,
+        "last_updated": "2026-01-15T08:48:24.903219",
+        "format": "txt",
+        "name": "changes in industry standards and practices",
+        "created_at": "2026-01-15T08:48:24.903217",
+        "char_count": 450,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1799-1802"
+      }
+    },
+    {
+      "id": 115,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 45,
+        "last_updated": "2026-01-15T08:48:35.460115",
+        "format": "txt",
+        "name": "SEC",
+        "created_at": "2026-01-15T08:48:35.460112",
+        "char_count": 488,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1803-1806"
+      }
+    },
+    {
+      "id": 116,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 47,
+        "last_updated": "2026-01-15T08:48:55.370714",
+        "format": "txt",
+        "name": "Fusion",
+        "created_at": "2026-01-15T08:48:55.370697",
+        "char_count": 419,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1812-1820"
+      }
+    },
+    {
+      "id": 117,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T14:00:30.113222",
+        "format": "txt",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T14:00:30.112264",
+        "char_count": 270,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpoqu0rt91.txt",
+        "segments": "Compute & Networking, Graphics",
+        "page_number": 1,
+        "name": "NVIDIA Corporation",
+        "market_share": "leading and dominant",
+        "tp": "USD175 per share",
+        "lines": "0-1"
+      }
+    },
+    {
+      "id": 118,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 47,
+        "last_updated": "2026-01-15T08:48:55.370783",
+        "format": "txt",
+        "name": "Toshiya Hari",
+        "created_at": "2026-01-15T08:48:55.370780",
+        "char_count": 419,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1812-1820"
+      }
+    },
+    {
+      "id": 119,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 47,
+        "last_updated": "2026-01-15T08:48:55.370809",
+        "name": "Mylene Mangalindan",
+        "format": "txt",
+        "created_at": "2026-01-15T08:48:55.370806",
+        "char_count": 419,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1812-1820"
+      }
+    },
+    {
+      "id": 120,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T08:25:44.435217",
+        "name": "Earnings per diluted share",
+        "format": "txt",
+        "created_at": "2026-01-15T08:25:44.435215",
+        "char_count": 421,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "9-12"
+      }
+    },
+    {
+      "id": 121,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T08:25:44.435245",
+        "name": "Blackwell sales",
+        "format": "txt",
+        "created_at": "2026-01-15T08:25:44.435243",
+        "char_count": 421,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "9-12"
+      }
+    },
+    {
+      "id": 122,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T08:25:44.435262",
+        "format": "txt",
+        "name": "cloud GPUs",
+        "created_at": "2026-01-15T08:25:44.435261",
+        "char_count": 421,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "9-12"
+      }
+    },
+    {
+      "id": 123,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "amount": "$36,010",
+        "last_updated": "2026-01-15T13:08:26.055099",
+        "page_number": 4,
+        "fiscal_year": "2025",
+        "name": "Operating income",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.055095",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 124,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 31910,
+        "q2": 19309,
+        "chunk_index": 28,
+        "q3": 77107,
+        "amount": "$31,910",
+        "last_updated": "2026-01-15T13:08:27.564801",
+        "q4": 50789,
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564793",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 6,
+        "fiscal_year": "2025",
+        "name": "Net income",
+        "lines": "752-822"
+      }
+    },
+    {
+      "id": 125,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-15T08:29:34.469132",
+        "name": "Diluted earnings per share",
+        "format": "txt",
+        "created_at": "2026-01-15T08:29:34.469126",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 126,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 5,
+        "last_updated": "2026-01-15T08:29:34.469216",
+        "format": "txt",
+        "name": "Outlook",
+        "created_at": "2026-01-15T08:29:34.469213",
+        "char_count": 511,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "84-111"
+      }
+    },
+    {
+      "id": 127,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711669",
+        "format": "txt",
+        "name": "GAAP net cash provided by operating activities",
+        "created_at": "2026-01-15T08:40:52.711667",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 128,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711696",
+        "format": "txt",
+        "name": "net, interest expense related to amortization of debt discount",
+        "created_at": "2026-01-15T08:40:52.711695",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 129,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711720",
+        "format": "txt",
+        "name": "associated tax impact of these items where applicable",
+        "created_at": "2026-01-15T08:40:52.711719",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 130,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T13:08:28.815305",
+        "page_number": 8,
+        "name": "Free cash flow",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:28.815301",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "209-212",
+        "value": "$22,089, $13,450, $16,787, $61,675, $45,204"
+      }
+    },
+    {
+      "id": 131,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711767",
+        "format": "txt",
+        "name": "GAAP net cash provided by operating activities less",
+        "created_at": "2026-01-15T08:40:52.711765",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 132,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711785",
+        "format": "txt",
+        "name": "both purchases related to property and equipment and intangible assets",
+        "created_at": "2026-01-15T08:40:52.711783",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 133,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 22,
+        "last_updated": "2026-01-15T08:40:52.711802",
+        "format": "txt",
+        "name": "principal payments on property and equipment and intangible assets",
+        "created_at": "2026-01-15T08:40:52.711800",
+        "char_count": 483,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "209-212"
+      }
+    },
+    {
+      "id": 134,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T13:08:28.815438",
+        "page_number": 8,
+        "name": "Cost of revenue",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:28.815434",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "252-393",
+        "value": "$48, $49, $116, $219, $355"
+      }
+    },
+    {
+      "id": 135,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940606",
+        "name": "Gross profit",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940604",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 136,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 38,
+        "last_updated": "2026-01-15T08:47:09.624491",
+        "name": "Research and development",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:09.624473",
+        "char_count": 500,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1629-1739"
+      }
+    },
+    {
+      "id": 137,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 38,
+        "last_updated": "2026-01-15T08:47:09.624531",
+        "format": "txt",
+        "name": "Sales, general and administrative",
+        "created_at": "2026-01-15T08:47:09.624529",
+        "char_count": 500,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1629-1739"
+      }
+    },
+    {
+      "id": 138,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940685",
+        "name": "Total operating expenses",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940684",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 139,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940719",
+        "name": "Interest income",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940717",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 140,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940735",
+        "name": "Interest expense",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940734",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 141,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 24,
+        "last_updated": "2026-01-15T08:41:53.940751",
+        "name": "Other incom",
+        "format": "txt",
+        "created_at": "2026-01-15T08:41:53.940750",
+        "char_count": 506,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "252-393"
+      }
+    },
+    {
+      "id": 142,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 25,
+        "last_updated": "2026-01-15T08:42:28.701986",
+        "name": "Income before income tax",
+        "format": "txt",
+        "created_at": "2026-01-15T08:42:28.701984",
+        "char_count": 509,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "394-527"
+      }
+    },
+    {
+      "id": 143,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 25,
+        "amount": "$6,026",
+        "last_updated": "2026-01-15T13:08:26.055161",
+        "page_number": 4,
+        "fiscal_year": "2025",
+        "name": "Income tax expense",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.055156",
+        "char_count": 509,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "394-527"
+      }
+    },
+    {
+      "id": 144,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 25,
+        "last_updated": "2026-01-15T08:42:28.702067",
+        "name": "Basic",
+        "format": "txt",
+        "created_at": "2026-01-15T08:42:28.702065",
+        "char_count": 509,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "394-527"
+      }
+    },
+    {
+      "id": 145,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 25,
+        "last_updated": "2026-01-15T08:42:28.702087",
+        "name": "Diluted",
+        "format": "txt",
+        "created_at": "2026-01-15T08:42:28.702085",
+        "char_count": 509,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "394-527"
+      }
+    },
+    {
+      "id": 146,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 25,
+        "last_updated": "2026-01-15T08:42:28.702107",
+        "format": "txt",
+        "name": "Weighted average shares used in per share computation",
+        "created_at": "2026-01-15T08:42:28.702105",
+        "char_count": 509,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "394-527"
+      }
+    },
+    {
+      "id": 147,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121187",
+        "name": "Company",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121129",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 148,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121230",
+        "name": "Accounts Receivable",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121227",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 149,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T08:44:29.455639",
+        "format": "txt",
+        "name": "Inventories",
+        "created_at": "2026-01-15T08:44:29.455354",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 150,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121299",
+        "format": "txt",
+        "name": "Prepaid Expenses and Other Current Assets",
+        "created_at": "2026-01-15T08:43:19.121297",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 151,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121321",
+        "format": "txt",
+        "name": "Property and Equipment, Net",
+        "created_at": "2026-01-15T08:43:19.121319",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 152,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121354",
+        "name": "Operating Lease Assets",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121352",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 153,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121376",
+        "name": "Goodwill",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121374",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 154,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121398",
+        "name": "Intangible Assets, Net",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121397",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 155,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121420",
+        "format": "txt",
+        "name": "Deferred Income Tax Assets",
+        "created_at": "2026-01-15T08:43:19.121419",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 156,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121442",
+        "name": "Other Assets",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121440",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 157,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121465",
+        "name": "Total Assets",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121463",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 158,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 26,
+        "last_updated": "2026-01-15T08:43:19.121486",
+        "name": "Current Liabilities",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:19.121484",
+        "char_count": 499,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "528-623"
+      }
+    },
+    {
+      "id": 159,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 28,
+        "last_updated": "2026-01-15T08:43:52.189441",
+        "name": "$ 31,910",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:52.189439",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "752-822"
+      }
+    },
+    {
+      "id": 160,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 28,
+        "last_updated": "2026-01-15T08:43:52.189470",
+        "name": "$ 19,309",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:52.189467",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "752-822"
+      }
+    },
+    {
+      "id": 161,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 28,
+        "last_updated": "2026-01-15T08:43:52.189495",
+        "name": "$ 77,107",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:52.189493",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "752-822"
+      }
+    },
+    {
+      "id": 162,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 28,
+        "last_updated": "2026-01-15T08:43:52.189520",
+        "name": "$ 50,789",
+        "format": "txt",
+        "created_at": "2026-01-15T08:43:52.189518",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "752-822"
+      }
+    },
+    {
+      "id": 163,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T08:44:29.455684",
+        "format": "txt",
+        "name": "Prepaid expenses and other assets",
+        "created_at": "2026-01-15T08:44:29.455681",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 164,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T13:08:26.470618",
+        "page_number": 5,
+        "value_2025": 8624,
+        "value_2024": 6310,
+        "name": "Accounts payable",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470615",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 165,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T13:08:26.470661",
+        "page_number": 5,
+        "value_2025": 16452,
+        "value_2024": 11737,
+        "format": "pdf",
+        "name": "Accrued and other current liabilities",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470658",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 166,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T13:08:26.470825",
+        "page_number": 5,
+        "value_2025": 6694,
+        "value_2024": 4245,
+        "format": "pdf",
+        "name": "Other long-term liabilities",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470822",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 167,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 23750,
+        "q2": 17629,
+        "chunk_index": 29,
+        "q3": 66530,
+        "last_updated": "2026-01-15T13:08:27.564968",
+        "q4": 47460,
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564966",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 6,
+        "name": "Net cash provided by operating activities",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 168,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 29,
+        "last_updated": "2026-01-15T08:44:29.455791",
+        "format": "txt",
+        "name": "Cash flows from investing activities",
+        "created_at": "2026-01-15T08:44:29.455789",
+        "char_count": 507,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "823-910"
+      }
+    },
+    {
+      "id": 169,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135210",
+        "name": "Purchases",
+        "format": "txt",
+        "created_at": "2026-01-15T08:45:11.135149",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 170,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135257",
+        "name": "Marketable securities",
+        "format": "txt",
+        "created_at": "2026-01-15T08:45:11.135255",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 171,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135335",
+        "format": "txt",
+        "name": "Non-marketable equity securities",
+        "created_at": "2026-01-15T08:45:11.135332",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 172,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135353",
+        "format": "txt",
+        "name": "Property and equipment and intangible assets",
+        "created_at": "2026-01-15T08:45:11.135351",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 173,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135370",
+        "format": "txt",
+        "name": "Acquisitions, net of cash acquired",
+        "created_at": "2026-01-15T08:45:11.135369",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 174,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135388",
+        "format": "txt",
+        "name": "Net cash used in investing activities",
+        "created_at": "2026-01-15T08:45:11.135386",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 175,
+      "labels": [
+        "PRODUCT_FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 30,
+        "last_updated": "2026-01-15T08:45:11.135405",
+        "format": "txt",
+        "name": "Cash flows from financing activities",
+        "created_at": "2026-01-15T08:45:11.135403",
+        "char_count": 508,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "911-976"
+      }
+    },
+    {
+      "id": 176,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995182",
+        "format": "txt",
+        "name": "Payments related to employee stock plan taxes",
+        "created_at": "2026-01-15T08:45:55.995126",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 177,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995236",
+        "name": "Dividends paid",
+        "format": "txt",
+        "created_at": "2026-01-15T08:45:55.995233",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 178,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995278",
+        "format": "txt",
+        "name": "Principal payments on property and equipment and intangible assets",
+        "created_at": "2026-01-15T08:45:55.995276",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 179,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995313",
+        "name": "Repayment of debt",
+        "format": "txt",
+        "created_at": "2026-01-15T08:45:55.995310",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 180,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": -14878,
+        "q2": -12748,
+        "chunk_index": 31,
+        "q3": -42266,
+        "last_updated": "2026-01-15T13:08:27.565057",
+        "q4": -32410,
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.565056",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 6,
+        "name": "Net cash used in financing activities",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 181,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": -153,
+        "q2": 536,
+        "chunk_index": 31,
+        "q3": 2897,
+        "last_updated": "2026-01-15T13:08:27.565080",
+        "q4": 1827,
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.565078",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 6,
+        "name": "Change in cash and cash equivalents",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 182,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995391",
+        "format": "txt",
+        "name": "Cash and cash equivalents at beginning of period",
+        "created_at": "2026-01-15T08:45:55.995389",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 183,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 31,
+        "last_updated": "2026-01-15T08:45:55.995416",
+        "format": "txt",
+        "name": "Cash and cash equivalents at end of period",
+        "created_at": "2026-01-15T08:45:55.995414",
+        "char_count": 490,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "977-1053"
+      }
+    },
+    {
+      "id": 184,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 33,
+        "last_updated": "2026-01-15T08:46:11.632815",
+        "format": "txt",
+        "name": "A",
+        "created_at": "2026-01-15T08:46:11.632803",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1149-1278"
+      }
+    },
+    {
+      "id": 185,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 33,
+        "last_updated": "2026-01-15T08:46:11.632850",
+        "format": "txt",
+        "name": "B",
+        "created_at": "2026-01-15T08:46:11.632848",
+        "char_count": 489,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1149-1278"
+      }
+    },
+    {
+      "id": 186,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 34,
+        "last_updated": "2026-01-15T13:08:28.099155",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Non-GAAP operating expenses",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:28.099152",
+        "char_count": 495,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "1279-1375"
+      }
+    },
+    {
+      "id": 187,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 34,
+        "last_updated": "2026-01-15T13:08:28.099189",
+        "page_number": 7,
+        "name": "GAAP operating income",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:28.099186",
+        "char_count": 495,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "1279-1375"
+      }
+    },
+    {
+      "id": 188,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 34,
+        "last_updated": "2026-01-15T08:46:33.642111",
+        "format": "txt",
+        "name": "Total impact of non-GAAP adjustments to operating income",
+        "created_at": "2026-01-15T08:46:33.642109",
+        "char_count": 495,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1279-1375"
+      }
+    },
+    {
+      "id": 189,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 34,
+        "last_updated": "2026-01-15T08:46:33.642141",
+        "format": "txt",
+        "name": "Non-GAAP total other income, net",
+        "created_at": "2026-01-15T08:46:33.642139",
+        "char_count": 495,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1279-1375"
+      }
+    },
+    {
+      "id": 190,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 34,
+        "last_updated": "2026-01-15T08:46:33.642179",
+        "format": "txt",
+        "name": "Gains from non-marketable equity securities and publicly-held equity securities, net",
+        "created_at": "2026-01-15T08:46:33.642177",
+        "char_count": 495,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1279-1375"
+      }
+    },
+    {
+      "id": 191,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 35,
+        "last_updated": "2026-01-15T13:08:29.057004",
+        "page_number": 9,
+        "name": "Non-GAAP",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:29.057002",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "1376-1507"
+      }
+    },
+    {
+      "id": 192,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 37,
+        "last_updated": "2026-01-15T08:47:01.809739",
+        "format": "txt",
+        "name": "H2O",
+        "created_at": "2026-01-15T08:47:01.809689",
+        "char_count": 493,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1574-1628"
+      }
+    },
+    {
+      "id": 193,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 37,
+        "last_updated": "2026-01-15T08:47:01.809778",
+        "name": "Billion",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:01.809775",
+        "char_count": 493,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1574-1628"
+      }
+    },
+    {
+      "id": 194,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 37,
+        "last_updated": "2026-01-15T08:47:01.809805",
+        "name": "Million",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:01.809803",
+        "char_count": 493,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1574-1628"
+      }
+    },
+    {
+      "id": 195,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 39,
+        "last_updated": "2026-01-15T08:47:19.718391",
+        "name": "ASU 2016-09",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:19.718389",
+        "char_count": 460,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1740-1782"
+      }
+    },
+    {
+      "id": 196,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 40,
+        "last_updated": "2026-01-15T08:47:28.620546",
+        "name": "NASDAQ: NVDA",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:28.620543",
+        "char_count": 436,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1783-1786"
+      }
+    },
+    {
+      "id": 197,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 41,
+        "last_updated": "2026-01-15T13:45:26.197705",
+        "page_number": 1,
+        "name": "Blackwell",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:26.197703",
+        "char_count": 484,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "lines": "1787-1790"
+      }
+    },
+    {
+      "id": 198,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 42,
+        "last_updated": "2026-01-15T13:08:29.386153",
+        "page_number": 10,
+        "name": "Rubin",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:29.386146",
+        "char_count": 494,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "lines": "1791-1794"
+      }
+    },
+    {
+      "id": 199,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 43,
+        "last_updated": "2026-01-15T08:47:59.662814",
+        "name": "SECURITY_EXCHANGE_ACT",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:59.662745",
+        "char_count": 473,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1795-1798"
+      }
+    },
+    {
+      "id": 200,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 43,
+        "last_updated": "2026-01-15T08:47:59.662873",
+        "name": "Section_21E",
+        "format": "txt",
+        "created_at": "2026-01-15T08:47:59.662870",
+        "char_count": 473,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1795-1798"
+      }
+    },
+    {
+      "id": 201,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 43,
+        "last_updated": "2026-01-15T08:47:59.662907",
+        "format": "txt",
+        "name": "Management's_beliefs_and_assumptions",
+        "created_at": "2026-01-15T08:47:59.662905",
+        "char_count": 473,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpo6z3fkmz.txt",
+        "lines": "1795-1798"
+      }
+    },
+    {
+      "id": 202,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:17.878303",
+        "page_number": 1,
+        "fiscal_year": "2026",
+        "name": "Q3 FY26",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:17.878298",
+        "fiscal_quarter": "Q3",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 203,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "period": "Q3 FY26",
+        "last_updated": "2026-01-15T13:08:17.878361",
+        "page_number": 1,
+        "metric_type": "revenue",
+        "name": "$57.0 billion",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:17.878357",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 204,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "period": "Q3 FY26",
+        "last_updated": "2026-01-15T13:08:17.878416",
+        "page_number": 1,
+        "metric_type": "Data Center revenue",
+        "name": "$51.2 billion",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:17.878412",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 205,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:17.878471",
+        "page_number": 1,
+        "metric_type": "dividend_per_share",
+        "name": "$0.01",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:17.878467",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "payment_date": "December 26, 2025"
+      }
+    },
+    {
+      "id": 206,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:17.878525",
+        "page_number": 1,
+        "metric_type": "remaining_share_repurchase_authorization",
+        "format": "pdf",
+        "name": "$62.2 billion",
+        "created_at": "2026-01-15T13:08:17.878520",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 207,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:22.065403",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "NVIDIA NVQLink",
+        "created_at": "2026-01-15T13:08:22.065397",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 208,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:22.065462",
+        "page_number": 2,
+        "name": "NVIDIA Spectrum-X",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:22.065456",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 209,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:22.065520",
+        "page_number": 2,
+        "name": "NVIDIA BlueField-4",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:22.065514",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 210,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:22.065580",
+        "page_number": 2,
+        "name": "NVIDIA NVLink Fusion",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:22.065574",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 211,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:22.065638",
+        "page_number": 2,
+        "name": "AI-native 5G-A",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:22.065633",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 212,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470203",
+        "page_number": 5,
+        "value_2025": 60608,
+        "value_2024": 43210,
+        "name": "Cash, cash equivalents and marketable securities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470200",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 213,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470240",
+        "page_number": 5,
+        "value_2025": 33391,
+        "value_2024": 23065,
+        "name": "Accounts receivable, net",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470237",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 214,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": -4823,
+        "q2": -978,
+        "q3": -9703,
+        "last_updated": "2026-01-15T13:08:27.564945",
+        "q4": -2357,
+        "value_2025": 19784,
+        "value_2024": 10080,
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564943",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "page_number": 6,
+        "name": "Inventories"
+      }
+    },
+    {
+      "id": 215,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470307",
+        "page_number": 5,
+        "value_2025": 2709,
+        "value_2024": 3771,
+        "name": "Prepaid expenses and other current assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470304",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 216,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470341",
+        "page_number": 5,
+        "value_2025": 116492,
+        "value_2024": 80126,
+        "name": "Total current assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470338",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 217,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470375",
+        "page_number": 5,
+        "value_2025": 9780,
+        "value_2024": 6283,
+        "format": "pdf",
+        "name": "Property and equipment, net",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470373",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 218,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470419",
+        "page_number": 5,
+        "value_2025": 2281,
+        "value_2024": 1793,
+        "name": "Operating lease assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470416",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 219,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470452",
+        "page_number": 5,
+        "value_2025": 6261,
+        "value_2024": 5188,
+        "name": "Goodwill",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470449",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 220,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470487",
+        "page_number": 5,
+        "value_2025": 936,
+        "value_2024": 807,
+        "name": "Intangible assets, net",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470485",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 221,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470521",
+        "page_number": 5,
+        "value_2025": 13674,
+        "value_2024": 10979,
+        "format": "pdf",
+        "name": "Deferred income tax assets",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470518",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 222,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470553",
+        "page_number": 5,
+        "value_2025": 11724,
+        "value_2024": 6425,
+        "name": "Other assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470550",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 223,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470585",
+        "page_number": 5,
+        "value_2025": 161148,
+        "value_2024": 111601,
+        "name": "Total assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470583",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 224,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470694",
+        "page_number": 5,
+        "value_2025": 999,
+        "value_2024": 0,
+        "name": "Short-term debt",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470691",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 225,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470726",
+        "page_number": 5,
+        "value_2025": 26075,
+        "value_2024": 18047,
+        "name": "Total current liabilities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470724",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 226,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470759",
+        "page_number": 5,
+        "value_2025": 7468,
+        "value_2024": 8463,
+        "name": "Long-term debt",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470756",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 227,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470791",
+        "page_number": 5,
+        "value_2025": 2014,
+        "value_2024": 1519,
+        "name": "Long-term operating lease liabilities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470789",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 228,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470857",
+        "page_number": 5,
+        "value_2025": 42251,
+        "value_2024": 32274,
+        "name": "Total liabilities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470854",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 229,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470893",
+        "page_number": 5,
+        "value_2025": 118897,
+        "value_2024": 79327,
+        "name": "Shareholders' equity",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470890",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 230,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.470926",
+        "page_number": 5,
+        "value_2025": 161148,
+        "value_2024": 111601,
+        "name": "Total liabilities and shareholders' equity",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:26.470923",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 231,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.471014",
+        "page_number": 5,
+        "name": "October 26, 2025",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:26.471012",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 232,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:26.471042",
+        "page_number": 5,
+        "name": "October 27, 2024",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:26.471039",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 233,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 1655,
+        "q2": 1252,
+        "q3": 4753,
+        "last_updated": "2026-01-15T13:08:27.564837",
+        "page_number": 6,
+        "q4": 3416,
+        "format": "pdf",
+        "name": "Stock-based compensation expense",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564835",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 234,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 752,
+        "q2": 478,
+        "q3": 2031,
+        "last_updated": "2026-01-15T13:08:27.564864",
+        "page_number": 6,
+        "q4": 1321,
+        "format": "pdf",
+        "name": "Depreciation and amortization",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564862",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 235,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 124,
+        "q2": -602,
+        "q3": -2035,
+        "last_updated": "2026-01-15T13:08:27.564894",
+        "q4": -3879,
+        "page_number": 6,
+        "name": "Deferred income taxes",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564892",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 236,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": -5583,
+        "q2": -3561,
+        "q3": -10325,
+        "last_updated": "2026-01-15T13:08:27.564917",
+        "q4": -7694,
+        "page_number": 6,
+        "name": "Accounts receivable",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564915",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 237,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 2728,
+        "q2": 1386,
+        "q3": 8980,
+        "last_updated": "2026-01-15T13:08:27.564990",
+        "page_number": 6,
+        "q4": 9485,
+        "name": "Proceeds from maturities of marketable securities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.564989",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 238,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": -9025,
+        "q2": -4345,
+        "q3": -21367,
+        "last_updated": "2026-01-15T13:08:27.565012",
+        "q4": -13223,
+        "page_number": 6,
+        "name": "Net cash used in investing activities",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.565011",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 239,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "q1": 274,
+        "q2": 204,
+        "q3": 643,
+        "last_updated": "2026-01-15T13:08:27.565034",
+        "page_number": 6,
+        "q4": 489,
+        "name": "Proceeds related to employee stock plans",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:08:27.565033",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 240,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.098961",
+        "page_number": 7,
+        "name": "GAAP cost of revenue",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.098957",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 241,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.098998",
+        "page_number": 7,
+        "name": "GAAP gross profit",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.098995",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 242,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.099047",
+        "page_number": 7,
+        "name": "Non-GAAP cost of revenue",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.099043",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 243,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.099083",
+        "page_number": 7,
+        "name": "Non-GAAP gross profit",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.099079",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 244,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.099120",
+        "page_number": 7,
+        "name": "GAAP operating expenses",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.099116",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 245,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.099223",
+        "page_number": 7,
+        "name": "Non-GAAP operating income",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.099220",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 246,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.099342",
+        "page_number": 7,
+        "name": "GAAP total other income, net",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.099337",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 247,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815178",
+        "page_number": 8,
+        "name": "Non-GAAP net income",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815157",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "$31,767, $25,783, $20,010, $77,444, $52,199"
+      }
+    },
+    {
+      "id": 248,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815260",
+        "page_number": 8,
+        "name": "GAAP net income",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815256",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "$31,910, $26,422, $19,309, $77,107, $50,789"
+      }
+    },
+    {
+      "id": 249,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815357",
+        "page_number": 8,
+        "name": "Tax expense from OBBBA",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815353",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "$48"
+      }
+    },
+    {
+      "id": 250,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815397",
+        "page_number": 8,
+        "name": "Weighted average shares used in diluted net income per share computation",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815394",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "24,483, 24,532, 24,774, 24,542, 24,837"
+      }
+    },
+    {
+      "id": 251,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815485",
+        "page_number": 8,
+        "name": "Research and development",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815481",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "$35, $29, $23, $93, $52"
+      }
+    },
+    {
+      "id": 252,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:28.815541",
+        "page_number": 8,
+        "name": "Sales, general and administrative",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:28.815537",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf",
+        "value": "$4, $8, $16, $20, $34"
+      }
+    },
+    {
+      "id": 253,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:29.056947",
+        "page_number": 9,
+        "format": "pdf",
+        "name": "Q4 FY2026",
+        "created_at": "2026-01-15T13:08:29.056945",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 254,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:29.386192",
+        "page_number": 10,
+        "name": "Securities and Exchange Commission",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:08:29.386189",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 255,
+      "labels": [
+        "EVENT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:08:29.386229",
+        "page_number": 10,
+        "format": "pdf",
+        "name": "Fiscal 2026",
+        "created_at": "2026-01-15T13:08:29.386226",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpt5vvp3e7.pdf"
+      }
+    },
+    {
+      "id": 256,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197664",
+        "page_number": 1,
+        "name": "AI applications",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:26.197662",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "demand": "long-term, structural"
+      }
+    },
+    {
+      "id": 257,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197687",
+        "page_number": 1,
+        "format": "pdf",
+        "name": "Hopper",
+        "created_at": "2026-01-15T13:45:26.197685",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 258,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197722",
+        "page_number": 1,
+        "format": "pdf",
+        "name": "USD4bn",
+        "created_at": "2026-01-15T13:45:26.197720",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 259,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197738",
+        "page_number": 1,
+        "format": "pdf",
+        "name": "USD37.5bn",
+        "created_at": "2026-01-15T13:45:26.197736",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 260,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197753",
+        "page_number": 1,
+        "format": "pdf",
+        "name": "USD37.1bn",
+        "created_at": "2026-01-15T13:45:26.197751",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 261,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197767",
+        "page_number": 1,
+        "format": "pdf",
+        "name": "mid-70s range",
+        "created_at": "2026-01-15T13:45:26.197766",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 262,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:26.197782",
+        "page_number": 1,
+        "name": "50%",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:26.197781",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 263,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000728",
+        "page_number": 2,
+        "name": "Sales",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000717",
+        "fy2025": 125735,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2026": 182203,
+        "fy2023": 26974,
+        "fy2024": 60922,
+        "fy2022": 26914
+      }
+    },
+    {
+      "id": 264,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000789",
+        "page_number": 2,
+        "name": "Gross Profit",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000785",
+        "fy2025": 94886,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2026": 135160,
+        "fy2023": 15965,
+        "fy2024": 44958,
+        "fy2022": 17968
+      }
+    },
+    {
+      "id": 265,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000837",
+        "page_number": 2,
+        "name": "EBITDA",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000834",
+        "fy2025": 84818,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2026": 120596,
+        "fy2023": 10584,
+        "fy2024": 38642,
+        "fy2022": 13865
+      }
+    },
+    {
+      "id": 266,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000882",
+        "page_number": 2,
+        "name": "Net Profit",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000879",
+        "fy2025": 70556,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2026": 101307,
+        "fy2023": 8366,
+        "fy2024": 32312,
+        "fy2022": 11259
+      }
+    },
+    {
+      "id": 267,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000925",
+        "page_number": 2,
+        "name": "FCF",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000922",
+        "fy2025": 62348,
+        "fy2026": 89130,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 3809,
+        "fy2024": 27023,
+        "fy2022": 8133
+      }
+    },
+    {
+      "id": 268,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.000971",
+        "page_number": 2,
+        "name": "CAPEX",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.000967",
+        "fy2025": 2859,
+        "fy2026": 3396,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 1833,
+        "fy2024": 1068,
+        "fy2022": 976
+      }
+    },
+    {
+      "id": 269,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001015",
+        "page_number": 2,
+        "name": "P/E",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001012",
+        "fy2025": 48.1,
+        "fy2026": 33.5,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 58.5,
+        "fy2024": 47.5,
+        "fy2022": 55.1
+      }
+    },
+    {
+      "id": 270,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001070",
+        "page_number": 2,
+        "name": "P/B",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001066",
+        "fy2025": 41.3,
+        "fy2026": 22.8,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 22.2,
+        "fy2024": 35.7,
+        "fy2022": 23.3
+      }
+    },
+    {
+      "id": 271,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001127",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Dividend Yield",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001123",
+        "fy2025": 0.0,
+        "fy2026": 0.0,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 0.1,
+        "fy2024": 0.0,
+        "fy2022": 0.1
+      }
+    },
+    {
+      "id": 272,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001177",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "EV/EBITDA",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001174",
+        "fy2025": 39.2,
+        "fy2026": 27.5,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 45.4,
+        "fy2024": 39.1,
+        "fy2022": 43.6
+      }
+    },
+    {
+      "id": 273,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001227",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Debt / Equity",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001224",
+        "fy2025": 11.6,
+        "fy2026": 6.6,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 53.6,
+        "fy2024": 22.6,
+        "fy2022": 43.9
+      }
+    },
+    {
+      "id": 274,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001277",
+        "page_number": 2,
+        "name": "Net Debt / Equity",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001274",
+        "fy2025": -0.5,
+        "fy2026": -0.6,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": -0.1,
+        "fy2024": -0.4,
+        "fy2022": -0.4
+      }
+    },
+    {
+      "id": 275,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001325",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Debt / Assets",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001322",
+        "fy2025": 8.5,
+        "fy2026": 5.3,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 28.8,
+        "fy2024": 14.8,
+        "fy2022": 26.4
+      }
+    },
+    {
+      "id": 276,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001371",
+        "page_number": 2,
+        "name": "Net Debt / Assets",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001368",
+        "fy2025": -0.4,
+        "fy2026": -0.5,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 0.0,
+        "fy2024": -0.2,
+        "fy2022": -0.2
+      }
+    },
+    {
+      "id": 277,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001418",
+        "page_number": 2,
+        "name": "EBITDA / Int Exp",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001415",
+        "fy2025": 344.2,
+        "fy2026": 500.5,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 40.2,
+        "fy2024": 150.4,
+        "fy2022": 58.7
+      }
+    },
+    {
+      "id": 278,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001464",
+        "page_number": 2,
+        "name": "ST Debt / Total Debt",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001461",
+        "fy2025": 0.1,
+        "fy2026": 0.1,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 0.1,
+        "fy2024": 0.1
+      }
+    },
+    {
+      "id": 279,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001519",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Debt / EBITDA",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001515",
+        "fy2025": 0.1,
+        "fy2026": 0.1,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 1.0,
+        "fy2024": 0.3,
+        "fy2022": 0.8
+      }
+    },
+    {
+      "id": 280,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001565",
+        "page_number": 2,
+        "name": "[Cash + CFO] / ST Debt",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001562",
+        "fy2025": 114.0,
+        "fy2026": 157.6,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 15.1,
+        "fy2024": 43.3,
+        "fy2022": "nm"
+      }
+    },
+    {
+      "id": 281,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001613",
+        "page_number": 2,
+        "name": "Receivables Days",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001610",
+        "fy2025": 51.4,
+        "fy2026": 52.0,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 51.8,
+        "fy2024": 59.9,
+        "fy2022": 63.1
+      }
+    },
+    {
+      "id": 282,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001658",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Days Payable",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001655",
+        "fy2025": 14.1,
+        "fy2026": 13.4,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 16.1,
+        "fy2024": 16.2,
+        "fy2022": 24.2
+      }
+    },
+    {
+      "id": 283,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.001703",
+        "page_number": 2,
+        "format": "pdf",
+        "name": "Inventory Days",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:30.001700",
+        "fy2025": 24.8,
+        "fy2026": 24.8,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "fy2023": 69.8,
+        "fy2024": 31.6,
+        "fy2022": 35.3
+      }
+    },
+    {
+      "id": 284,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996425",
+        "page_number": 6,
+        "name": "DBS Group Research",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996418",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 285,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.842588",
+        "page_number": 3,
+        "format": "pdf",
+        "name": "Fang Boon Foo",
+        "created_at": "2026-01-15T13:45:30.842586",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 286,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.842606",
+        "page_number": 3,
+        "format": "pdf",
+        "name": "Ling Lee Keng",
+        "created_at": "2026-01-15T13:45:30.842605",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 287,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585376",
+        "page_number": 7,
+        "afs_licence_no": "475946",
+        "format": "pdf",
+        "name": "DBS Bank Ltd",
+        "created_at": "2026-01-15T13:45:32.585369",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "company_regn__no": "196800306E",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 288,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:30.842638",
+        "page_number": 3,
+        "name": "DBS Vickers Securities (Singapore) Pte Ltd",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:30.842636",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 289,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585416",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "DBSVUSA",
+        "created_at": "2026-01-15T13:45:32.585414",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 290,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.099302",
+        "page_number": 4,
+        "format": "pdf",
+        "name": "research analyst",
+        "created_at": "2026-01-15T13:45:31.099300",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 291,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242363",
+        "page_number": 5,
+        "name": "DBSVS",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242362",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 292,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242379",
+        "page_number": 5,
+        "format": "pdf",
+        "name": "DBSV HK",
+        "created_at": "2026-01-15T13:45:31.242378",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 293,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242395",
+        "page_number": 5,
+        "name": "Monetary Authority of Singapore",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242394",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 294,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242411",
+        "page_number": 5,
+        "name": "Hong Kong Securities and Futures Commission",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242410",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 295,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585434",
+        "page_number": 7,
+        "reg_no": "AH8290",
+        "name": "Dennis Lam",
+        "format": "pdf",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "created_at": "2026-01-15T13:45:32.585432",
+        "location": "Hong Kong",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "email": "dbsvhk@dbs.com"
+      }
+    },
+    {
+      "id": 296,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242448",
+        "page_number": 5,
+        "name": "PT DBS Vickers Sekuritas Indonesia",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242446",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 297,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242463",
+        "page_number": 5,
+        "name": "AllianceDBS Research Sdn Bhd",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242462",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "abbreviation": "ADBSR"
+      }
+    },
+    {
+      "id": 298,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.242481",
+        "page_number": 5,
+        "name": "Alliance Investment Bank Berhad",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.242479",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 299,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996453",
+        "page_number": 6,
+        "name": "DBS Vickers Securities (Thailand) Co Ltd",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996451",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 300,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585493",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Chanpen Sirithanarattanakul",
+        "created_at": "2026-01-15T13:45:32.585491",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "location": "Thailand",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf",
+        "email": "research@th.dbs.com"
+      }
+    },
+    {
+      "id": 301,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996508",
+        "page_number": 6,
+        "name": "Monetary Authority of Singapore",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996506",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 302,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996524",
+        "page_number": 6,
+        "format": "pdf",
+        "name": "DBS UK",
+        "created_at": "2026-01-15T13:45:31.996523",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 303,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996541",
+        "page_number": 6,
+        "name": "Prudential Regulation Authority",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996540",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 304,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996556",
+        "page_number": 6,
+        "name": "Financial Conduct Authority",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996555",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 305,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996572",
+        "page_number": 6,
+        "name": "Dubai International Financial Centre",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996571",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 306,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996588",
+        "page_number": 6,
+        "format": "pdf",
+        "name": "DBS DIFC",
+        "created_at": "2026-01-15T13:45:31.996587",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 307,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:31.996604",
+        "page_number": 6,
+        "name": "Dubai Financial Services Authority",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:31.996602",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 308,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585458",
+        "page_number": 7,
+        "name": "Andy Sim",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:32.585457",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "location": "Singapore",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 309,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585476",
+        "page_number": 7,
+        "name": "William Simadiputra",
+        "format": "pdf",
+        "created_at": "2026-01-15T13:45:32.585474",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "location": "Indonesia",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 310,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585509",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Hong Kong",
+        "created_at": "2026-01-15T13:45:32.585508",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 311,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585525",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Singapore",
+        "created_at": "2026-01-15T13:45:32.585523",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 312,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585540",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Indonesia",
+        "created_at": "2026-01-15T13:45:32.585538",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 313,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "last_updated": "2026-01-15T13:45:32.585554",
+        "page_number": 7,
+        "format": "pdf",
+        "name": "Thailand",
+        "created_at": "2026-01-15T13:45:32.585553",
+        "extraction_method": "gpt-4o-mini-parallel",
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp6lizpt93.pdf"
+      }
+    },
+    {
+      "id": 314,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T13:56:14.535559",
+        "name": "Debora Shoquist",
+        "format": "txt",
+        "created_at": "2026-01-15T13:56:14.535557",
+        "char_count": 478,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "0-14"
+      }
+    },
+    {
+      "id": 315,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245200",
+        "format": "txt",
+        "name": "Total Revenue",
+        "created_at": "2026-01-15T13:57:19.245193",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 316,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T13:56:14.535609",
+        "name": "Data Center Revenue",
+        "format": "txt",
+        "created_at": "2026-01-15T13:56:14.535607",
+        "char_count": 478,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "0-14"
+      }
+    },
+    {
+      "id": 317,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.241412",
+        "format": "txt",
+        "name": "Gaming Revenue",
+        "created_at": "2026-01-15T13:57:19.237047",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 318,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.243932",
+        "name": "Professional Visualization Revenue",
+        "format": "txt",
+        "created_at": "2026-01-15T13:57:19.243921",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 319,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.243982",
+        "name": "Automotive Revenue",
+        "format": "txt",
+        "created_at": "2026-01-15T13:57:19.243979",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 320,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245236",
+        "format": "txt",
+        "name": "Net Income",
+        "created_at": "2026-01-15T13:57:19.245233",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 321,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245268",
+        "format": "txt",
+        "name": "Gross Margin",
+        "created_at": "2026-01-15T13:57:19.245265",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 322,
+      "labels": [
+        "FINANCIAL_METRIC"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245299",
+        "name": "Operating Margin",
+        "format": "txt",
+        "created_at": "2026-01-15T13:57:19.245296",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 323,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245329",
+        "name": "H100 Tensor Core GPU",
+        "format": "txt",
+        "created_at": "2026-01-15T13:57:19.245326",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 324,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245357",
+        "format": "txt",
+        "name": "A100 GPU",
+        "created_at": "2026-01-15T13:57:19.245355",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 325,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 2,
+        "last_updated": "2026-01-15T13:57:19.245386",
+        "name": "GeForce RTX 4090",
+        "format": "txt",
+        "created_at": "2026-01-15T13:57:19.245384",
+        "char_count": 503,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "15-28"
+      }
+    },
+    {
+      "id": 326,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:48.997879",
+        "format": "txt",
+        "name": "CUDA Platform",
+        "created_at": "2026-01-15T13:58:48.991712",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 327,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001673",
+        "name": "AI Enterprise Software",
+        "format": "txt",
+        "created_at": "2026-01-15T13:58:49.001665",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 328,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001712",
+        "format": "txt",
+        "name": "AMD",
+        "created_at": "2026-01-15T13:58:49.001710",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 329,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001744",
+        "format": "txt",
+        "name": "Cerebras",
+        "created_at": "2026-01-15T13:58:49.001742",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 330,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001767",
+        "format": "txt",
+        "name": "Microsoft",
+        "created_at": "2026-01-15T13:58:49.001765",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 331,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001782",
+        "format": "txt",
+        "name": "Meta",
+        "created_at": "2026-01-15T13:58:49.001781",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 332,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001798",
+        "name": "Amazon Web Services",
+        "format": "txt",
+        "created_at": "2026-01-15T13:58:49.001796",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 333,
+      "labels": [
+        "PERSON"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001814",
+        "format": "txt",
+        "name": "Google Cloud",
+        "created_at": "2026-01-15T13:58:49.001812",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 334,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 3,
+        "last_updated": "2026-01-15T13:58:49.001829",
+        "format": "txt",
+        "name": "Tesla",
+        "created_at": "2026-01-15T13:58:49.001828",
+        "char_count": 512,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "29-43"
+      }
+    },
+    {
+      "id": 335,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906632",
+        "format": "txt",
+        "name": "Samsung",
+        "created_at": "2026-01-15T14:00:00.906619",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 336,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906673",
+        "format": "txt",
+        "name": "SK Hynix",
+        "created_at": "2026-01-15T14:00:00.906670",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 337,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906764",
+        "format": "txt",
+        "name": "ServiceNow",
+        "created_at": "2026-01-15T14:00:00.906761",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 338,
+      "labels": [
+        "COMPANY"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906793",
+        "format": "txt",
+        "name": "SAP",
+        "created_at": "2026-01-15T14:00:00.906790",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 339,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.906824",
+        "format": "txt",
+        "name": "United States",
+        "created_at": "2026-01-15T14:00:00.906821",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 340,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.907190",
+        "format": "txt",
+        "name": "China",
+        "created_at": "2026-01-15T14:00:00.907171",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 341,
+      "labels": [
+        "LOCATION"
+      ],
+      "properties": {
+        "chunk_index": 4,
+        "last_updated": "2026-01-15T14:00:00.907253",
+        "format": "txt",
+        "name": "Taiwan",
+        "created_at": "2026-01-15T14:00:00.907248",
+        "char_count": 497,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmp_s3lyhee.txt",
+        "lines": "44-56"
+      }
+    },
+    {
+      "id": 342,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T14:00:30.113726",
+        "format": "txt",
+        "name": "GPU",
+        "created_at": "2026-01-15T14:00:30.113720",
+        "char_count": 270,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpoqu0rt91.txt",
+        "lines": "0-1"
+      }
+    },
+    {
+      "id": 343,
+      "labels": [
+        "PRODUCT"
+      ],
+      "properties": {
+        "chunk_index": 1,
+        "last_updated": "2026-01-15T14:00:30.113808",
+        "format": "txt",
+        "name": "AI chip",
+        "created_at": "2026-01-15T14:00:30.113798",
+        "char_count": 270,
+        "source": "/var/folders/rw/dr3t_nv13wj1cdwrhsl_7_c00000gn/T/tmpoqu0rt91.txt",
+        "lines": "0-1"
+      }
+    },
+    {
+      "id": 344,
+      "labels": [
+        "Country"
+      ],
+      "properties": {
+        "name": "United States",
+        "region": "North America"
+      }
+    },
+    {
+      "id": 345,
+      "labels": [
+        "Country"
+      ],
+      "properties": {
+        "updated_at": 

@@ -1,0 +1,639 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "overall_pass_rate": 0.6,
+    "timestamp": "2026-01-17T15:06:39.890006"
+  },
+  "security": {
+    "passed": 10,
+    "failed": 0,
+    "total_violations": 0,
+    "status": "\u2705 PASS"
+  },
+  "format": {
+    "passed": 0,
+    "failed": 10,
+    "avg_compliance": 0.0,
+    "status": "\u26a0\ufe0f PARTIAL"
+  },
+  "accuracy": {
+    "passed": 6,
+    "failed": 4,
+    "avg_score": 0.5793333333333333,
+    "status": "\u274c FAIL"
+  },
+  "multihop": {
+    "avg_score": 4.333333333333333,
+    "total_evaluated": 9,
+    "status": "\u2705 PASS"
+  },
+  "detailed_results": [
+    {
+      "test_id": 1,
+      "query": "What is Nvidia's supply chain dependency on TSMC?",
+      "category": "supply_chain",
+      "timestamp": "2026-01-17T15:04:43.785097",
+      "security": {
+        "test_id": 1,
+        "query": "What is Nvidia's supply chain dependency on TSMC?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 117,
+          "scan_timestamp": "2026-01-17T15:04:43.785477"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\nNVIDIA has a **significant supply chain dependency on TSMC** for manufacturing its most advanced chips, particularly its AI processors like Blackwell and the newer Vera Rubin platform.[1][4][5]\n\nNVIDIA's reliance on TSMC is substantial because TSMC is the world's leading semiconductor manufacturer capable of producing chips at the most advanced technology nodes.[2] NVIDIA's latest AI chips are manufactured using TSMC's cutting-edge processes\u2014Blackwell chips are produced at TSMC's facilities, and the Vera Rubin platform's six chips are primarily manufactured using TSMC's advanced 3-nanometer process.[5]\n\nTo mitigate supply chain risks, NVIDIA has been actively diversifying its manufacturing footprint while maintaining its partnership with TSMC. The company is working with multiple manufacturing partners including Foxconn and Wistron for supercomputer assembly in Texas, and Amkor and SPIL for packaging and testing operations in Arizona.[3] Notably, NVIDIA has begun producing Blackwell chips at TSMC's Phoenix, Arizona facility, marking the first time these critical AI chips are manufactured on U.S. soil.[1][4]\n\nDespite this diversification, TSMC remains central to NVIDIA's strategy. The two companies have a **three-decade partnership** and continue to collaborate on advancing manufacturing technology, including NVIDIA's computational lithography platform (cuLitho), which TSMC has integrated into production to accelerate chip development.[2] NVIDIA plans to produce up to half a trillion dollars of AI infrastructure in the United States within four years through partnerships with TSMC and other manufacturers, indicating that while NVIDIA is building redundancy, TSMC continues to be a critical partner rather than a replaceable supplier.[3]",
+      "response_length": 1790,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 1790
+      },
+      "accuracy": {
+        "accuracy_score": 0.44999999999999996,
+        "keyword_overlap": 0.0,
+        "semantic_similarity": 0.75,
+        "keywords_expected": [
+          "Nvidia",
+          "90",
+          "This"
+        ],
+        "keywords_found": [],
+        "passed": false
+      },
+      "multihop": {
+        "score": 5,
+        "reasoning": "The path found in the knowledge graph logically connects Nvidia to TSMC through the concept of supply chain and manufacturing, which directly addresses the query about Nvidia's dependency on TSMC for its supply chain.",
+        "strengths": "The response effectively utilizes the path by clearly articulating Nvidia's significant reliance on TSMC for manufacturing advanced chips, providing specific examples of products and emphasizing TSMC's leading role in the semiconductor industry.",
+        "weaknesses": "There are no notable weaknesses; the response is comprehensive and directly relevant to the query.",
+        "hop_count": 3,
+        "path": [
+          "Nvidia",
+          "TSMC",
+          "supply chain",
+          "manufacturing"
+        ]
+      }
+    },
+    {
+      "test_id": 2,
+      "query": "When will TSMC start mass production of 2nm chips?",
+      "category": "technology",
+      "timestamp": "2026-01-17T15:04:56.585981",
+      "security": {
+        "test_id": 2,
+        "query": "When will TSMC start mass production of 2nm chips?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 104,
+          "scan_timestamp": "2026-01-17T15:04:56.586059"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**TSMC began mass production of its 2nm chips in the fourth quarter of 2025, as confirmed by the company on January 2, 2026.** [1][2]\n\nThis milestone was achieved at Wafer Fab 20 in Hsinchu and Wafer Fab 22 in Kaohsiung, Taiwan, using first-generation nanosheet transistor (Gate-All-Around or GAA) technology, marking a shift from FinFET architecture and enabling 20% faster clock speeds, higher SRAM density (38Mb/mm\u00b2), and better power efficiency.[1][2] Production ramp-up is accelerating, with initial capacity at 45,000-50,000 wafers per month scaling to over 100,000 by the end of 2026, though much of it\u2014over 50%\u2014is already booked by Apple through 2026 for products like the iPhone 18's A20 chip and M5 Macs.[2][5] Demand from AI applications (e.g., Nvidia GPUs, Google TPUs) will keep 2nm lines undersupplied in 2026, while competitors like Nvidia await 2027 access.[1][2]\n\nEarlier plans aligned with this timeline: risk production started in July 2024, with mass production targeted for the second half of 2025.[4] TSMC maintains a 3-5 year lead over rivals like Intel's 18A node.[1] US-based 2nm production (Fab 21 phase 3 in Arizona) is not expected until after 2027.[3]",
+      "response_length": 1207,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 1207
+      },
+      "accuracy": {
+        "accuracy_score": 0.8200000000000001,
+        "keyword_overlap": 1.0,
+        "semantic_similarity": 0.7,
+        "keywords_expected": [
+          "This",
+          "2025"
+        ],
+        "keywords_found": [
+          "This",
+          "2025"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path from TSMC to 2nm technology roadmap is relevant to the query about mass production of 2nm chips. The response effectively utilizes this path by providing a specific timeline for the start of mass production, which is directly related to the technology roadmap.",
+        "strengths": "The response includes a clear and specific date for mass production, along with additional context about the technology used, which enhances the relevance and depth of the answer.",
+        "weaknesses": "While the path is logical, it could be improved by explicitly connecting the roadmap to the production timeline, perhaps by mentioning how the roadmap informs production decisions.",
+        "hop_count": 2,
+        "path": [
+          "TSMC",
+          "2nm",
+          "technology roadmap"
+        ]
+      }
+    },
+    {
+      "test_id": 3,
+      "query": "What are the geopolitical risks affecting Taiwan's semiconductor industry?",
+      "category": "risk_analysis",
+      "timestamp": "2026-01-17T15:05:06.186648",
+      "security": {
+        "test_id": 3,
+        "query": "What are the geopolitical risks affecting Taiwan's semiconductor industry?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 130,
+          "scan_timestamp": "2026-01-17T15:05:06.186733"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**Taiwan's semiconductor industry, led by TSMC which produces nearly 90% of the world's most advanced chips, faces primary geopolitical risks from escalating China-Taiwan tensions, potential U.S.-China trade conflicts, and disruptions to energy supply routes.[1][6][8]**\n\n### China-Taiwan Tensions and Military Risks\nChina's growing assertiveness, including military exercises near Taiwan and potential \"quarantine\" scenarios in the Taiwan Strait, threatens direct disruption to chip production and exports.[4][6] Taiwan's dominance acts as a \"silicon shield,\" deterring invasion due to mutual economic catastrophe\u2014China relies on over half of Taiwan's chip exports\u2014but could incentivize Beijing to seize facilities for technological dominance.[1][3] A conflict would paralyze trade routes like the Taiwan Strait and South China Sea, halting semiconductor output and global supply chains.[2][6]\n\n### U.S.-China Trade War and Supply Chain Pressures\nU.S.-China rivalry disrupts the ecosystem through export controls on advanced chips and AI accelerators to China, alongside U.S. efforts to onshore production via TSMC plants in the U.S., Japan, and Europe.[3][5][7] This erodes Taiwan's \"indispensability,\" weakening its shield as advanced nodes (e.g., below 2nm) remain restricted to Taiwan, fueling perceptions of U.S. unreliability amid \"America First\" policies.[3] Interdependence persists, with U.S. tech relying on Taiwanese components, but bans on adversary-sourced parts heighten vulnerabilities.[5][7]\n\n### Energy and Infrastructure Vulnerabilities\nTaiwan's energy imports, transiting contested South China Sea routes, risk shortages from Chinese interference, impacting power reliability for fabs.[2] Limited natural gas reserves and high relocation costs make short-term diversification challenging before 2027.[4]\n\n### Broader Global Implications and Mitigation Efforts\nGlobal dependence amplifies risks, prompting U.S.-led onshoring, alliances, and \"triad\" deterrence models with partners to assess and counter quarantine threats.[1][4][9] Taiwan counters via energy diversification, renewables, and U.S. diplomatic/military support, though talent exodus and sanctions could cripple seized facilities.[1][2] These factors underscore the industry's status as a critical geopolitical flashpoint.[5][8]",
+      "response_length": 2337,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2337
+      },
+      "accuracy": {
+        "accuracy_score": 0.5833333333333333,
+        "keyword_overlap": 0.3333333333333333,
+        "semantic_similarity": 0.75,
+        "keywords_expected": [
+          "Any",
+          "Nvidia",
+          "60",
+          "Taiwan",
+          "Strait",
+          "Apple"
+        ],
+        "keywords_found": [
+          "Taiwan",
+          "Strait"
+        ],
+        "passed": false
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path from 'Taiwan' to 'geopolitical risk' to 'TSMC' is logical and relevant to the query about the geopolitical risks affecting Taiwan's semiconductor industry. The response effectively identifies key risks and connects them to TSMC, which is central to Taiwan's semiconductor industry.",
+        "strengths": "The response provides specific geopolitical risks and contextualizes them within the framework of Taiwan's semiconductor industry, particularly highlighting TSMC's significance.",
+        "weaknesses": "While the path is clear, it could be improved by explicitly detailing how each identified risk directly impacts TSMC or the semiconductor industry, enhancing the causal connections.",
+        "hop_count": 2,
+        "path": [
+          "Taiwan",
+          "geopolitical risk",
+          "TSMC"
+        ]
+      }
+    },
+    {
+      "test_id": 4,
+      "query": "How does the CHIPS Act impact Intel's manufacturing strategy?",
+      "category": "regulation",
+      "timestamp": "2026-01-17T15:05:17.505699",
+      "security": {
+        "test_id": 4,
+        "query": "How does the CHIPS Act impact Intel's manufacturing strategy?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 114,
+          "scan_timestamp": "2026-01-17T15:05:17.505874"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**The CHIPS and Science Act provides Intel with up to $7.86 billion in direct funding, plus a $3 billion Secure Enclave contract, tax credits up to 25% on over $100 billion in qualified investments, and potential loans, enabling massive expansion of U.S. semiconductor manufacturing and advanced packaging in Arizona, New Mexico, Ohio, and Oregon.[1][4][5]**\n\nThis funding supports Intel's strategy to invest over $100 billion domestically, building new fabs (e.g., four advanced facilities in Chandler, AZ, and New Albany, OH) and upgrading existing ones in Hillsboro, OR, and Rio Rancho, NM, to produce leading-edge chips and fill supply chain gaps critical for economic and national security.[1][3][4]\n\nKey impacts include:\n- **Capacity and technology leadership**: Advances commercial manufacturing, advanced packaging, and trusted production for U.S. government needs via Secure Enclave, with high-volume production starting soon at new Arizona sites using the most advanced U.S. process tech.[1][4][6]\n- **Financial and operational resilience**: Offsets cash flow challenges during 2025\u20132026 fab construction (revenue from 2027+), eliminates claw-back provisions on prior $2.2 billion grants under recent agreements, and spurs job creation (tens of thousands directly, hundreds of thousands indirectly).[2][5][6]\n- **Strategic shifts**: Reinforces U.S.-centric manufacturing over global reliance, balancing capacity across North America amid competition, while fostering R&D and supply chain security.[4][5][7]\n\nThese incentives have accelerated Intel's plans since 2022, with finalization in late 2024 signaling government commitment amid Intel's financial pressures and CEO-led turnaround efforts.[1][2][6] Industry groups like SIA highlight broader benefits for U.S. competitiveness.[2]",
+      "response_length": 1822,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 1822
+      },
+      "accuracy": {
+        "accuracy_score": 0.69,
+        "keyword_overlap": 0.6,
+        "semantic_similarity": 0.75,
+        "keywords_expected": [
+          "Intel",
+          "Samsung",
+          "52",
+          "The",
+          "Act"
+        ],
+        "keywords_found": [
+          "Intel",
+          "Act",
+          "The"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path from the CHIPS Act to Intel through regulation is logical, as the CHIPS Act directly influences Intel's manufacturing strategy through funding and incentives. However, the path could be more explicit in detailing how regulation specifically affects Intel's decisions.",
+        "strengths": "The response effectively highlights the financial support and incentives provided by the CHIPS Act, which are crucial for Intel's manufacturing strategy. It also mentions specific locations for expansion, adding depth to the answer.",
+        "weaknesses": "While the response is informative, it could improve by explicitly connecting the regulatory aspects of the CHIPS Act to Intel's strategic decisions, thereby strengthening the causal link.",
+        "hop_count": 2,
+        "path": [
+          "CHIPS Act",
+          "Intel",
+          "regulation"
+        ]
+      }
+    },
+    {
+      "test_id": 5,
+      "query": "Trace the supply chain from ASML to cloud service providers.",
+      "category": "multihop",
+      "timestamp": "2026-01-17T15:05:28.503790",
+      "security": {
+        "test_id": 5,
+        "query": "Trace the supply chain from ASML to cloud service providers.",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 122,
+          "scan_timestamp": "2026-01-17T15:05:28.503849"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**ASML supplies photolithography machines (primarily EUV and DUV systems) to leading semiconductor foundries, which use them to manufacture advanced logic and memory chips subsequently purchased by cloud service providers (CSPs) like AWS, Google Cloud, and Microsoft Azure for data centers and AI infrastructure.** These machines are essential for printing intricate transistor patterns on silicon wafers during chip fabrication[1][2][5][6].\n\n### Key Steps in the Supply Chain\n1. **ASML Production and Delivery**: ASML manufactures lithography scanners in Veldhoven, Netherlands, assembling modules (e.g., optics from Zeiss in Germany, lasers from California) in cleanrooms. Systems are tested, disassembled, shipped, and reassembled at customer fabs, primarily in Asia (e.g., TSMC in Taiwan) or the U.S.[1][7].\n\n2. **Foundry Chip Manufacturing**: Foundries like TSMC, Samsung, and Intel install ASML machines in their fabrication plants (fabs). These perform lithography\u2014projecting light through masks onto photoresist-coated wafers\u2014to build 100+ layers of transistors, creating chips via deposition, etching, ion implantation, and packaging over 3-4 months[2][3][4][5][7]. EUV enables sub-3nm nodes for high-performance chips; DUV supports larger features[1][6][8].\n\n3. **Chip Delivery to CSPs**: Foundries produce processors (e.g., TSMC fabricates Nvidia GPUs, AMD/Intel CPUs) ordered by CSPs. These chips power cloud servers:\n   - **Nvidia**: GPUs (e.g., H100/B200) made on TSMC's EUV processes for AI training in AWS, Azure, Google[1].\n   - **AMD/Intel**: CPUs for cloud instances, reliant on ASML-equipped fabs[6].\n   CSPs integrate chips into servers for services like compute, storage, and AI[3][6].\n\n| Stage | Key Players | ASML Role | Output |\n|-------|-------------|-----------|--------|\n| Machine Supply | ASML \u2192 TSMC, Samsung, Intel | EUV/DUV lithography systems | Scanners for wafer patterning[1][6] |\n| Chip Fab | TSMC/Samsung \u2192 Nvidia, AMD, Intel | Prints transistor layers on wafers | Advanced SoCs/GPUs/CPUs (e.g., 3nm nodes)[2][3][4] |\n| CSP Integration | AWS, Google Cloud, Azure \u2192 End-users | Purchases finished chips | Data center servers for cloud/AI[1][7] |\n\nThis chain dominates advanced nodes (ASML holds 83% lithography market share as of 2025), though geopolitical restrictions limit EUV access for some regions[6][8].",
+      "response_length": 2373,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2373
+      },
+      "accuracy": {
+        "accuracy_score": 0.8600000000000001,
+        "keyword_overlap": 0.875,
+        "semantic_similarity": 0.85,
+        "keywords_expected": [
+          "Providers",
+          "Nvidia",
+          "Azure",
+          "This",
+          "Cloud",
+          "4",
+          "Google",
+          "Microsoft"
+        ],
+        "keywords_found": [
+          "Nvidia",
+          "This",
+          "Azure",
+          "Cloud",
+          "4",
+          "Google",
+          "Microsoft"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 5,
+        "reasoning": "The path from ASML to cloud service providers is logical and reflects a clear causal chain in the semiconductor supply chain. Each hop represents a significant step in the process of manufacturing chips that are ultimately used by cloud service providers.",
+        "strengths": "The response effectively explains the role of each entity in the supply chain, highlighting ASML's contribution to semiconductor manufacturing and the subsequent use of those semiconductors by cloud service providers. The explanation is detailed and relevant to the query.",
+        "weaknesses": "While the response is strong, it could be enhanced by providing specific examples of the types of chips produced and their applications in cloud services, which would further illustrate the connection.",
+        "hop_count": 3,
+        "path": [
+          "ASML",
+          "TSMC",
+          "Nvidia",
+          "cloud providers"
+        ]
+      }
+    },
+    {
+      "test_id": 6,
+      "query": "What is the latest news about Nvidia's AI chip developments?",
+      "category": "realtime_search",
+      "timestamp": "2026-01-17T15:05:41.750963",
+      "security": {
+        "test_id": 6,
+        "query": "What is the latest news about Nvidia's AI chip developments?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 114,
+          "scan_timestamp": "2026-01-17T15:05:41.751035"
+        }
+      },
+      "system_response": "\uc6f9 \uac80\uc0c9 \uae30\ub2a5\uc740 Multi-Agent Analysis \ubaa8\ub4dc\uc5d0\uc11c \ub354 \uac15\ub825\ud558\uac8c \ub3d9\uc791\ud569\ub2c8\ub2e4. Advanced Settings\uc5d0\uc11c 'Multi-Agent Analysis Mode'\ub97c \ud65c\uc131\ud654\ud55c \ud6c4 \ub2e4\uc2dc \uc9c8\ubb38\ud574\uc8fc\uc138\uc694.",
+      "response_length": 115,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 115
+      },
+      "accuracy": {
+        "accuracy_score": 0.0,
+        "keyword_overlap": 0.0,
+        "semantic_similarity": 0.0,
+        "keywords_expected": [
+          "Perplexity",
+          "Nvidia",
+          "Expected",
+          "This"
+        ],
+        "keywords_found": [],
+        "passed": false
+      }
+    },
+    {
+      "test_id": 7,
+      "query": "Compare Nvidia and AMD in the AI accelerator market.",
+      "category": "competitive_analysis",
+      "timestamp": "2026-01-17T15:05:44.234425",
+      "security": {
+        "test_id": 7,
+        "query": "Compare Nvidia and AMD in the AI accelerator market.",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 117,
+          "scan_timestamp": "2026-01-17T15:05:44.234489"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\nNVIDIA remains the dominant force in the AI accelerator market with approximately 92% market share, but AMD is rapidly gaining ground with significant competitive advantages in cost-efficiency and emerging software parity[3][4].\n\n## Market Position and Share\n\nNVIDIA's dominance stems from its mature **CUDA software ecosystem** and established customer relationships, with platforms like Blackwell and Rubin architectures leading in performance[4]. However, AMD's market share is expanding, particularly in inference workloads where it captures nearly 50% customer mindshare among companies focused on inference-only deployments[2].\n\n## Key Competitive Advantages\n\n**AMD's Strengths:**\n- **Cost-per-performance:** The MI350X offers 40% better token-per-dollar efficiency than NVIDIA's B200 Blackwell chips for inference workloads[1]\n- **Software maturity:** ROCm 7.2 has achieved \"functional parity\" with mainstream AI frameworks like PyTorch and TensorFlow, reducing migration friction from CUDA[1]\n- **Memory architecture:** The Helios platform emphasizes high-bandwidth memory richness, with the MI400 series providing expanded key-value caches for low-latency inference[2]\n- **Open standards:** AMD's open-source ROCm stack appeals to customers seeking alternatives to NVIDIA's proprietary systems[3]\n\n**NVIDIA's Advantages:**\n- **Ecosystem depth:** Superior software maturity and established developer tools continue to drive adoption[4]\n- **Supply chain dominance:** NVIDIA will be TSMC's leading customer in 2026, contributing approximately 20% of TSMC's revenue versus AMD's less than half that amount[2]\n- **Broader platform reach:** Leadership extends beyond data centers into edge AI and autonomous vehicles[4]\n\n## Market Momentum\n\nAMD stock rose 77.3% in 2025, outpacing NVIDIA in the final quarter[6]. An analyst forecast predicts AMD's AI revenue will reach $14-15 billion in 2026 driven by MI355 and MI455 accelerator shipments[3]. Strategic endorsements from OpenAI, Luma AI, and others signal growing ecosystem confidence[3].\n\n## 2026 Outlook\n\nThe competitive landscape is shifting toward **inference workloads and agentic AI**, where AMD's cost advantages and memory-rich architectures are particularly valuable[1][5]. While NVIDIA maintains overall market leadership, AMD is positioned to capture increasing share in cost-sensitive segments and specialized applications[3].",
+      "response_length": 2420,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2420
+      },
+      "accuracy": {
+        "accuracy_score": 0.6499999999999999,
+        "keyword_overlap": 0.5,
+        "semantic_similarity": 0.75,
+        "keywords_expected": [
+          "80",
+          "Nvidia",
+          "Blackwell",
+          "15"
+        ],
+        "keywords_found": [
+          "15",
+          "Blackwell"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path found connects Nvidia and AMD through their competition in the AI accelerator market, which is relevant to the query. The hops logically lead to a comparison of their market positions and share, although the path could have been more direct.",
+        "strengths": "The response effectively highlights Nvidia's market dominance and AMD's competitive advantages, providing a clear comparison that aligns with the query. The use of specific metrics like market share adds credibility.",
+        "weaknesses": "While the path is relevant, it could have included more direct connections between Nvidia and AMD's specific products or technologies in the AI accelerator space to strengthen the comparison further.",
+        "hop_count": 3,
+        "path": [
+          "Nvidia",
+          "AMD",
+          "market share",
+          "competition"
+        ]
+      }
+    },
+    {
+      "test_id": 8,
+      "query": "What is the difference between HBM3 and HBM4 memory?",
+      "category": "technology",
+      "timestamp": "2026-01-17T15:05:58.394574",
+      "security": {
+        "test_id": 8,
+        "query": "What is the difference between HBM3 and HBM4 memory?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 106,
+          "scan_timestamp": "2026-01-17T15:05:58.394648"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**HBM4 offers significantly higher bandwidth, capacity, and efficiency than HBM3, primarily through a doubled interface width (2048-bit vs. 1024-bit), more channels (up to 32 vs. 16), and taller stacks supporting up to 64 GB per stack compared to HBM3's 24-36 GB.**[1][2][4][5]\n\n### Key Architectural Differences\n- **Interface and Bandwidth**: HBM3 uses a 1024-bit interface with data rates up to 6.4 Gb/s per pin, delivering around 819 GB/s per stack. HBM4 doubles this to a 2048-bit interface, achieving up to 2 TB/s per stack at 8 Gb/s per pin (or higher, like 10 GT/s in prototypes), a 2.4x bandwidth improvement.[1][2][3][4]\n- **Channel Count**: HBM3 supports 16 channels; HBM4 doubles this to 32 channels (with 2 pseudo-channels per channel) for greater flexibility and performance in multi-core CPUs/GPUs.[2][5]\n- **Stack Height and Capacity**: HBM3 enables 16-high stacks with 24-36 GB capacity using 32 Gb dies. HBM4 supports up to 16-high stacks (taller at ~950 \u00b5m vs. ~750 \u00b5m for HBM3's 12-high) with 24-32 Gb dies, reaching 64 GB per stack.[1][3][4][6]\n- **Power Efficiency and Voltage**: HBM4 reduces core voltage to 1.05V (vs. HBM3's 1.1V) and offers I/O options like 0.7-0.9V, improving efficiency. It also features denser backside bumps for better power delivery and signal integrity at high speeds.[2][3][5]\n- **Additional Features**: HBM4 adds support for decision feedback equalizer (DFE), more mode registers (MR0-MR19 vs. HBM3's fewer), and backwards compatibility with HBM3 controllers, unlike some claims of incompatibility with HBM3E.[4][5][8]\n\n| Feature              | HBM3                          | HBM4                          |\n|----------------------|-------------------------------|-------------------------------|\n| **Interface Width** | 1024-bit[2][4]               | 2048-bit[2][3][4]            |\n| **Data Rate (Gb/s)**| Up to 6.4[1][4]              | Up to 8 (10 in prototypes)[3][4] |\n| **Bandwidth/Stack** | ~819 GB/s[1]                 | Up to 2 TB/s[1][2][4]        |\n| **Channels**        | 16[1][5]                     | 32[2][5]                     |\n| **Max Capacity/Stack** | 24-36 GB[1]                | 64 GB[1][4][6]               |\n| **Stack Height**    | Up to 16-high (~750 \u00b5m for 12-high)[3] | Up to 16-high (~950 \u00b5m)[3] |\n\nThese advancements address AI training bottlenecks like data movement for large models, with HBM4 standardized by JEDEC in April 2025 by Samsung, Micron, and SK hynix.[1][4] Note minor source conflicts on HBM3E compatibility, but HBM4 is confirmed compatible with HBM3 controllers.[4][8]",
+      "response_length": 2591,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2591
+      },
+      "accuracy": {
+        "accuracy_score": 0.61,
+        "keyword_overlap": 0.4,
+        "semantic_similarity": 0.75,
+        "keywords_expected": [
+          "Hynix",
+          "819",
+          "2026",
+          "1",
+          "25"
+        ],
+        "keywords_found": [
+          "1",
+          "819"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path from HBM3 to HBM4 and then to memory technology is logical and relevant to the query about the differences between the two memory types. The response effectively utilizes the path to provide specific architectural differences, demonstrating a clear understanding of the subject matter.",
+        "strengths": "The response provides detailed and relevant comparisons between HBM3 and HBM4, highlighting key differences in bandwidth, capacity, and efficiency. It also includes specific metrics that enhance the clarity of the comparison.",
+        "weaknesses": "While the response is strong, it could improve by explicitly stating how HBM4's advancements directly relate to the differences from HBM3, ensuring that the causal connections are even clearer.",
+        "hop_count": 2,
+        "path": [
+          "HBM3",
+          "HBM4",
+          "memory technology"
+        ]
+      }
+    },
+    {
+      "test_id": 9,
+      "query": "What risks does ASML's EUV monopoly create?",
+      "category": "risk_analysis",
+      "timestamp": "2026-01-17T15:06:14.029622",
+      "security": {
+        "test_id": 9,
+        "query": "What risks does ASML's EUV monopoly create?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 95,
+          "scan_timestamp": "2026-01-17T15:06:14.029770"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**ASML's EUV monopoly exposes it to geopolitical tensions, regulatory pressures from export controls, vulnerability to U.S. influence due to technological dependencies, and potential retaliatory actions from governments.** These risks stem from its sole position in supplying extreme ultraviolet (EUV) lithography machines essential for advanced chip production.\n\n### Geopolitical and Export Control Risks\nASML cannot sell EUV machines to China due to U.S.-led export bans, resulting in **$0 EUV revenue from China**, while broader restrictions on high-end deep ultraviolet (DUV) machines since 2024 further limit sales.[1][2] U.S. export controls, enforced via Dutch regulations, force compliance because **ASML's EUV technology relies on U.S. subsidiaries (e.g., Cymer laser division), with about 10% American components and over 8,000 U.S. employees**.[2] This dependence makes ASML susceptible to escalating U.S. pressures, potentially blocking sales to other markets like Taiwan if tensions rise.[2][3]\n\n### Retaliation and Political Vulnerabilities\nThe EU could leverage ASML's monopoly for strategic goals, such as restricting EUV exports to Taiwan to negotiate AI safety standards, but this risks **U.S. retaliation including sanctions, blacklisting Dutch firms, tariffs, or threats to trade/NATO support**.[2] Such moves could strain EU-U.S. relations and disrupt ASML's global supply chain.[2]\n\n### Market and Competitive Pressures\nWhile China's EUV efforts (e.g., via SMEE) lag **at least 20 years behind**, per Goldman Sachs estimates, long-term success could erode ASML's DUV business, though EUV remains protected.[1] The monopoly enables productivity gains in low-NA EUV systems, deterring competitors, but invites scrutiny amid **cyclical chip spending downturns and financial leverage concerns**.[1][3][4]\n\nNo immediate competitive threats exist, as ASML's EUV dominance results from decades of R&D, patents (first filed in 1999, systems in 2017), and collaborations.[1][4] However, these risks amplify during global chip demand fluctuations.[3]",
+      "response_length": 2089,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2089
+      },
+      "accuracy": {
+        "accuracy_score": 0.67,
+        "keyword_overlap": 0.4,
+        "semantic_similarity": 0.85,
+        "keywords_expected": [
+          "This",
+          "Each",
+          "150",
+          "Export",
+          "18"
+        ],
+        "keywords_found": [
+          "Export",
+          "This"
+        ],
+        "passed": true
+      },
+      "multihop": {
+        "score": 4,
+        "reasoning": "The path from ASML to EUV to monopoly to risk logically connects the entities and concepts relevant to the query. The response effectively identifies specific risks associated with ASML's monopoly on EUV technology, demonstrating a clear understanding of the implications of this monopoly.",
+        "strengths": "The response provides a detailed explanation of the risks, including geopolitical tensions and regulatory pressures, which are directly related to the monopoly aspect. The use of specific examples, such as export controls and U.S. influence, enhances the relevance of the answer.",
+        "weaknesses": "While the response is strong, it could be improved by explicitly linking each identified risk back to the monopoly aspect, ensuring that the causal chain is even clearer. Additionally, a more structured presentation of the risks could enhance readability.",
+        "hop_count": 3,
+        "path": [
+          "ASML",
+          "EUV",
+          "monopoly",
+          "risk"
+        ]
+      }
+    },
+    {
+      "test_id": 10,
+      "query": "What is the outlook for AI chip demand in 2026?",
+      "category": "market_outlook",
+      "timestamp": "2026-01-17T15:06:26.730216",
+      "security": {
+        "test_id": 10,
+        "query": "What is the outlook for AI chip demand in 2026?",
+        "passed": true,
+        "scan_result": {
+          "has_violations": false,
+          "violation_count": 0,
+          "violations": [],
+          "prompt_length": 104,
+          "scan_timestamp": "2026-01-17T15:06:26.730282"
+        }
+      },
+      "system_response": "## \uc2e4\uc2dc\uac04 \uac80\uc0c9 \uacb0\uacfc (Perplexity)\n\n**AI chip demand in 2026 is projected to grow strongly, driven by explosive expansion in AI accelerators, high-bandwidth memory (HBM), and custom silicon, pushing the global semiconductor market toward $1 trillion amid infrastructure investments by hyperscalers.** This outlook is supported by forecasts from major analysts and manufacturers, though potential memory shortages could constrain supply for some segments.[1][2][3]\n\n### Key Drivers and Projections\n- **HBM and Memory Supercycle**: Demand for AI-specific HBM memory is expected to surge, with BofA forecasting the HBM market at **$54.6 billion** (58% YoY growth). Goldman Sachs predicts **82% growth** in HBM for custom ASIC-based AI chips, comprising one-third of the market. HBM3E will dominate (~two-thirds of shipments), fueled by NVIDIA's Blackwell Ultra and ASICs from Google/AWS.[1]\n- **AI Accelerators**: TSMC forecasts **mid-to-high 50% CAGR** (e.g., 57.5%) for AI accelerators from 2024-2029, implying ~$98.5 billion in revenue by 2029 from a ~$10.2 billion 2024 base. This includes GPUs, XPUs, and networking chips, with hyperscalers like Google, Amazon, and Microsoft shifting to custom ASICs for training/inference efficiency.[2][3]\n- **Overall Semiconductor Market**: Revenues are projected at **~$975.5 billion**, led by logic and memory (both >30% YoY growth). AI infrastructure expands server DRAM/HBM capacity and enterprise SSDs, with HBM potentially surpassing 2024's total DRAM market by 2028.[1][2]\n- **Edge and On-Device AI**: Inference shifts to edge devices (AI PCs, smartphones, IoT) with **>26% CAGR** for on-device compute via NPUs, increasing memory needs (e.g., 16-32GB+ RAM in AI PCs).[2][4]\n\n### Supply Chain Dynamics\n- **Capacity Expansion**: TSMC targets 2nm nodes and **~100k+ CoWoS wafers/month** for AI backlogs; SK hynix leads HBM3E/HBM4 supply.[1][2]\n- **Challenges**: AI prioritizes high-margin HBM/DDR5, causing shortages in consumer DRAM/NAND (supply growth at 16-17% YoY vs. historical norms). This raises prices and risks derailing AI PC growth, with potential PC/smartphone market contraction up to 2.9% in downside scenarios.[4]\n\n### Analyst Consensus\nDeutsche Bank anticipates another solid year for AI stocks, reflecting sustained hyperscaler capex on specialized hardware despite electricity/cooling bottlenecks.[5] While optimistic on accelerators and memory, forecasts note diversification beyond GPUs and supply risks into 2027.[1][3][4]",
+      "response_length": 2478,
+      "format": {
+        "compliant": false,
+        "compliance_rate": 0.0,
+        "sections_found": [],
+        "sections_missing": [
+          "Executive Summary",
+          "Market Context",
+          "Supply Chain Analysis",
+          "Risk & Outlook"
+        ],
+        "total_sections": 4,
+        "response_length": 2478
+      },
+      "accuracy": {
+        "accuracy_score": 0.45999999999999996,
+        "keyword_overlap": 0.25,
+        "semantic_similarity": 0.6,
+        "keywords_expected": [
+          "Samsung",
+          "Supply",
+          "Nvidia",
+          "200"
+        ],
+        "keywords_found": [
+          "Supply"
+        ],
+        "passed": false
+      },
+      "multihop": {
+        "score": 5,
+        "reasoning": "The path from 'AI chips' to 'demand' to 'market outlook' is logical and directly relevant to the query about AI chip demand in 2026. Each hop is causally connected, leading to a coherent understanding of the market dynamics.",
+        "strengths": "The response effectively utilizes the identified path by providing a detailed projection of AI chip demand, mentioning key drivers and potential constraints, which aligns well with the query.",
+        "weaknesses": "There are no significant weaknesses; however, additional context on specific market segments or geographical variations could enhance the depth of the response.",
+        "hop_count": 2,
+        "path": [
+          "AI chips",
+          "demand",
+          "market outlook"
+        ]
+      }
+    }
+  ]
+}
