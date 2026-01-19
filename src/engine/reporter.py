@@ -11,7 +11,10 @@ import json
 from typing import Dict, List, Any, Optional
 from openai import AsyncOpenAI
 
-from ..config import OPENAI_API_KEY, OPENAI_BASE_URL
+try:
+    from ..config import OPENAI_API_KEY, OPENAI_BASE_URL
+except ImportError:
+    from config import OPENAI_API_KEY, OPENAI_BASE_URL
 
 
 class FinancialReporter:

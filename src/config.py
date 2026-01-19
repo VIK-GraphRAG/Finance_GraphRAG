@@ -68,7 +68,7 @@ MCP_LAZY_LOAD: bool = os.getenv("MCP_LAZY_LOAD", "true").lower() in ("true", "1"
 # Perplexity API configuration (for real-time web search)
 PERPLEXITY_API_KEY: str = os.getenv("PERPLEXITY_API_KEY", "")
 PERPLEXITY_BASE_URL: str = "https://api.perplexity.ai"
-PERPLEXITY_MODEL: str = os.getenv("PERPLEXITY_MODEL", "llama-3.1-sonar-small-128k-online")
+PERPLEXITY_MODEL: str = os.getenv("PERPLEXITY_MODEL", "sonar")  # Updated to 2026 model name
 PERPLEXITY_MAX_RESULTS: int = int(os.getenv("PERPLEXITY_MAX_RESULTS", "5"))
 
 # Domain schema configuration (Event-Actor-Asset-Factor-Region)
@@ -76,7 +76,8 @@ ENABLE_DOMAIN_SCHEMA: bool = os.getenv("ENABLE_DOMAIN_SCHEMA", "true").lower() i
 DOMAIN_CLASSIFICATION_MODEL: str = os.getenv("DOMAIN_CLASSIFICATION_MODEL", "gpt-4o-mini")
 
 # Privacy Mode Configuration (8GB RAM optimized, offline-first)
-PRIVACY_MODE: bool = os.getenv("PRIVACY_MODE", "false").lower() in ("true", "1", "yes")
+# 사용자 데이터 보호를 위해 Privacy Mode 강제 활성화
+PRIVACY_MODE: bool = True  # 항상 True로 강제 설정 (사용자 데이터 보호)
 PRIVACY_CHUNK_SIZE: int = int(os.getenv("PRIVACY_CHUNK_SIZE", "512"))  # Smaller chunks for 8GB RAM
 PRIVACY_BATCH_SIZE: int = int(os.getenv("PRIVACY_BATCH_SIZE", "5"))    # Process 5 chunks at a time
 PRIVACY_MAX_MEMORY_MB: int = int(os.getenv("PRIVACY_MAX_MEMORY_MB", "2048"))  # 2GB memory limit

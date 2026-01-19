@@ -1,6 +1,11 @@
 """
 Data Integrator: Merge PDF knowledge with structured data (CSV/JSON)
 Handles entity resolution and deduplication
+
+SECURITY POLICY:
+- All PDF processing must use local Qwen 2.5 Coder
+- No cloud API access for sensitive data
+- Verify local model before processing
 """
 
 import json
@@ -10,7 +15,12 @@ from typing import Dict, List, Any, Set, Tuple
 from pathlib import Path
 from neo4j import GraphDatabase
 
-from ..config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+try:
+    from ..config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+    from .connection_check import check_local_model_before_processing
+except ImportError:
+    from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+    from connection_check import check_local_model_before_processing
 
 
 class EntityResolver:
@@ -338,6 +348,10 @@ class DataIntegrator:
         """
         Ingest entities extracted from PDF
         
+        SECURITY: This function handles sensitive data from PDFs
+        - Must verify local model processed this data
+        - No cloud API fallback allowed
+        
         Args:
             entities: List of entities from KnowledgeExtractor
                 [
@@ -345,6 +359,10 @@ class DataIntegrator:
                     ...
                 ]
         """
+        # SECURITY CHECK: Verify local model is available
+        print("🔒 SECURITY: Verifying local model before PDF data ingestion...")
+        check_local_model_before_processing()
+        
         print(f"📚 Ingesting {len(entities)} entities from PDF")
         
         for entity in entities:
@@ -576,6 +594,10 @@ class DataIntegrator:
         """
         Complete workflow: Extract entities from user PDF and merge with baseline
         
+        SECURITY: This function processes sensitive PDF data
+        - Must use local model (Qwen 2.5 Coder) only
+        - Verifies Ollama availability before processing
+        
         Args:
             pdf_path: Path to user's PDF document
             extractor: KnowledgeExtractor instance
@@ -584,12 +606,16 @@ class DataIntegrator:
         Returns:
             Combined statistics
         """
+        # SECURITY CHECK: Verify local model is available
+        print("🔒 SECURITY: Verifying local model before PDF processing...")
+        check_local_model_before_processing()
+        
         print(f"📄 Processing user PDF: {pdf_path}")
         
         if source_label is None:
             source_label = Path(pdf_path).stem
         
-        # Step 1: Extract entities from PDF
+        # Step 1: Extract entities from PDF (using LOCAL model only)
         try:
             import fitz
         except ImportError:

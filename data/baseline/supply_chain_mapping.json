@@ -1,257 +1,248 @@
 {
-  "metadata": {
-    "title": "반도체 산업 공급망 매핑 데이터",
-    "version": "2024.01",
-    "description": "ASML → TSMC → Nvidia → CSP 공급망 관계 및 티커 정보",
-    "last_updated": "2024-01-15"
+  "supply_chain": {
+    "tiers": [
+      {
+        "tier": 1,
+        "name": "Equipment Suppliers",
+        "companies": [
+          {
+            "name": "ASML",
+            "ticker": "ASML",
+            "country": "Netherlands",
+            "role": "EUV Lithography Equipment",
+            "market_share": "100%",
+            "key_products": ["EUV Systems", "DUV Systems"],
+            "annual_capacity": "60 EUV systems",
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "Applied Materials",
+            "ticker": "AMAT",
+            "country": "USA",
+            "role": "Deposition & Etching Equipment",
+            "market_share": "25%",
+            "criticality": "HIGH"
+          }
+        ]
+      },
+      {
+        "tier": 2,
+        "name": "Foundries",
+        "companies": [
+          {
+            "name": "TSMC",
+            "ticker": "TSM",
+            "country": "Taiwan",
+            "role": "Advanced Chip Manufacturing",
+            "market_share": "60%",
+            "key_technologies": ["3nm", "5nm", "7nm"],
+            "major_customers": ["Nvidia", "AMD", "Apple", "Qualcomm"],
+            "dependencies": ["ASML"],
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "Samsung Foundry",
+            "ticker": "005930.KS",
+            "country": "South Korea",
+            "role": "Advanced Chip Manufacturing",
+            "market_share": "15%",
+            "key_technologies": ["3nm GAA", "5nm"],
+            "dependencies": ["ASML"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Intel Foundry",
+            "ticker": "INTC",
+            "country": "USA",
+            "role": "Emerging Foundry Player",
+            "market_share": "5%",
+            "key_technologies": ["Intel 18A", "Intel 20A"],
+            "dependencies": ["ASML"],
+            "criticality": "MEDIUM"
+          }
+        ]
+      },
+      {
+        "tier": 3,
+        "name": "Chip Designers",
+        "companies": [
+          {
+            "name": "Nvidia",
+            "ticker": "NVDA",
+            "country": "USA",
+            "role": "GPU & AI Accelerator Design",
+            "market_share": "80% (AI chips)",
+            "key_products": ["H100", "H200", "Blackwell", "Hopper"],
+            "dependencies": ["TSMC"],
+            "major_customers": ["Microsoft", "Amazon", "Google", "Meta"],
+            "criticality": "CRITICAL"
+          },
+          {
+            "name": "AMD",
+            "ticker": "AMD",
+            "country": "USA",
+            "role": "CPU & GPU Design",
+            "market_share": "15% (AI chips)",
+            "key_products": ["MI300", "EPYC", "Radeon"],
+            "dependencies": ["TSMC"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Qualcomm",
+            "ticker": "QCOM",
+            "country": "USA",
+            "role": "Mobile & Edge AI Chips",
+            "dependencies": ["TSMC", "Samsung"],
+            "criticality": "MEDIUM"
+          }
+        ]
+      },
+      {
+        "tier": 4,
+        "name": "Cloud Service Providers",
+        "companies": [
+          {
+            "name": "Microsoft Azure",
+            "ticker": "MSFT",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "AMD"],
+            "gpu_deployment": "100,000+ H100s",
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Amazon AWS",
+            "ticker": "AMZN",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "AMD", "Custom Silicon"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Google Cloud",
+            "ticker": "GOOGL",
+            "country": "USA",
+            "role": "Cloud AI Infrastructure",
+            "dependencies": ["Nvidia", "TPU (Custom)"],
+            "criticality": "HIGH"
+          },
+          {
+            "name": "Meta",
+            "ticker": "META",
+            "country": "USA",
+            "role": "AI Research Infrastructure",
+            "dependencies": ["Nvidia"],
+            "gpu_deployment": "350,000+ GPUs planned",
+            "criticality": "MEDIUM"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "ASML",
+        "to": "TSMC",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV lithography systems for 3nm and below",
+        "dependency_level": "CRITICAL",
+        "lead_time": "18 months"
+      },
+      {
+        "from": "ASML",
+        "to": "Samsung Foundry",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV systems for GAA technology",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "ASML",
+        "to": "Intel Foundry",
+        "type": "SUPPLIES_EQUIPMENT",
+        "description": "EUV systems for Intel 18A/20A",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "TSMC",
+        "to": "Nvidia",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces H100, H200, Blackwell GPUs",
+        "dependency_level": "CRITICAL",
+        "capacity_allocation": "90% of advanced chips"
+      },
+      {
+        "from": "TSMC",
+        "to": "AMD",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces MI300 and EPYC chips",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "TSMC",
+        "to": "Apple",
+        "type": "MANUFACTURES_FOR",
+        "description": "Produces A-series and M-series chips",
+        "dependency_level": "CRITICAL"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Microsoft Azure",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "H100/H200 GPU supply",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Amazon AWS",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "GPU supply for AWS instances",
+        "dependency_level": "HIGH"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Google Cloud",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "GPU supply for GCP",
+        "dependency_level": "MEDIUM"
+      },
+      {
+        "from": "Nvidia",
+        "to": "Meta",
+        "type": "SUPPLIES_HARDWARE",
+        "description": "Large-scale GPU deployments",
+        "dependency_level": "HIGH"
+      }
+    ],
+    "risk_factors": [
+      {
+        "name": "Taiwan Strait Geopolitical Risk",
+        "impact_level": "CRITICAL",
+        "affected_entities": ["TSMC", "Nvidia", "AMD", "Apple"],
+        "description": "Military tensions could disrupt TSMC operations, affecting 60% of global advanced chip supply"
+      },
+      {
+        "name": "ASML Export Controls",
+        "impact_level": "HIGH",
+        "affected_entities": ["ASML", "TSMC", "Samsung"],
+        "description": "US/Dutch export restrictions on EUV systems to China"
+      },
+      {
+        "name": "Power Supply Constraints",
+        "impact_level": "HIGH",
+        "affected_entities": ["TSMC", "Samsung", "Intel"],
+        "description": "Advanced fabs require massive power (1-2 GW per fab)"
+      },
+      {
+        "name": "Talent Shortage",
+        "impact_level": "MEDIUM",
+        "affected_entities": ["All semiconductor companies"],
+        "description": "Global shortage of semiconductor engineers"
+      }
+    ]
   },
-  "companies": [
-    {
-      "name": "ASML",
-      "ticker": "ASML",
-      "country": "Netherlands",
-      "industry": "Semiconductor Equipment",
-      "products": ["EUV Lithography Systems", "DUV Systems"],
-      "market_position": "EUV 장비 독점 공급업체"
-    },
-    {
-      "name": "TSMC",
-      "ticker": "TSM",
-      "country": "Taiwan",
-      "industry": "Semiconductor Foundry",
-      "products": ["3nm Chips", "5nm Chips", "7nm Chips"],
-      "market_position": "파운드리 시장 점유율 60%"
-    },
-    {
-      "name": "Nvidia",
-      "ticker": "NVDA",
-      "country": "USA",
-      "industry": "GPU & AI Chips",
-      "products": ["H100 GPU", "A100 GPU", "Data Center GPUs"],
-      "market_position": "AI 칩 시장 점유율 80%"
-    },
-    {
-      "name": "AMD",
-      "ticker": "AMD",
-      "country": "USA",
-      "industry": "GPU & CPU",
-      "products": ["MI300 GPU", "EPYC CPUs", "Ryzen CPUs"],
-      "market_position": "서버 CPU 시장 점유율 증가 중"
-    },
-    {
-      "name": "Intel",
-      "ticker": "INTC",
-      "country": "USA",
-      "industry": "Semiconductor IDM",
-      "products": ["Xeon CPUs", "Gaudi AI Chips"],
-      "market_position": "데이터센터 CPU 점유율 감소 중"
-    },
-    {
-      "name": "SK Hynix",
-      "ticker": "000660.KS",
-      "country": "South Korea",
-      "industry": "Memory Chips",
-      "products": ["HBM3", "HBM3E", "DDR5"],
-      "market_position": "HBM 시장 점유율 50%"
-    },
-    {
-      "name": "Samsung Electronics",
-      "ticker": "005930.KS",
-      "country": "South Korea",
-      "industry": "Memory & Foundry",
-      "products": ["HBM3", "DRAM", "NAND", "Foundry Services"],
-      "market_position": "메모리 시장 1위, 파운드리 2위"
-    },
-    {
-      "name": "Micron",
-      "ticker": "MU",
-      "country": "USA",
-      "industry": "Memory Chips",
-      "products": ["DRAM", "NAND", "HBM"],
-      "market_position": "메모리 시장 3위"
-    },
-    {
-      "name": "Applied Materials",
-      "ticker": "AMAT",
-      "country": "USA",
-      "industry": "Semiconductor Equipment",
-      "products": ["Deposition Equipment", "Etching Systems"],
-      "market_position": "반도체 장비 시장 점유율 1위"
-    },
-    {
-      "name": "AWS",
-      "ticker": "AMZN",
-      "country": "USA",
-      "industry": "Cloud Service Provider",
-      "products": ["EC2", "Trainium", "Inferentia"],
-      "market_position": "클라우드 인프라 시장 1위"
-    },
-    {
-      "name": "Microsoft Azure",
-      "ticker": "MSFT",
-      "country": "USA",
-      "industry": "Cloud Service Provider",
-      "products": ["Azure AI", "OpenAI Infrastructure"],
-      "market_position": "클라우드 인프라 시장 2위"
-    },
-    {
-      "name": "Google Cloud",
-      "ticker": "GOOGL",
-      "country": "USA",
-      "industry": "Cloud Service Provider",
-      "products": ["TPU", "Vertex AI"],
-      "market_position": "클라우드 인프라 시장 3위"
-    }
-  ],
-  "supply_chain_relationships": [
-    {
-      "from": "ASML",
-      "to": "TSMC",
-      "relationship": "SUPPLIES_TO",
-      "product": "EUV Lithography Systems",
-      "criticality": "critical",
-      "dependency_level": 1.0,
-      "notes": "TSMC의 3nm 이하 공정은 ASML EUV 장비 필수"
-    },
-    {
-      "from": "ASML",
-      "to": "Samsung Electronics",
-      "relationship": "SUPPLIES_TO",
-      "product": "EUV Lithography Systems",
-      "criticality": "critical",
-      "dependency_level": 1.0,
-      "notes": "삼성 파운드리 3nm 공정용 EUV 장비"
-    },
-    {
-      "from": "ASML",
-      "to": "Intel",
-      "relationship": "SUPPLIES_TO",
-      "product": "EUV Lithography Systems",
-      "criticality": "critical",
-      "dependency_level": 0.9,
-      "notes": "Intel 18A 공정 개발용"
-    },
-    {
-      "from": "TSMC",
-      "to": "Nvidia",
-      "relationship": "MANUFACTURES_FOR",
-      "product": "H100/H200 GPUs",
-      "criticality": "critical",
-      "dependency_level": 1.0,
-      "notes": "Nvidia GPU 100% TSMC 생산"
-    },
-    {
-      "from": "TSMC",
-      "to": "AMD",
-      "relationship": "MANUFACTURES_FOR",
-      "product": "MI300 GPUs, EPYC CPUs",
-      "criticality": "critical",
-      "dependency_level": 1.0,
-      "notes": "AMD 고성능 칩 전량 TSMC 생산"
-    },
-    {
-      "from": "TSMC",
-      "to": "Apple",
-      "relationship": "MANUFACTURES_FOR",
-      "product": "A-series, M-series chips",
-      "criticality": "critical",
-      "dependency_level": 1.0,
-      "notes": "Apple Silicon 독점 생산"
-    },
-    {
-      "from": "SK Hynix",
-      "to": "Nvidia",
-      "relationship": "SUPPLIES_TO",
-      "product": "HBM3E",
-      "criticality": "critical",
-      "dependency_level": 0.9,
-      "notes": "Nvidia GPU용 HBM 주요 공급사"
-    },
-    {
-      "from": "Samsung Electronics",
-      "to": "Nvidia",
-      "relationship": "SUPPLIES_TO",
-      "product": "HBM3",
-      "criticality": "high",
-      "dependency_level": 0.6,
-      "notes": "HBM 듀얼 소싱 전략"
-    },
-    {
-      "from": "Micron",
-      "to": "Nvidia",
-      "relationship": "SUPPLIES_TO",
-      "product": "HBM3",
-      "criticality": "medium",
-      "dependency_level": 0.3,
-      "notes": "2025년부터 HBM 공급 예정"
-    },
-    {
-      "from": "Applied Materials",
-      "to": "TSMC",
-      "relationship": "SUPPLIES_TO",
-      "product": "Deposition & Etching Equipment",
-      "criticality": "high",
-      "dependency_level": 0.8,
-      "notes": "반도체 제조 공정 장비"
-    },
-    {
-      "from": "Nvidia",
-      "to": "AWS",
-      "relationship": "SUPPLIES_TO",
-      "product": "H100 GPUs",
-      "criticality": "high",
-      "dependency_level": 0.7,
-      "notes": "AWS EC2 P5 인스턴스용 GPU"
-    },
-    {
-      "from": "Nvidia",
-      "to": "Microsoft Azure",
-      "relationship": "SUPPLIES_TO",
-      "product": "H100 GPUs",
-      "criticality": "critical",
-      "dependency_level": 0.85,
-      "notes": "Azure OpenAI 인프라 핵심"
-    },
-    {
-      "from": "Nvidia",
-      "to": "Google Cloud",
-      "relationship": "SUPPLIES_TO",
-      "product": "H100 GPUs",
-      "criticality": "high",
-      "dependency_level": 0.6,
-      "notes": "Google은 자체 TPU도 사용"
-    },
-    {
-      "from": "AMD",
-      "to": "AWS",
-      "relationship": "SUPPLIES_TO",
-      "product": "MI300X GPUs, EPYC CPUs",
-      "criticality": "medium",
-      "dependency_level": 0.5,
-      "notes": "AWS 자체 칩 개발로 의존도 감소"
-    }
-  ],
-  "partnerships": [
-    {
-      "companies": ["Nvidia", "TSMC"],
-      "type": "Strategic Partnership",
-      "description": "CoWoS 패키징 기술 공동 개발",
-      "duration": "2020-2026",
-      "exclusivity": false
-    },
-    {
-      "companies": ["SK Hynix", "Nvidia"],
-      "type": "Technology Collaboration",
-      "description": "HBM4 공동 개발",
-      "duration": "2023-2025",
-      "exclusivity": true
-    },
-    {
-      "companies": ["Intel", "ASML"],
-      "type": "R&D Partnership",
-      "description": "High-NA EUV 기술 개발",
-      "duration": "2022-2025",
-      "exclusivity": false
-    }
-  ]
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-01-16",
+    "source": "Tech-Analyst GraphRAG Baseline Data",
+    "coverage": "Semiconductor Supply Chain (Focus: AI Chips)"
+  }
 }

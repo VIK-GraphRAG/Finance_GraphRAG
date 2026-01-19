@@ -1,0 +1,86 @@
+{
+  "test_cases": [
+    {
+      "id": 1,
+      "query": "What is Nvidia's supply chain dependency on TSMC?",
+      "ground_truth": "TSMC manufactures approximately 90% of Nvidia's advanced chips using 5nm and below process nodes. This creates a critical single-point-of-failure risk for Nvidia's GPU production.",
+      "context": ["Nvidia", "TSMC", "supply chain", "manufacturing"],
+      "expected_hops": 2,
+      "category": "supply_chain"
+    },
+    {
+      "id": 2,
+      "query": "When will TSMC start mass production of 2nm chips?",
+      "ground_truth": "TSMC plans to begin mass production of 2nm chips in 2025. This represents a significant technological milestone in semiconductor manufacturing.",
+      "context": ["TSMC", "2nm", "technology roadmap"],
+      "expected_hops": 1,
+      "category": "technology"
+    },
+    {
+      "id": 3,
+      "query": "What are the geopolitical risks affecting Taiwan's semiconductor industry?",
+      "ground_truth": "Taiwan Strait geopolitical tensions pose a critical risk to the global semiconductor supply chain. TSMC, located in Taiwan, produces 60% of global advanced chips. Any military conflict would severely disrupt chip supply to Nvidia, AMD, Apple, and other major customers.",
+      "context": ["Taiwan", "geopolitical risk", "TSMC"],
+      "expected_hops": 3,
+      "category": "risk_analysis"
+    },
+    {
+      "id": 4,
+      "query": "How does the CHIPS Act impact Intel's manufacturing strategy?",
+      "ground_truth": "The CHIPS Act provides $52 billion in subsidies for domestic chip manufacturing. Intel is a major beneficiary, using funds to expand US-based fabs and compete with TSMC and Samsung in advanced node manufacturing.",
+      "context": ["CHIPS Act", "Intel", "regulation"],
+      "expected_hops": 2,
+      "category": "regulation"
+    },
+    {
+      "id": 5,
+      "query": "Trace the supply chain from ASML to cloud service providers.",
+      "ground_truth": "ASML supplies EUV lithography equipment to TSMC. TSMC manufactures advanced chips for Nvidia. Nvidia supplies GPUs to cloud providers like Microsoft Azure, AWS, and Google Cloud. This creates a 4-hop dependency chain: ASML → TSMC → Nvidia → Cloud Providers.",
+      "context": ["ASML", "TSMC", "Nvidia", "cloud providers"],
+      "expected_hops": 4,
+      "category": "multihop"
+    },
+    {
+      "id": 6,
+      "query": "What is the latest news about Nvidia's AI chip developments?",
+      "ground_truth": "This requires real-time web search via Perplexity API. Expected to return current news about Nvidia's latest GPU architectures, product launches, and AI initiatives.",
+      "context": ["Nvidia", "AI chips", "latest news"],
+      "expected_hops": 0,
+      "category": "realtime_search",
+      "requires_web_search": true
+    },
+    {
+      "id": 7,
+      "query": "Compare Nvidia and AMD in the AI accelerator market.",
+      "ground_truth": "Nvidia dominates with approximately 80% market share in AI accelerators (H100, H200, Blackwell). AMD holds about 15% with MI300 series. Nvidia's CUDA ecosystem and first-mover advantage provide strong competitive moats.",
+      "context": ["Nvidia", "AMD", "market share", "competition"],
+      "expected_hops": 2,
+      "category": "competitive_analysis"
+    },
+    {
+      "id": 8,
+      "query": "What is the difference between HBM3 and HBM4 memory?",
+      "ground_truth": "HBM3 offers 819 GB/s bandwidth and is currently in production. HBM4, expected in 2026, will provide over 1 TB/s bandwidth, representing a ~25% improvement. SK Hynix leads HBM4 development.",
+      "context": ["HBM3", "HBM4", "memory technology"],
+      "expected_hops": 1,
+      "category": "technology"
+    },
+    {
+      "id": 9,
+      "query": "What risks does ASML's EUV monopoly create?",
+      "ground_truth": "ASML is the sole supplier of EUV lithography systems required for sub-7nm chip production. This monopoly creates supply chain vulnerability. Export controls and geopolitical tensions could restrict access. Each EUV system costs $150-200M with 18-month lead times.",
+      "context": ["ASML", "EUV", "monopoly", "risk"],
+      "expected_hops": 2,
+      "category": "risk_analysis"
+    },
+    {
+      "id": 10,
+      "query": "What is the outlook for AI chip demand in 2026?",
+      "ground_truth": "AI chip demand continues to surge driven by generative AI applications, large language models, and cloud AI services. Nvidia's data center revenue grew 200%+ YoY. Supply constraints persist despite capacity expansion by TSMC and Samsung.",
+      "context": ["AI chips", "demand", "market outlook"],
+      "expected_hops": 2,
+      "category": "market_outlook",
+      "requires_web_search": true
+    }
+  ]
+}

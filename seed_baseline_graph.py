@@ -1,428 +1,404 @@
+#!/usr/bin/env python3
 """
-Seed Baseline Knowledge Graph
-Constructs industry backbone graph from baseline data (JSON + PDFs)
+Seed Baseline Graph - Load baseline data into Neo4j
+베이스라인 데이터를 Neo4j에 로드
 """
 
 import json
+import os
 import sys
-from pathlib import Path
-from typing import Dict, List, Any
-from neo4j import GraphDatabase
+from dotenv import load_dotenv
 
-# Add src to path for imports
-sys.path.append(str(Path(__file__).parent / "src"))
+load_dotenv()
 
-from src.config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
-from src.engine.extractor import KnowledgeExtractor
-from src.engine.translator import CypherTranslator
+# Add src to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+try:
+    from db.neo4j_db import Neo4jDatabase
+except ImportError:
+    print("❌ Cannot import Neo4jDatabase")
+    sys.exit(1)
 
 
-class BaselineGraphBuilder:
+def load_json_data(filepath: str) -> dict:
+    """Load JSON data from file"""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def seed_supply_chain(db: Neo4jDatabase, data: dict):
     """
-    Build baseline industry knowledge graph from:
-    1. supply_chain_mapping.json (structured data)
-    2. PDF documents (unstructured knowledge)
+    Seed supply chain data into Neo4j
+    
+    Args:
+        db: Neo4j database instance
+        data: Supply chain data
     """
+    print("\n📊 Seeding Supply Chain Data...")
     
-    def __init__(self):
-        self.driver = GraphDatabase.driver(
-            NEO4J_URI,
-            auth=(NEO4J_USERNAME, NEO4J_PASSWORD)
-        )
-        self.extractor = KnowledgeExtractor()
-        self.translator = CypherTranslator()
-        self.stats = {
-            'companies': 0,
-            'relationships': 0,
-            'pdf_entities': 0,
-            'pdf_relationships': 0
-        }
+    supply_chain = data.get('supply_chain', {})
+    tiers = supply_chain.get('tiers', [])
     
-    def close(self):
-        """Close Neo4j connection"""
-        self.driver.close()
-    
-    def clear_baseline_data(self):
-        """Clear existing baseline data (optional, for fresh start)"""
-        print("🗑️  Clearing existing baseline data...")
+    # Create companies
+    company_count = 0
+    for tier in tiers:
+        tier_num = tier.get('tier')
+        tier_name = tier.get('name')
         
-        with self.driver.session() as session:
-            # Delete only baseline-tagged data
-            session.run("""
-                MATCH (n)
-                WHERE n.source = 'baseline'
-                DETACH DELETE n
-            """)
-        
-        print("✅ Baseline data cleared")
-    
-    def load_json_supply_chain(self, json_path: str):
-        """
-        Load supply chain data from JSON
-        Creates Company nodes and SUPPLIES_TO/DEPENDS_ON relationships
-        """
-        print(f"📊 Loading supply chain data: {json_path}")
-        
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        companies = data.get('companies', [])
-        relationships = data.get('supply_chain_relationships', [])
-        
-        with self.driver.session() as session:
-            # Create Company nodes
-            for company in companies:
+        for company in tier.get('companies', []):
+            # Create Company node
                 query = """
                 MERGE (c:Company {name: $name})
                 SET c.ticker = $ticker,
                     c.country = $country,
-                    c.industry = $industry,
-                    c.market_position = $market_position,
-                    c.products = $products,
-                    c.source = 'baseline',
+                c.role = $role,
+                c.tier = $tier,
+                c.tier_name = $tier_name,
+                c.market_share = $market_share,
+                c.criticality = $criticality,
                     c.updated_at = datetime()
-                """
-                
-                session.run(
-                    query,
-                    name=company['name'],
-                    ticker=company.get('ticker', ''),
-                    country=company.get('country', ''),
-                    industry=company.get('industry', ''),
-                    market_position=company.get('market_position', ''),
-                    products=company.get('products', [])
-                )
-                
-                self.stats['companies'] += 1
+            RETURN c.name as name
+            """
             
-            print(f"✅ Created {self.stats['companies']} Company nodes")
+            params = {
+                'name': company.get('name'),
+                'ticker': company.get('ticker', ''),
+                'country': company.get('country', ''),
+                'role': company.get('role', ''),
+                'tier': tier_num,
+                'tier_name': tier_name,
+                'market_share': company.get('market_share', ''),
+                'criticality': company.get('criticality', 'MEDIUM')
+            }
             
-            # Create supply chain relationships
-            for rel in relationships:
-                rel_type = rel.get('relationship', 'SUPPLIES_TO')
-                
-                query = f"""
-                MATCH (a:Company {{name: $from_name}})
-                MATCH (b:Company {{name: $to_name}})
-                MERGE (a)-[r:{rel_type}]->(b)
-                SET r.product = $product,
-                    r.criticality = $criticality,
-                    r.dependency_level = $dependency_level,
-                    r.notes = $notes,
-                    r.source = 'baseline',
-                    r.updated_at = datetime()
-                """
-                
-                session.run(
-                    query,
-                    from_name=rel['from'],
-                    to_name=rel['to'],
-                    product=rel.get('product', ''),
-                    criticality=rel.get('criticality', 'medium'),
-                    dependency_level=rel.get('dependency_level', 0.5),
-                    notes=rel.get('notes', '')
-                )
-                
-                self.stats['relationships'] += 1
-            
-            print(f"✅ Created {self.stats['relationships']} supply chain relationships")
+            with db.driver.session() as session:
+                result = session.run(query, **params)
+                if result:
+                    company_count += 1
+                    print(f"  ✅ Created: {company.get('name')} ({tier_name})")
     
-    async def ingest_pdf_knowledge(self, pdf_path: str, category: str):
+    print(f"\n✅ Created {company_count} companies")
+    
+    # Create relationships
+    relationships = supply_chain.get('relationships', [])
+    rel_count = 0
+    
+    for rel in relationships:
+        query = """
+        MATCH (from:Company {name: $from_name})
+        MATCH (to:Company {name: $to_name})
+        MERGE (from)-[r:SUPPLIES_TO]->(to)
+        SET r.type = $rel_type,
+            r.description = $description,
+            r.dependency_level = $dependency_level,
+            r.lead_time = $lead_time,
+            r.capacity_allocation = $capacity_allocation
+        RETURN from.name as from, to.name as to
         """
-        Extract knowledge from baseline PDFs
         
-        Args:
-            pdf_path: Path to PDF file
-            category: Type of knowledge (risk_factors, regulations, tech_roadmap)
+        params = {
+            'from_name': rel.get('from'),
+            'to_name': rel.get('to'),
+            'rel_type': rel.get('type', 'SUPPLIES_TO'),
+            'description': rel.get('description', ''),
+            'dependency_level': rel.get('dependency_level', 'MEDIUM'),
+            'lead_time': rel.get('lead_time', ''),
+            'capacity_allocation': rel.get('capacity_allocation', '')
+        }
+        
+        with db.driver.session() as session:
+            result = session.run(query, **params)
+            if result:
+                rel_count += 1
+                print(f"  ✅ Created: {rel.get('from')} → {rel.get('to')}")
+    
+    print(f"\n✅ Created {rel_count} relationships")
+    
+    # Create risk factors
+    risk_factors = supply_chain.get('risk_factors', [])
+    risk_count = 0
+    
+    for risk in risk_factors:
+        # Create Risk node
+        query = """
+        MERGE (r:Risk {name: $name})
+        SET r.impact_level = $impact_level,
+            r.description = $description,
+            r.updated_at = datetime()
+        RETURN r.name as name
         """
-        print(f"📄 Processing PDF: {pdf_path} (category: {category})")
         
-        try:
-            import fitz  # PyMuPDF
-        except ImportError:
-            print("⚠️  PyMuPDF not installed. Run: pip install pymupdf")
-            return
+        params = {
+            'name': risk.get('name'),
+            'impact_level': risk.get('impact_level', 'MEDIUM'),
+            'description': risk.get('description', '')
+        }
         
-        # Read PDF text
-        doc = fitz.open(pdf_path)
-        full_text = ""
+        with db.driver.session() as session:
+            result = session.run(query, **params)
+            if result:
+                risk_count += 1
+                print(f"  ✅ Created risk: {risk.get('name')}")
         
-        for page_num in range(len(doc)):
-            page = doc[page_num]
-            full_text += page.get_text()
-        
-        doc.close()
-        
-        # Process in chunks (500 characters for 8GB RAM optimization)
-        chunk_size = 500
-        chunks = [full_text[i:i+chunk_size] for i in range(0, len(full_text), chunk_size)]
-        
-        print(f"   Processing {len(chunks)} chunks...")
-        
-        all_entities = []
-        all_relationships = []
-        
-        for i, chunk in enumerate(chunks[:20]):  # Limit to first 20 chunks for baseline
-            if i % 5 == 0:
-                print(f"   Chunk {i+1}/{min(20, len(chunks))}...")
+        # Link risk to affected companies
+        for company_name in risk.get('affected_entities', []):
+            link_query = """
+            MATCH (c:Company {name: $company_name})
+            MATCH (r:Risk {name: $risk_name})
+            MERGE (c)-[rel:EXPOSED_TO]->(r)
+            SET rel.impact_level = $impact_level
+            """
             
-            try:
-                # Extract entities and relationships
-                extracted = await self.extractor.extract_entities(chunk)
-                
-                if extracted:
-                    all_entities.extend(extracted.get('entities', []))
-                    all_relationships.extend(extracted.get('relationships', []))
-            
-            except Exception as e:
-                print(f"⚠️  Error processing chunk {i}: {e}")
-                continue
-        
-        # Store entities based on category
-        with self.driver.session() as session:
-            for entity in all_entities:
-                entity_name = entity.get('name', '')
-                entity_type = entity.get('type', 'Entity')
-                
-                # Determine node label based on category
-                if category == 'risk_factors':
-                    node_label = 'RiskFactor'
-                elif category == 'regulations':
-                    node_label = 'Regulation'
-                elif category == 'tech_roadmap':
-                    node_label = 'Technology'
-                else:
-                    node_label = entity_type
-                
-                query = f"""
-                MERGE (e:{node_label} {{name: $name}})
-                SET e.category = $category,
-                    e.description = $description,
-                    e.source = 'baseline',
-                    e.source_file = $source_file,
-                    e.updated_at = datetime()
-                """
-                
-                session.run(
-                    query,
-                    name=entity_name,
-                    category=category,
-                    description=entity.get('description', '')[:500],
-                    source_file=Path(pdf_path).name
+            with db.driver.session() as session:
+                session.run(link_query, 
+                    company_name=company_name,
+                    risk_name=risk.get('name'),
+                    impact_level=risk.get('impact_level')
                 )
-                
-                self.stats['pdf_entities'] += 1
-            
-            # Create relationships
-            for rel in all_relationships:
-                source = rel.get('source', '')
-                target = rel.get('target', '')
-                rel_type = rel.get('type', 'RELATED_TO')
-                
-                if not source or not target:
-                    continue
-                
-                # Sanitize relationship type
-                rel_type = rel_type.upper().replace(' ', '_').replace('-', '_')
-                
-                query = f"""
-                MATCH (a {{name: $source}})
-                MATCH (b {{name: $target}})
-                MERGE (a)-[r:{rel_type}]->(b)
-                SET r.context = $context,
-                    r.source = 'baseline',
-                    r.updated_at = datetime()
-                """
-                
-                try:
-                    session.run(
-                        query,
-                        source=source,
-                        target=target,
-                        context=rel.get('context', '')[:300]
-                    )
-                    
-                    self.stats['pdf_relationships'] += 1
-                
-                except Exception as e:
-                    # Skip if relationship type is invalid
-                    continue
-        
-        print(f"✅ Extracted {self.stats['pdf_entities']} entities, {self.stats['pdf_relationships']} relationships")
     
-    def create_industry_structure(self):
-        """
-        Create high-level industry structure nodes
-        (Industry sectors, countries, macro indicators)
-        """
-        print("🏗️  Creating industry structure...")
-        
-        with self.driver.session() as session:
-            # Create Industry sectors
-            industries = [
-                {'name': 'Semiconductor Equipment', 'description': 'Lithography, deposition, etching systems'},
-                {'name': 'Semiconductor Foundry', 'description': 'Contract chip manufacturing'},
-                {'name': 'Semiconductor IDM', 'description': 'Integrated device manufacturers'},
-                {'name': 'Memory Chips', 'description': 'DRAM, NAND, HBM production'},
-                {'name': 'GPU & AI Chips', 'description': 'Graphics processors and AI accelerators'},
-                {'name': 'Cloud Service Provider', 'description': 'Hyperscale cloud infrastructure'},
-            ]
-            
-            for industry in industries:
-                session.run("""
-                    MERGE (i:Industry {name: $name})
-                    SET i.description = $description,
-                        i.source = 'baseline',
-                        i.updated_at = datetime()
-                """, **industry)
-            
-            # Create Country nodes
-            countries = ['USA', 'Taiwan', 'Netherlands', 'South Korea', 'China', 'Japan', 'Germany']
-            
-            for country in countries:
-                session.run("""
-                    MERGE (c:Country {name: $name})
-                    SET c.source = 'baseline',
-                        c.updated_at = datetime()
-                """, name=country)
-            
-            # Link companies to industries and countries
-            session.run("""
-                MATCH (c:Company)
-                WHERE c.industry IS NOT NULL
-                MATCH (i:Industry)
-                WHERE i.name = c.industry
-                MERGE (c)-[r:OPERATES_IN]->(i)
-                SET r.source = 'baseline'
-            """)
-            
-            session.run("""
-                MATCH (c:Company)
-                WHERE c.country IS NOT NULL
-                MATCH (co:Country)
-                WHERE co.name = c.country
-                MERGE (c)-[r:LOCATED_IN]->(co)
-                SET r.source = 'baseline'
-            """)
-            
-            # Create macro indicators
-            macro_indicators = [
-                {
-                    'name': 'US-China Trade War',
-                    'type': 'geopolitical',
-                    'severity': 0.85,
-                    'description': 'Technology decoupling and export controls'
-                },
-                {
-                    'name': 'Taiwan Strait Tension',
-                    'type': 'geopolitical',
-                    'severity': 0.95,
-                    'description': 'Military conflict risk affecting TSMC'
-                },
-                {
-                    'name': 'Interest Rate Volatility',
-                    'type': 'economic',
-                    'severity': 0.65,
-                    'description': 'Impact on CAPEX and valuations'
-                },
-                {
-                    'name': 'Power Supply Constraints',
-                    'type': 'infrastructure',
-                    'severity': 0.70,
-                    'description': 'Data center and fab power limitations'
-                },
-            ]
-            
-            for indicator in macro_indicators:
-                session.run("""
-                    MERGE (m:MacroIndicator {name: $name})
-                    SET m.type = $type,
-                        m.severity = $severity,
-                        m.description = $description,
-                        m.source = 'baseline',
-                        m.updated_at = datetime()
-                """, **indicator)
-            
-            # Link macro indicators to affected industries/countries
-            session.run("""
-                MATCH (m:MacroIndicator {name: 'Taiwan Strait Tension'})
-                MATCH (c:Country {name: 'Taiwan'})
-                MERGE (m)-[r:AFFECTS]->(c)
-                SET r.severity = 0.95, r.source = 'baseline'
-            """)
-            
-            session.run("""
-                MATCH (m:MacroIndicator {name: 'US-China Trade War'})
-                MATCH (i:Industry {name: 'Semiconductor Equipment'})
-                MERGE (m)-[r:IMPACTS]->(i)
-                SET r.severity = 0.85, r.impact_type = 'export restrictions', r.source = 'baseline'
-            """)
-            
-            print("✅ Industry structure created")
-    
-    def print_stats(self):
-        """Print build statistics"""
-        print("\n" + "="*60)
-        print("📊 Baseline Graph Construction Stats")
-        print("="*60)
-        print(f"Companies: {self.stats['companies']}")
-        print(f"Supply Chain Relationships: {self.stats['relationships']}")
-        print(f"PDF-extracted Entities: {self.stats['pdf_entities']}")
-        print(f"PDF-extracted Relationships: {self.stats['pdf_relationships']}")
-        print("="*60)
+    print(f"\n✅ Created {risk_count} risk factors")
 
 
-async def main():
-    """Main execution"""
-    print("🚀 Building Baseline Knowledge Graph")
-    print("="*60)
+def seed_technologies(db: Neo4jDatabase):
+    """Seed technology nodes"""
+    print("\n🔬 Seeding Technology Data...")
     
-    builder = BaselineGraphBuilder()
+    technologies = [
+        {
+            "name": "EUV Lithography",
+            "category": "Manufacturing",
+            "node_size": "< 7nm",
+            "maturity": "Production",
+            "key_players": ["ASML"]
+        },
+        {
+            "name": "3nm Process",
+            "category": "Node Technology",
+            "node_size": "3nm",
+            "maturity": "Production",
+            "key_players": ["TSMC", "Samsung"]
+        },
+        {
+            "name": "2nm Process",
+            "category": "Node Technology",
+            "node_size": "2nm",
+            "maturity": "Development",
+            "timeline": "2025 (TSMC)",
+            "key_players": ["TSMC"]
+        },
+        {
+            "name": "GAA Transistor",
+            "category": "Transistor Architecture",
+            "maturity": "Production",
+            "key_players": ["Samsung", "TSMC"]
+        },
+        {
+            "name": "HBM3",
+            "category": "Memory",
+            "maturity": "Production",
+            "bandwidth": "819 GB/s",
+            "key_players": ["SK Hynix", "Samsung", "Micron"]
+        },
+        {
+            "name": "HBM4",
+            "category": "Memory",
+            "maturity": "Development",
+            "timeline": "2026",
+            "bandwidth": "> 1 TB/s",
+            "key_players": ["SK Hynix"]
+        }
+    ]
     
-    # Optional: Clear existing data for fresh start
-    # Uncomment if you want to rebuild from scratch
-    # builder.clear_baseline_data()
+    tech_count = 0
+    for tech in technologies:
+        query = """
+        MERGE (t:Technology {name: $name})
+        SET t.category = $category,
+            t.maturity = $maturity,
+            t.node_size = $node_size,
+            t.timeline = $timeline,
+            t.bandwidth = $bandwidth,
+            t.updated_at = datetime()
+        RETURN t.name as name
+        """
+        
+        params = {
+            'name': tech.get('name'),
+            'category': tech.get('category', ''),
+            'maturity': tech.get('maturity', ''),
+            'node_size': tech.get('node_size', ''),
+            'timeline': tech.get('timeline', ''),
+            'bandwidth': tech.get('bandwidth', '')
+        }
+        
+        with db.driver.session() as session:
+            result = session.run(query, **params)
+        if result:
+            tech_count += 1
+            print(f"  ✅ Created: {tech.get('name')}")
+        
+        # Link to companies
+        for company_name in tech.get('key_players', []):
+            link_query = """
+            MATCH (c:Company {name: $company_name})
+            MATCH (t:Technology {name: $tech_name})
+            MERGE (c)-[r:DEVELOPS]->(t)
+            """
+            
+            with db.driver.session() as session:
+                session.run(link_query,
+                    company_name=company_name,
+                    tech_name=tech.get('name')
+                )
     
-    # Step 1: Load JSON supply chain data
+    print(f"\n✅ Created {tech_count} technologies")
+
+
+def seed_regulations(db: Neo4jDatabase):
+    """Seed regulation nodes"""
+    print("\n📜 Seeding Regulation Data...")
+    
+    regulations = [
+        {
+            "name": "CHIPS Act",
+            "country": "USA",
+            "type": "Subsidy",
+            "budget": "$52 billion",
+            "impact": "Incentivizes domestic chip manufacturing",
+            "affected_companies": ["Intel", "TSMC", "Samsung"]
+        },
+        {
+            "name": "EU Chips Act",
+            "country": "EU",
+            "type": "Subsidy",
+            "budget": "€43 billion",
+            "impact": "Aims to double EU chip production share",
+            "affected_companies": ["Intel", "TSMC", "ASML"]
+        },
+        {
+            "name": "Export Controls (China)",
+            "country": "USA",
+            "type": "Restriction",
+            "impact": "Restricts advanced chip exports to China",
+            "affected_companies": ["Nvidia", "AMD", "Intel", "ASML"]
+        },
+        {
+            "name": "EU AI Act",
+            "country": "EU",
+            "type": "Regulation",
+            "impact": "Regulates AI system deployment",
+            "affected_companies": ["Microsoft", "Google", "Meta", "Amazon"]
+        }
+    ]
+    
+    reg_count = 0
+    for reg in regulations:
+        query = """
+        MERGE (r:Regulation {name: $name})
+        SET r.country = $country,
+            r.type = $type,
+            r.budget = $budget,
+            r.impact = $impact,
+            r.updated_at = datetime()
+        RETURN r.name as name
+        """
+        
+        params = {
+            'name': reg.get('name'),
+            'country': reg.get('country', ''),
+            'type': reg.get('type', ''),
+            'budget': reg.get('budget', ''),
+            'impact': reg.get('impact', '')
+        }
+        
+        with db.driver.session() as session:
+            result = session.run(query, **params)
+            if result:
+                reg_count += 1
+                print(f"  ✅ Created: {reg.get('name')}")
+        
+        # Link to companies
+        for company_name in reg.get('affected_companies', []):
+            link_query = """
+            MATCH (c:Company {name: $company_name})
+            MATCH (r:Regulation {name: $reg_name})
+            MERGE (c)-[rel:SUBJECT_TO]->(r)
+            """
+            
+            with db.driver.session() as session:
+                session.run(link_query, 
+                    company_name=company_name,
+                    reg_name=reg.get('name')
+                )
+    
+    print(f"\n✅ Created {reg_count} regulations")
+
+
+def main():
+    """Main seeding function"""
+    print("=" * 60)
+    print("🌱 Seeding Baseline Graph Data")
+    print("=" * 60)
+    
+    # Connect to Neo4j
+    try:
+        db = Neo4jDatabase()
+        print("✅ Connected to Neo4j")
+    except Exception as e:
+        print(f"❌ Failed to connect to Neo4j: {e}")
+        print("Make sure Neo4j is running and credentials are correct in .env")
+        return
+    
+    # Load JSON data
     json_path = "data/baseline/supply_chain_mapping.json"
-    if Path(json_path).exists():
-        builder.load_json_supply_chain(json_path)
-    else:
-        print(f"⚠️  {json_path} not found, skipping")
+    if not os.path.exists(json_path):
+        print(f"❌ JSON file not found: {json_path}")
+        return
     
-    # Step 2: Create industry structure
-    builder.create_industry_structure()
+    data = load_json_data(json_path)
+    print(f"✅ Loaded JSON data from {json_path}")
     
-    # Step 3: Ingest PDF knowledge (skip for now - Ollama may not be running)
-    print("\n📄 PDF Knowledge Ingestion")
-    print("⚠️  Skipping PDF extraction (requires Ollama server)")
-    print("💡 To enable PDF processing:")
-    print("   1. Start Ollama: ollama serve")
-    print("   2. Pull model: ollama pull qwen2.5-coder:3b")
-    print("   3. Re-run this script")
+    # Seed data
+    try:
+        seed_supply_chain(db, data)
+        seed_technologies(db)
+        seed_regulations(db)
+        
+        print("\n" + "=" * 60)
+        print("✅ Baseline graph seeding completed successfully!")
+        print("=" * 60)
+        
+        # Print summary
+        summary_query = """
+        MATCH (c:Company) WITH count(c) as companies
+        MATCH (t:Technology) WITH companies, count(t) as technologies
+        MATCH (r:Risk) WITH companies, technologies, count(r) as risks
+        MATCH (reg:Regulation) WITH companies, technologies, risks, count(reg) as regulations
+        MATCH ()-[rel]->() WITH companies, technologies, risks, regulations, count(rel) as relationships
+        RETURN companies, technologies, risks, regulations, relationships
+        """
+        
+        with db.driver.session() as session:
+            result = session.run(summary_query).data()
+        if result:
+            stats = result[0]
+            print(f"\n📊 Graph Statistics:")
+            print(f"  Companies: {stats['companies']}")
+            print(f"  Technologies: {stats['technologies']}")
+            print(f"  Risks: {stats['risks']}")
+            print(f"  Regulations: {stats['regulations']}")
+            print(f"  Relationships: {stats['relationships']}")
+        
+    except Exception as e:
+        print(f"\n❌ Seeding failed: {e}")
+        import traceback
+        traceback.print_exc()
     
-    # Uncomment when Ollama is available:
-    # pdf_mappings = [
-    #     ('data/baseline/industry_risk_factors.pdf', 'risk_factors'),
-    #     ('data/baseline/regulation_guidelines.pdf', 'regulations'),
-    #     ('data/baseline/tech_roadmap.pdf', 'tech_roadmap'),
-    # ]
-    # 
-    # for pdf_path, category in pdf_mappings:
-    #     if Path(pdf_path).exists():
-    #         await builder.ingest_pdf_knowledge(pdf_path, category)
-    #     else:
-    #         print(f"⚠️  {pdf_path} not found, skipping")
-    
-    # Print final statistics
-    builder.print_stats()
-    
-    builder.close()
-    
-    print("\n✅ Baseline graph construction complete!")
-    print("💡 Next step: Run Streamlit app to query the graph")
+    finally:
+        db.close()
+        print("\n✅ Database connection closed")
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()

@@ -1,7 +1,7 @@
 # app.py는 "FastAPI 서버"를 만드는 파일이에요!
 # 마치 "웹 서버를 만드는 도구 상자" 같은 거예요!
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, UploadFile, File
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
@@ -738,7 +738,7 @@ async def query(request: QueryRequest):
                     evidence = []
                     override_applied = True
 
-                # 신뢰도가 낮거나 응답이 비정상적이면 "정보 없음" 응답으로 대체
+                # 신뢰도가 낮거나 응답이 비정상적이면 Perplexity로 폴백
                 # 또는 응답에 HTML/웹 검색 흔적이 있으면 거부
                 # 단, override가 적용된 경우는 스킵 (base_answer를 사용하므로)
                 if not override_applied and (validation_result["confidence_score"] < 0.7 or 
@@ -746,11 +746,49 @@ async def query(request: QueryRequest):
                     "Thesaurus.com" in response or
                     "WordHippo" in response or
                     len(response.strip()) < 50):
-                    print(f"[WARNING] Low confidence or invalid response, replacing with 'no info' response")
-                    response = "해당 문서들에서는 관련 정보를 찾을 수 없습니다."
-                    sources_list = []
-                    validation_result = {"confidence_score": 0.0, "is_valid": False}
-                    evidence = []
+                    print(f"[WARNING] Low confidence or invalid response, falling back to Perplexity search")
+                    
+                    # Perplexity로 폴백
+                    try:
+                        from engine.search_handler import SearchHandler
+                        search_handler = SearchHandler()
+                        
+                        # 질문에서 공개 엔티티 추출
+                        perplexity_result = search_handler.search(
+                            query=request.question,
+                            max_results=5,
+                            sanitize=True
+                        )
+                        
+                        if perplexity_result and not perplexity_result.get("error"):
+                            # Perplexity 답변 사용
+                            response = f"## 실시간 검색 결과 (Perplexity)\n\n{perplexity_result.get('answer', '')}"
+                            
+                            # Citations를 sources로 변환
+                            sources_list = []
+                            for i, url in enumerate(perplexity_result.get('citations', [])[:5], 1):
+                                sources_list.append({
+                                    'id': i,
+                                    'file': 'Perplexity Web Search',
+                                    'url': url,
+                                    'excerpt': f"실시간 웹 검색 결과 #{i}"
+                                })
+                            
+                            validation_result = {"confidence_score": 0.8, "is_valid": True}
+                            evidence = []
+                            print(f"✅ Perplexity fallback successful: {len(sources_list)} sources")
+                        else:
+                            # Perplexity도 실패한 경우
+                            response = "데이터베이스와 실시간 검색 모두에서 관련 정보를 찾을 수 없습니다."
+                            sources_list = []
+                            validation_result = {"confidence_score": 0.0, "is_valid": False}
+                            evidence = []
+                    except Exception as e:
+                        print(f"❌ Perplexity fallback failed: {e}")
+                        response = "해당 문서들에서는 관련 정보를 찾을 수 없습니다."
+                        sources_list = []
+                        validation_result = {"confidence_score": 0.0, "is_valid": False}
+                        evidence = []
                 else:
                     # 응답에서 실제로 사용된 citation 번호 추출 및 필터링
                     import re
@@ -779,10 +817,46 @@ async def query(request: QueryRequest):
                         evidence = validator.build_evidence(response)
                     # override_applied인 경우 evidence는 이미 빈 배열로 설정됨
             else:
-                # 출처가 없으면 "정보 없음" 응답
-                response = "해당 문서들에서는 관련 정보를 찾을 수 없습니다."
-                validation_result = {"confidence_score": 0.0, "is_valid": False}
-                evidence = []
+                # 출처가 없으면 Perplexity로 폴백
+                print(f"📚 No sources found in database, falling back to Perplexity search")
+                
+                try:
+                    from engine.search_handler import SearchHandler
+                    search_handler = SearchHandler()
+                    
+                    # Perplexity 검색
+                    perplexity_result = search_handler.search(
+                        query=request.question,
+                        max_results=5,
+                        sanitize=True
+                    )
+                    
+                    if perplexity_result and not perplexity_result.get("error"):
+                        # Perplexity 답변 사용
+                        response = f"## 실시간 검색 결과 (Perplexity)\n\n{perplexity_result.get('answer', '')}"
+                        
+                        # Citations를 sources로 변환
+                        sources_list = []
+                        for i, url in enumerate(perplexity_result.get('citations', [])[:5], 1):
+                            sources_list.append({
+                                'id': i,
+                                'file': 'Perplexity Web Search',
+                                'url': url,
+                                'excerpt': f"실시간 웹 검색 결과 #{i}"
+                            })
+                        
+                        validation_result = {"confidence_score": 0.8, "is_valid": True}
+                        evidence = []
+                        print(f"✅ Perplexity fallback successful: {len(sources_list)} sources")
+                    else:
+                        response = "데이터베이스와 실시간 검색 모두에서 관련 정보를 찾을 수 없습니다."
+                        validation_result = {"confidence_score": 0.0, "is_valid": False}
+                        evidence = []
+                except Exception as e:
+                    print(f"❌ Perplexity fallback failed: {e}")
+                    response = "해당 문서들에서는 관련 정보를 찾을 수 없습니다."
+                    validation_result = {"confidence_score": 0.0, "is_valid": False}
+                    evidence = []
             
             source = "GRAPH_RAG"
         
@@ -814,7 +888,239 @@ async def query(request: QueryRequest):
         # except는 "만약 에러가 생기면"이라는 뜻이에요!
         raise HTTPException(status_code=500, detail=f"질문 처리 중 에러가 발생했어요: {str(e)}")
 
-# --- [13] 서버 실행 ---
+
+# --- [12] PDF Upload Endpoint ---
+@app.post("/ingest_pdf",
+          summary="PDF Upload and Processing",
+          description="Upload PDF document for local processing with Qwen 2.5 Coder")
+async def ingest_pdf(file: UploadFile = File(...)):
+    """
+    Upload and process PDF with local security model
+    
+    Security:
+    - Uses LocalWorker (Qwen 2.5 Coder) only
+    - Enforces Ollama availability check
+    - No cloud API fallback
+    """
+    import tempfile
+    from pathlib import Path
+    
+    try:
+        # Validate file type
+        if not file.filename.endswith('.pdf'):
+            raise HTTPException(
+                status_code=400,
+                detail="Only PDF files are supported"
+            )
+        
+        print(f"📄 Received PDF upload: {file.filename}")
+        
+        # Save uploaded file to temp location
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+            content = await file.read()
+            tmp_file.write(content)
+            tmp_path = tmp_file.name
+        
+        print(f"💾 Saved to: {tmp_path}")
+        
+        # SECURITY: Initialize LocalWorker (will check Ollama)
+        from engine.local_worker import LocalWorker
+        
+        print("🔒 Initializing LocalWorker with security check...")
+        worker = LocalWorker(enforce_security=True)
+        
+        # Process PDF with local model
+        print("🔍 Processing PDF with local Qwen 2.5 Coder...")
+        result = worker.process_pdf(
+            pdf_path=tmp_path,
+            extract_entities=True,
+            tag_sensitive=True
+        )
+        
+        if "error" in result:
+            raise HTTPException(status_code=500, detail=result["error"])
+        
+        print(f"✅ Extracted {result['sensitive_count']} sensitive items")
+        
+        # Store in Neo4j via integrator
+        from engine.integrator import DataIntegrator
+        
+        if neo4j_db:
+            integrator = DataIntegrator(neo4j_db.driver)
+            
+            # Convert entities to format expected by integrator
+            entities_for_neo4j = []
+            for entity_type, values in result['entities'].items():
+                for value in values:
+                    entities_for_neo4j.append({
+                        'name': value,
+                        'type': entity_type.upper(),
+                        'source': file.filename
+                    })
+            
+            print(f"💾 Storing {len(entities_for_neo4j)} entities in Neo4j...")
+            integrator.ingest_pdf_entities(entities_for_neo4j)
+            
+            print("✅ PDF processing complete")
+        else:
+            print("⚠️ Neo4j not available, skipping storage")
+        
+        # Clean up temp file
+        Path(tmp_path).unlink()
+        
+        return {
+            "message": "PDF processed successfully",
+            "filename": file.filename,
+            "text_length": result['text_length'],
+            "entities_extracted": sum(len(v) for v in result['entities'].values()),
+            "sensitive_items_tagged": result['sensitive_count'],
+            "status": "success"
+        }
+        
+    except SystemExit:
+        # Security check failed - Ollama not available
+        raise HTTPException(
+            status_code=503,
+            detail="Local security model not available. Cannot process sensitive data."
+        )
+    except Exception as e:
+        import traceback
+        print(f"❌ PDF processing error: {e}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"PDF processing failed: {str(e)}"
+        )
+
+
+# --- [13] CSV Upload Endpoint ---
+@app.post("/upload_csv",
+          summary="CSV Data Upload to Neo4j",
+          description="Upload CSV data directly to Neo4j graph database")
+async def upload_csv(request: dict):
+    """
+    CSV 데이터를 Neo4j에 직접 업로드 (로컬 처리만)
+    """
+    try:
+        data = request.get("data", [])
+        entity_column = request.get("entity_column")
+        entity_type = request.get("entity_type", "Entity")
+        property_columns = request.get("property_columns", [])
+        
+        if not data or not entity_column:
+            raise HTTPException(status_code=400, detail="data and entity_column are required")
+        
+        print(f"📊 Uploading CSV data: {len(data)} rows (로컬 처리)")
+        
+        # Neo4j에 데이터 삽입
+        from db.neo4j_db import Neo4jDatabase
+        
+        if not NEO4J_URI or not NEO4J_PASSWORD:
+            raise HTTPException(status_code=500, detail="Neo4j not configured")
+        
+        db = Neo4jDatabase(NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD)
+        
+        nodes_created = 0
+        
+        for row in data:
+            entity_name = row.get(entity_column)
+            if not entity_name:
+                continue
+            
+            # 노드 속성 준비
+            properties = {col: row.get(col) for col in property_columns if col in row}
+            properties['name'] = entity_name
+            
+            # Cypher 쿼리 생성
+            query = f"MERGE (n:{entity_type} {{name: $name}}) SET n += $properties RETURN n"
+            
+            db.execute_query(query, {"name": entity_name, "properties": properties})
+            nodes_created += 1
+        
+        db.close()
+        
+        return {
+            "message": f"Successfully uploaded {nodes_created} nodes (로컬 처리)",
+            "nodes_created": nodes_created,
+            "relationships_created": 0,
+            "status": "success"
+        }
+    
+    except Exception as e:
+        print(f"❌ CSV upload failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# --- [14] JSON Upload Endpoint ---
+@app.post("/upload_json",
+          summary="JSON Data Upload to Neo4j",
+          description="Upload JSON data directly to Neo4j graph database")
+async def upload_json(request: dict):
+    """
+    JSON 데이터를 Neo4j에 직접 업로드 (로컬 처리만)
+    """
+    try:
+        data = request.get("data")
+        root_key = request.get("root_key")
+        entity_key = request.get("entity_key", "name")
+        entity_type = request.get("entity_type", "Entity")
+        
+        if not data:
+            raise HTTPException(status_code=400, detail="data is required")
+        
+        # 루트 키가 있으면 해당 배열 추출
+        if root_key and isinstance(data, dict):
+            data = data.get(root_key, [])
+        
+        # 리스트가 아니면 리스트로 변환
+        if not isinstance(data, list):
+            data = [data]
+        
+        print(f"📦 Uploading JSON data: {len(data)} items (로컬 처리)")
+        
+        # Neo4j에 데이터 삽입
+        from db.neo4j_db import Neo4jDatabase
+        
+        if not NEO4J_URI or not NEO4J_PASSWORD:
+            raise HTTPException(status_code=500, detail="Neo4j not configured")
+        
+        db = Neo4jDatabase(NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD)
+        
+        nodes_created = 0
+        
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            
+            entity_name = item.get(entity_key)
+            if not entity_name:
+                continue
+            
+            # 모든 속성 포함
+            properties = dict(item)
+            properties['name'] = entity_name
+            
+            # Cypher 쿼리 생성
+            query = f"MERGE (n:{entity_type} {{name: $name}}) SET n += $properties RETURN n"
+            
+            db.execute_query(query, {"name": entity_name, "properties": properties})
+            nodes_created += 1
+        
+        db.close()
+        
+        return {
+            "message": f"Successfully uploaded {nodes_created} nodes (로컬 처리)",
+            "nodes_created": nodes_created,
+            "relationships_created": 0,
+            "status": "success"
+        }
+    
+    except Exception as e:
+        print(f"❌ JSON upload failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# --- [15] 서버 실행 ---
 # if __name__ == "__main__": 이건 "이 파일을 직접 실행했을 때만"이라는 뜻이에요!
 if __name__ == "__main__":
     # uvicorn.run()은 "서버를 실행하는" 거예요!

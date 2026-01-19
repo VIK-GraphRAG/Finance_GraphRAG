@@ -5,8 +5,7 @@
    lsof -ti:8501 | xargs kill -9
 
    # FastAPI 서버 (Auto-reload)
-   cd /Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG
-   source .venv/bin/activate
+   cd /Users/gyuteoi/new/Finance_GraphRAG
    # --reload 옵션 사용 시 코드 변경 즉시 반영됨
    uvicorn src.app:app --reload &
 

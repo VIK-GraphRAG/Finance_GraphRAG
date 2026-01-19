@@ -9,12 +9,20 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 import requests
 
-from ..config import (
-    PERPLEXITY_API_KEY,
-    PERPLEXITY_BASE_URL,
-    PERPLEXITY_MODEL,
-    PERPLEXITY_MAX_RESULTS
-)
+try:
+    from ..config import (
+        PERPLEXITY_API_KEY,
+        PERPLEXITY_BASE_URL,
+        PERPLEXITY_MODEL,
+        PERPLEXITY_MAX_RESULTS
+    )
+except ImportError:
+    from config import (
+        PERPLEXITY_API_KEY,
+        PERPLEXITY_BASE_URL,
+        PERPLEXITY_MODEL,
+        PERPLEXITY_MAX_RESULTS
+    )
 
 
 class PerplexitySearchEngine:
@@ -89,6 +97,7 @@ class PerplexitySearchEngine:
             "Content-Type": "application/json"
         }
         
+        # Build payload based on 2026 Perplexity API format
         payload = {
             "model": self.model,
             "messages": [
@@ -109,10 +118,9 @@ class PerplexitySearchEngine:
             "max_tokens": 1000,
             "temperature": 0.2,
             "top_p": 0.9,
-            "search_domain_filter": ["news", "finance"],
+            "search_mode": "web",  # Updated parameter (was search_domain_filter)
             "return_images": False,
             "return_related_questions": False,
-            "search_recency_filter": "month",  # Focus on recent news
         }
         
         try:
@@ -126,9 +134,16 @@ class PerplexitySearchEngine:
             response.raise_for_status()
             data = response.json()
             
-            # Extract answer and citations
+            # Extract answer and citations (updated format for 2026 API)
             answer = data['choices'][0]['message']['content']
-            citations = data.get('citations', [])
+            
+            # Extract citations from search_results or citations field
+            citations = []
+            if 'citations' in data:
+                citations = data['citations']
+            elif 'search_results' in data:
+                # Extract URLs from search_results
+                citations = [result.get('url', '') for result in data.get('search_results', []) if result.get('url')]
             
             result = {
                 'query': query,
