@@ -85,15 +85,13 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
 # Header
-st.title("📊 Tech-Analyst GraphRAG")
-st.markdown("Real-time Search + Knowledge Graph for Financial Analysis")
+st.title("Tech-Analyst GraphRAG")
+st.markdown("Knowledge Graph for Financial Analysis")
 
-# Privacy Mode 강제 활성화 알림
-st.success("🔒 **Privacy Mode 활성화**: 모든 사용자 데이터는 로컬 Ollama 모델로만 처리되며 외부로 전송되지 않습니다.")
 st.divider()
 
 # Tabs for different sections
-tab1, tab2, tab3, tab4 = st.tabs(["💬 Query", "📄 Upload PDF", "💾 Database Upload", "🕸️ Graph Visualization"])
+tab1, tab2, tab3, tab4 = st.tabs(["Query", "Upload PDF", "Database Upload", "Visualization"])
 
 # Tab 1: Query
 with tab1:
@@ -106,9 +104,6 @@ with tab1:
 
     with col1:
         st.subheader("Ask a Question")
-        
-        # 통합 분석 모드 설명
-        st.info("🔍 **GraphRAG 분석**: 로컬 Ollama 모델로 업로드된 문서에서 정보를 검색하고 분석합니다.")
     
     # Query input
     user_query = st.text_area(
@@ -118,8 +113,8 @@ with tab1:
         key="query_input"
     )
     
-    # Submit button (통합)
-    submit_button = st.button("🔍 Analyze", type="primary", use_container_width=True, help="GraphRAG 검색 및 분석 (10-30초)")
+    # Submit button
+    submit_button = st.button("Analyze", type="primary", use_container_width=True)
     
     # Process query (통합)
     if submit_button and user_query:
@@ -152,22 +147,21 @@ with tab1:
                     })
                     
                     # Display answer
-                    st.markdown("### 📊 Analysis Result")
+                    st.markdown("### Analysis Result")
                     st.markdown(f'<div class="report-container">{answer}</div>', unsafe_allow_html=True)
                     
                     # Display sources
                     if sources:
-                        with st.expander(f"📚 Sources ({len(sources)})"):
+                        with st.expander(f"Sources ({len(sources)})"):
                             for i, source in enumerate(sources[:5], 1):
                                 st.markdown(f"**[{i}]** {source.get('file', 'Unknown')}")
                                 if source.get('excerpt'):
                                     st.caption(source['excerpt'][:200] + "...")
                 
                 elif response.status_code == 500:
-                    st.error("⚠️ 서버 처리 중 오류가 발생했습니다. 로그를 확인해주세요.")
-                    st.info("💡 **해결 방법**: OpenAI API 키를 .env 파일에 설정해주세요. (현재: sk-your-key-here)")
+                    st.error("서버 처리 중 오류가 발생했습니다.")
                 elif response.status_code == 503:
-                    st.error("⚠️ 서비스를 사용할 수 없습니다. Multi-Agent 시스템이 초기화되지 않았습니다.")
+                    st.error("서비스를 사용할 수 없습니다.")
                 else:
                     st.error(f"Error: {response.status_code}")
                     
@@ -185,24 +179,20 @@ with tab1:
 
 # Tab 2: Upload PDF
 with tab2:
-    st.subheader("📄 Upload PDF Document")
+    st.subheader("Upload PDF Document")
     
-    # 처리 모드 안내
-    st.info("🔒 **로컬 처리**: 업로드된 PDF는 로컬 Ollama 모델로 엔티티와 관계를 추출합니다.")
-    
-    st.markdown("Upload financial reports, supply chain documents, or industry analysis PDFs")
+    st.markdown("Upload financial reports or industry analysis PDFs")
     
     uploaded_file = st.file_uploader(
         "Choose a PDF file",
-        type=['pdf'],
-        help="Upload PDF documents to process with local Ollama model"
+        type=['pdf']
     )
     
     if uploaded_file is not None:
-        st.info(f"📎 File: {uploaded_file.name} ({uploaded_file.size / 1024:.1f} KB)")
+        st.info(f"File: {uploaded_file.name} ({uploaded_file.size / 1024:.1f} KB)")
         
-        if st.button("🔒 Process PDF (Local Ollama)", type="primary"):
-            with st.spinner("🔒 로컬 모델로 처리 중... (외부 전송 없음)"):
+        if st.button("Process PDF (Local)", type="primary"):
+            with st.spinner("Processing with local model..."):
                 try:
                     # Send PDF to backend
                     files = {'file': (uploaded_file.name, uploaded_file.getvalue(), 'application/pdf')}
@@ -214,52 +204,43 @@ with tab2:
                     
                     if response.status_code == 200:
                         data = response.json()
-                        st.success("✅ PDF가 로컬 Ollama 모델로 처리되었습니다!")
+                        st.success("PDF processed successfully")
                         
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            st.metric("📊 엔티티 추출", data.get('entities_extracted', 'N/A'))
+                            st.metric("Entities", data.get('entities_extracted', 'N/A'))
                         with col2:
-                            st.metric("🔗 관계 추출", data.get('relationships_extracted', 'N/A'))
+                            st.metric("Relationships", data.get('relationships_extracted', 'N/A'))
                         with col3:
-                            st.metric("🔒 민감 정보", data.get('sensitive_count', 'N/A'))
-                        
-                        st.info(data.get('message', 'Processing complete'))
+                            st.metric("Sensitive", data.get('sensitive_count', 'N/A'))
                         
                         # 처리 세부사항 표시
                         if data.get('entities'):
-                            with st.expander("📋 추출된 엔티티 보기"):
-                                st.json(data.get('entities', [])[:10])  # 처음 10개만 표시
+                            with st.expander("View extracted entities"):
+                                st.json(data.get('entities', [])[:10])
                     else:
-                        st.error(f"❌ Error processing PDF: {response.status_code}")
+                        st.error(f"Error processing PDF: {response.status_code}")
                         droneLogError("PDF upload failed in UI (tab2)", Exception(f"status={response.status_code}"))
 
                 except Exception as e:
                     droneLogError("PDF upload exception in UI (tab2)", e)
-                    st.error(f"❌ Error: {str(e)}")
+                    st.error(f"Error: {str(e)}")
 
 # Tab 3: Database Upload
 with tab3:
-    st.subheader("💾 데이터베이스 영구 업로드 (OpenAI API)")
-    st.markdown("PDF 파일을 Neo4j 그래프 데이터베이스에 영구적으로 병합합니다")
-    
-    # 처리 모드 안내
-    st.info("🤖 **OpenAI API 처리**: PDF를 업로드하면 GPT-4o-mini로 엔티티/관계를 추출하여 기존 그래프와 병합합니다. 멀티홉 추론이 가능해집니다!")
-
-    st.markdown("### 📄 PDF 파일 업로드 (영구 저장)")
-    st.markdown("**OpenAI API로 처리되어 정확한 엔티티 추출이 가능합니다**")
+    st.subheader("Database Upload (OpenAI)")
+    st.markdown("Merge PDF into Neo4j graph database")
     
     pdf_db_file = st.file_uploader(
-        "PDF 파일 선택 (DB 영구 병합용)",
+        "Choose PDF file",
         type=['pdf'],
-        key="db_pdf_upload",
-        help="OpenAI API로 PDF 문서의 엔티티/관계를 추출해 Neo4j 그래프에 병합"
+        key="db_pdf_upload"
     )
 
     if pdf_db_file:
-        st.info(f"📎 File: {pdf_db_file.name} ({pdf_db_file.size / 1024:.1f} KB)")
-        if st.button("🤖 OpenAI로 PDF 그래프 병합", type="primary", key="db_pdf_upload_btn"):
-            with st.spinner("🤖 OpenAI API로 PDF 처리 및 그래프 병합 중..."):
+        st.info(f"File: {pdf_db_file.name} ({pdf_db_file.size / 1024:.1f} KB)")
+        if st.button("Process & Merge", type="primary", key="db_pdf_upload_btn"):
+            with st.spinner("Processing with OpenAI API..."):
                 try:
                     response = requests.post(
                         f"{API_BASE_URL}/ingest_pdf_db",
@@ -268,22 +249,20 @@ with tab3:
                     )
                     if response.status_code == 200:
                         result = response.json()
-                        st.success("✅ PDF 그래프 병합 완료 (OpenAI API)!")
+                        st.success("PDF merged successfully")
                         col_p1, col_p2, col_p3 = st.columns(3)
                         with col_p1:
-                            st.metric("엔티티", result.get("entities_extracted", 0))
+                            st.metric("Entities", result.get("entities_extracted", 0))
                         with col_p2:
-                            st.metric("관계", result.get("relationships_extracted", 0))
+                            st.metric("Relationships", result.get("relationships_extracted", 0))
                         with col_p3:
-                            st.metric("텍스트 길이", result.get("text_length", 0))
-                        
-                        st.info(result.get('message', 'Processing complete'))
+                            st.metric("Text Length", result.get("text_length", 0))
                     else:
-                        st.error(f"❌ 업로드 실패: {response.status_code}")
+                        st.error(f"Upload failed: {response.status_code}")
                         droneLogError("PDF DB upload failed in UI (tab3)", Exception(f"status={response.status_code}"))
                 except Exception as e:
                     droneLogError("PDF DB upload exception in UI (tab3)", e)
-                    st.error(f"❌ Error: {str(e)}")
+                    st.error(f"Error: {str(e)}")
 
 # CSV/JSON upload sections removed per user request
 
@@ -322,7 +301,7 @@ with tab4:
                         NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
 
                         if not NEO4J_PASSWORD:
-                            st.error("Neo4j 비밀번호가 설정되지 않았습니다. .env에 NEO4J_PASSWORD를 설정하세요.")
+                            st.error("Neo4j password not set in .env")
                             droneLogError("Neo4j password missing for visualization (sample data)")
                         else:
                             driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
@@ -385,8 +364,7 @@ with tab4:
 
 # Tab 4: Graph Visualization
 with tab4:
-    st.subheader("Knowledge Graph Visualization")
-    st.markdown("Interactive visualization of the supply chain network")
+    st.subheader("Graph Visualization")
     
     # Visualization options
     col1, col2 = st.columns(2)
@@ -395,7 +373,7 @@ with tab4:
     with col2:
         layout = st.selectbox("Layout", ["Force-directed", "Hierarchical", "Circular"])
     
-    if st.button("Generate Graph Visualization", type="primary"):
+    if st.button("Generate", type="primary"):
         with st.spinner("Generating graph visualization..."):
             try:
                 # Direct Neo4j query for visualization
@@ -407,7 +385,7 @@ with tab4:
                 import json
 
                 if not NEO4J_PASSWORD:
-                    st.error("Neo4j 비밀번호가 설정되지 않았습니다. .env에 NEO4J_PASSWORD를 설정하세요.")
+                    st.error("Neo4j password not set in .env")
                     droneLogError("Neo4j password missing for visualization (graph view)")
                     raise RuntimeError("Neo4j password missing")
 
@@ -646,6 +624,6 @@ if st.button("Clear History", use_container_width=True):
 
 st.markdown("""
 <div style='text-align: center; color: #666; font-size: 0.9rem; margin-top: 2rem;'>
-    Tech-Analyst GraphRAG v2.0 | Powered by GPT-4o-mini & Perplexity
+    Tech-Analyst GraphRAG v2.0
 </div>
 """, unsafe_allow_html=True)
