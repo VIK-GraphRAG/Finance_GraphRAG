@@ -38,11 +38,6 @@ async def openai_model_if(
     Returns:
         LLM 응답 텍스트
     """
-    # #region agent log
-    import json
-    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-        f.write(json.dumps({"location":"utils.py:42","message":"OpenAI LLM call","data":{"prompt_len":len(prompt),"prompt_preview":prompt[:200],"system_prompt":system_prompt[:200] if system_prompt else None,"kwargs":str(kwargs)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H3,H4"})+'\n')
-    # #endregion
     
     client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
     
@@ -61,10 +56,6 @@ async def openai_model_if(
     
     result = response.choices[0].message.content
     
-    # #region agent log
-    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-        f.write(json.dumps({"location":"utils.py:75","message":"OpenAI LLM response","data":{"response_len":len(result) if result else 0,"response_preview":result[:500] if result else None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H4"})+'\n')
-    # #endregion
     
     return result
 
@@ -112,12 +103,6 @@ async def ollama_model_if(
     Returns:
         LLM 응답 텍스트
     """
-    # #region agent log
-    import json
-    import re
-    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-        f.write(json.dumps({"location":"utils.py:115","message":"Ollama LLM call","data":{"prompt_len":len(prompt),"prompt_preview":prompt[:200],"system_prompt":system_prompt[:200] if system_prompt else None,"kwargs":str(kwargs)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H3,H5"})+'\n')
-    # #endregion
     
     client = AsyncClient()
     
@@ -151,10 +136,6 @@ async def ollama_model_if(
     
     result = response['message']['content']
     
-    # #region agent log
-    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-        f.write(json.dumps({"location":"utils.py:165","message":"Ollama LLM response (raw)","data":{"response_len":len(result) if result else 0,"response_preview":result[:500] if result else None,"is_json_request":is_json_request},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H5"})+'\n')
-    # #endregion
     
     # If JSON was expected, try to extract it from conversational responses
     if is_json_request and result:
@@ -168,10 +149,6 @@ async def ollama_model_if(
             if json_obj_match:
                 result = json_obj_match.group(0)
     
-    # #region agent log
-    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-        f.write(json.dumps({"location":"utils.py:185","message":"Ollama LLM response (processed)","data":{"response_len":len(result) if result else 0,"response_preview":result[:500] if result else None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H4"})+'\n')
-    # #endregion
     
     return result
 

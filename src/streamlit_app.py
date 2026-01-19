@@ -107,29 +107,8 @@ with tab1:
     with col1:
         st.subheader("Ask a Question")
         
-        # 분석 모드 설명 추가
-        with st.expander("ℹ️ 분석 모드 차이점", expanded=False):
-            col_info1, col_info2 = st.columns(2)
-            
-            with col_info1:
-                st.markdown("""
-                ### ⚡ Analyze (빠른 분석)
-                - **처리 시간**: 10-30초
-                - **방식**: 단일 GraphRAG 검색
-                - **용도**: 간단한 질문, 빠른 답변
-                - **모델**: 로컬 Ollama (qwen2.5-coder:3b)
-                - **예시**: "Nvidia의 매출은?"
-                """)
-            
-            with col_info2:
-                st.markdown("""
-                ### 🔬 Deep Analysis (심층 분석)
-                - **처리 시간**: 30-60초
-                - **방식**: Multi-Agent 협업 파이프라인
-                - **용도**: 복잡한 분석, 다각도 검토
-                - **파이프라인**: Master → KB Collector → Analyst → Writer
-                - **예시**: "Nvidia의 공급망 리스크 분석"
-                """)
+        # 통합 분석 모드 설명
+        st.info("🔍 **GraphRAG 분석**: 로컬 Ollama 모델로 업로드된 문서에서 정보를 검색하고 분석합니다.")
     
     # Query input
     user_query = st.text_area(
@@ -139,18 +118,12 @@ with tab1:
         key="query_input"
     )
     
-    # Submit button
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 2])
+    # Submit button (통합)
+    submit_button = st.button("🔍 Analyze", type="primary", use_container_width=True, help="GraphRAG 검색 및 분석 (10-30초)")
     
-    with col_btn1:
-        submit_button = st.button("⚡ Analyze", type="primary", use_container_width=True, help="빠른 단일 검색 (10-30초)")
-    
-    with col_btn2:
-        agentic_button = st.button("🔬 Deep Analysis", use_container_width=True, help="Multi-Agent 심층 분석 (30-60초)")
-    
-    # Process query
+    # Process query (통합)
     if submit_button and user_query:
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analyzing with GraphRAG..."):
             try:
                 # Call API
                 response = requests.post(
@@ -159,7 +132,9 @@ with tab1:
                         "question": user_query,
                         "mode": "local",
                         "temperature": temperature,
-                        "enable_web_search": enable_web_search
+                        "enable_web_search": False,  # 웹 검색 비활성화 (로컬만)
+                        "search_type": "local",
+                        "top_k": 30
                     },
                     timeout=90
                 )
@@ -167,50 +142,32 @@ with tab1:
                 if response.status_code == 200:
                     data = response.json()
                     answer = data.get("answer", "Unable to generate answer.")
+                    sources = data.get("sources", [])
                     
                     # Add to history
                     st.session_state.chat_history.append({
                         "query": user_query,
                         "answer": answer,
-                        "type": "standard"
+                        "type": "graphrag"
                     })
                     
                     # Display answer
-                    st.markdown("### Analysis Result")
+                    st.markdown("### 📊 Analysis Result")
                     st.markdown(f'<div class="report-container">{answer}</div>', unsafe_allow_html=True)
-                else:
-                    st.error(f"Error: {response.status_code}")
                     
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
-    
-    elif agentic_button and user_query:
-        with st.spinner("Deep analysis in progress... (30-60 seconds)"):
-            try:
-                # Call Agentic API
-                response = requests.post(
-                    f"{API_BASE_URL}/agentic-query",
-                    json={
-                        "question": user_query,
-                        "enable_web_search": enable_web_search
-                    },
-                    timeout=120
-                )
+                    # Display sources
+                    if sources:
+                        with st.expander(f"📚 Sources ({len(sources)})"):
+                            for i, source in enumerate(sources[:5], 1):
+                                st.markdown(f"**[{i}]** {source.get('file', 'Unknown')}")
+                                if source.get('excerpt'):
+                                    st.caption(source['excerpt'][:200] + "...")
                 
-                if response.status_code == 200:
-                    data = response.json()
-                    answer = data.get("answer", "Unable to generate answer.")
-                    
-                    # Add to history
-                    st.session_state.chat_history.append({
-                        "query": user_query,
-                        "answer": answer,
-                        "type": "agentic"
-                    })
-                    
-                    # Display answer
-                    st.markdown("### Deep Analysis Result")
-                    st.markdown(f'<div class="report-container">{answer}</div>', unsafe_allow_html=True)
+                elif response.status_code == 500:
+                    st.error("⚠️ 서버 처리 중 오류가 발생했습니다. 로그를 확인해주세요.")
+                    st.info("💡 **해결 방법**: OpenAI API 키를 .env 파일에 설정해주세요. (현재: sk-your-key-here)")
+                elif response.status_code == 503:
+                    st.error("⚠️ 서비스를 사용할 수 없습니다. Multi-Agent 시스템이 초기화되지 않았습니다.")
                 else:
                     st.error(f"Error: {response.status_code}")
                     

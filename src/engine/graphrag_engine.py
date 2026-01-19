@@ -203,10 +203,6 @@ class PrivacyGraphRAGEngine:
             return_context=False: 답변 텍스트 (str)
             return_context=True: {"answer": str, "sources": List[dict]} (dict)
         """
-        # #region agent log
-        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-            f.write(__import__('json').dumps({"location":"graphrag_engine.py:171","message":"aquery() entry","data":{"question":question,"mode":mode,"return_context":return_context,"top_k":top_k},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"})+'\n')
-        # #endregion
         # Planner를 사용하여 모드 자동 결정
         if auto_plan and mode is None:
             planner = QueryPlanner()
@@ -285,11 +281,6 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
         if os.path.exists(graphml_path):
             import networkx as nx
             G = nx.read_graphml(graphml_path)
-            # #region agent log
-            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                revenue_nodes = [n for n,d in G.nodes(data=True) if 'revenue' in str(d).lower() or 'revenue' in str(n).lower()]
-                f.write(__import__('json').dumps({"location":"graphrag_engine.py:232","message":"graph stats","data":{"nodes":G.number_of_nodes(),"edges":G.number_of_edges(),"revenue_nodes_count":len(revenue_nodes),"revenue_nodes_sample":revenue_nodes[:5]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H6"})+'\n')
-            # #endregion
             print(f"[DEBUG] 그래프 노드 수: {G.number_of_nodes()}, 엣지 수: {G.number_of_edges()}")
         else:
             print(f"[DEBUG] 그래프 파일이 없어요: {graphml_path}")
@@ -303,10 +294,6 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
                     top_k=top_k,  # 사용자 지정 top_k 사용
                 )
                 response = await self.query_rag_api.aquery(question, param=query_param)
-                # #region agent log
-                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:236","message":"query_rag_api response","data":{"response_length":len(response) if response else 0,"response_preview":response[:200] if response else None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1"})+'\n')
-                # #endregion
                 print(f"🔍 [DEBUG] query_rag_api.aquery() 완료! (top_k: {top_k})")
             except Exception as e:
                 print(f"❌ [DEBUG] query_rag_api.aquery() 에러: {type(e).__name__}: {e}")
@@ -347,10 +334,6 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
         if return_context:
             ctx = await self._aretrieve_context_from_neo4j(question=question, top_sources=min(top_k, 10))
             sources = ctx.get("sources", [])
-            # #region agent log
-            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                f.write(__import__('json').dumps({"location":"graphrag_engine.py:288","message":"context retrieval result","data":{"sources_count":len(sources),"first_source_excerpt":sources[0].get('excerpt','')[:100] if sources else None,"retrieval_backend":ctx.get("retrieval_backend")},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3"})+'\n')
-            # #endregion
             return {
                 "answer": response,
                 "sources": sources,
@@ -368,10 +351,6 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
         try:
             if self._neo4j_retriever is None:
                 self._neo4j_retriever = Neo4jRetriever()
-            # #region agent log
-            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                f.write(__import__('json').dumps({"location":"graphrag_engine.py:314","message":"before neo4j retrieval","data":{"question":question,"top_sources":top_sources},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2"})+'\n')
-            # #endregion
             result = await asyncio.to_thread(
                 self._neo4j_retriever.retrieve,
                 question,
@@ -380,34 +359,18 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
                 top_sources,
             )
             sources = result.get("sources", [])
-            # #region agent log
-            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                f.write(__import__('json').dumps({"location":"graphrag_engine.py:326","message":"neo4j retrieval result","data":{"sources_count":len(sources),"context_length":len(result.get("context",""))},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2"})+'\n')
-            # #endregion
             
             # Neo4j에서 소스를 못 찾았으면 KV 폴백 실행
             if not sources or len(sources) == 0:
-                # #region agent log
-                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:333","message":"neo4j returned empty sources, falling back to KV","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2,H3"})+'\n')
-                # #endregion
                 print(f"[Neo4jRetriever] Neo4j returned 0 sources, falling back to KV store")
                 try:
                     sources = await self._extract_sources(question=question)
-                    # #region agent log
-                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                        f.write(__import__('json').dumps({"location":"graphrag_engine.py:340","message":"kv fallback success","data":{"sources_count":len(sources)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
-                    # #endregion
                     return {
                         "context": "",
                         "sources": sources,
                         "retrieval_backend": "kv_fallback",
                     }
                 except Exception as e2:
-                    # #region agent log
-                    with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                        f.write(__import__('json').dumps({"location":"graphrag_engine.py:350","message":"kv fallback also failed","data":{"error":str(e2),"error_type":type(e2).__name__},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
-                    # #endregion
                     sources = []
                     return {
                         "context": "",
@@ -421,23 +384,10 @@ Streamlit UI에서 "Privacy Mode" 체크박스를 활성화했는지 확인하�
                 "retrieval_backend": "neo4j",
             }
         except Exception as e:
-            # #region agent log
-            with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                import traceback
-                f.write(__import__('json').dumps({"location":"graphrag_engine.py:337","message":"neo4j retrieval failed, trying fallback","data":{"error":str(e),"error_type":type(e).__name__,"traceback":traceback.format_exc()[:500]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H2,H3"})+'\n')
-            # #endregion
             print(f"[Neo4jRetriever] fallback to kv sources: {type(e).__name__}: {e}")
             try:
                 sources = await self._extract_sources(question=question)
-                # #region agent log
-                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:347","message":"kv fallback success","data":{"sources_count":len(sources)},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
-                # #endregion
             except Exception as e2:
-                # #region agent log
-                with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
-                    f.write(__import__('json').dumps({"location":"graphrag_engine.py:353","message":"kv fallback also failed","data":{"error":str(e2),"error_type":type(e2).__name__},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run2","hypothesisId":"H3"})+'\n')
-                # #endregion
                 sources = []
             return {
                 "context": "",

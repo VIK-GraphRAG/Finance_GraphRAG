@@ -64,12 +64,21 @@ class AgenticWorkflow:
             mcp_manager: MCP Manager 인스턴스
             neo4j_db: Neo4jDatabase 인스턴스
         """
+        # #region agent log
+        import json
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"langgraph_workflow.py:56","message":"AgenticWorkflow init entry","data":{"has_engine":engine is not None,"has_mcp":mcp_manager is not None,"has_neo4j":neo4j_db is not None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3"})+'\n')
+        # #endregion
         self.engine = engine
         self.mcp_manager = mcp_manager
         self.neo4j_db = neo4j_db
         self.memory_manager = get_memory_manager()
         
         # 에이전트 초기화
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"langgraph_workflow.py:67","message":"Before agent init","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H3"})+'\n')
+        # #endregion
         self.planner = PlannerAgent()
         self.collector = KBCollectorAgent(
             engine=engine, 
@@ -82,9 +91,21 @@ class AgenticWorkflow:
             neo4j_db=neo4j_db
         )
         self.writer = WriterAgent(neo4j_db=neo4j_db)
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"langgraph_workflow.py:82","message":"After agent init","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H3"})+'\n')
+        # #endregion
         
         # 그래프 구축
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"langgraph_workflow.py:85","message":"Before graph build","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H3"})+'\n')
+        # #endregion
         self.graph = self._build_graph()
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/graphrag/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"langgraph_workflow.py:90","message":"After graph build","data":{"graph_ready":self.graph is not None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H3"})+'\n')
+        # #endregion
     
     def _build_graph(self) -> StateGraph:
         """

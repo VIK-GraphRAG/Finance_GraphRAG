@@ -122,16 +122,42 @@ async def lifespan(app: FastAPI):
         neo4j_db = None
     
     # Agentic Workflow 초기화
+    # #region agent log
+    import json
+    with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+        f.write(json.dumps({"location":"app.py:70","message":"Agentic Workflow init start","data":{"engine_ready":engine is not None,"mcp_ready":mcp_manager is not None,"neo4j_ready":neo4j_db is not None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H2,H4"})+'\n')
+    # #endregion
     try:
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:72","message":"Before import AgenticWorkflow","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H5"})+'\n')
+        # #endregion
         from agents.langgraph_workflow import AgenticWorkflow
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:73","message":"After import AgenticWorkflow","data":{"class_type":str(type(AgenticWorkflow))},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H5"})+'\n')
+        # #endregion
         print("🔧 Agentic Workflow 초기화 중...")
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:74","message":"Before AgenticWorkflow instantiation","data":{},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H2,H3"})+'\n')
+        # #endregion
         agentic_workflow = AgenticWorkflow(
             engine=engine,
             mcp_manager=mcp_manager,
             neo4j_db=neo4j_db
         )
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:79","message":"After AgenticWorkflow instantiation","data":{"workflow_ready":agentic_workflow is not None},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H3"})+'\n')
+        # #endregion
         print("✅ Agentic Workflow 준비 완료!")
     except Exception as e:
+        # #region agent log
+        import traceback
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:80","message":"Agentic Workflow exception caught","data":{"error_type":type(e).__name__,"error_msg":str(e),"traceback":traceback.format_exc()},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H2,H3,H4,H5"})+'\n')
+        # #endregion
         print(f"⚠️ Agentic Workflow 초기화 실패: {e}")
         agentic_workflow = None
     
@@ -587,6 +613,11 @@ async def query(request: QueryRequest):
         )
     
     try:
+        # #region agent log
+        import json
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:325","message":"Query entry","data":{"question":request.question,"mode":request.mode,"enable_web_search":request.enable_web_search},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H2,H5"})+'\n')
+        # #endregion
         
         # --- Decision Layer (Router) ---
         # 웹 검색이 활성화된 경우에만 질문 분류
@@ -646,6 +677,10 @@ async def query(request: QueryRequest):
             
             # Strict Grounding으로 보고서 재생성
             if sources_list:
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"app.py:567","message":"sources_list before grounding","data":{"count":len(sources_list),"sources":[{"id":s.get("id"),"file":s.get("file"),"excerpt":s.get("excerpt","")[:100]} for s in sources_list[:3]]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H4"})+'\n')
+                # #endregion
                 # 실제 소스 개수만 사용하도록 제한
                 max_sources = min(len(sources_list), 10)  # 최대 10개
                 sources_list = sources_list[:max_sources]
@@ -665,12 +700,20 @@ async def query(request: QueryRequest):
                     max_tokens=2000
                 )
                 response = llm_response.choices[0].message.content.strip()
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"app.py:584","message":"LLM response before validation","data":{"response_length":len(response),"response_preview":response[:300]},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"})+'\n')
+                # #endregion
                 
                 # Self-Correction: Citation Validation
                 from citation_validator import CitationValidator
                 validator = CitationValidator(sources_list)
                 validation_result = validator.validate_response(response)
                 evidence = []
+                # #region agent log
+                with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                    f.write(__import__('json').dumps({"location":"app.py:596","message":"validation result","data":{"confidence":validation_result.get('confidence_score'),"valid_citations":validation_result.get('valid_citations'),"total_citations":validation_result.get('total_citations'),"missing_citations":validation_result.get('missing_citations',[])},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H5"})+'\n')
+                # #endregion
                 
                 print(f"[VALIDATION] Confidence: {validation_result['confidence_score']:.1%}")
                 print(f"[VALIDATION] Valid citations: {validation_result['valid_citations']}/{validation_result['total_citations']}")
@@ -679,6 +722,21 @@ async def query(request: QueryRequest):
                 override_applied = False
                 if response.strip() == "해당 문서들에서는 관련 정보를 찾을 수 없습니다." and len(sources_list) > 0:
                     print("[WARNING] Strict grounding LLM returned 'no info' despite non-empty sources. Falling back to base GraphRAG answer.")
+                    # #region agent log
+                    with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+                        f.write(__import__('json').dumps({
+                            "location": "app.py:610",
+                            "message": "override no-info with base_answer",
+                            "data": {
+                                "base_answer_preview": base_answer[:200] if base_answer else None,
+                                "sources_count": len(sources_list)
+                            },
+                            "timestamp": __import__('time').time()*1000,
+                            "sessionId": "debug-session",
+                            "runId": "run1",
+                            "hypothesisId": "H4,H5"
+                        }) + '\n')
+                    # #endregion
                     response = base_answer or response
                     # base_answer에는 citation이 없을 수 있으므로 validation은 유지하되 신뢰도는 0.7 이상으로 설정하여 후속 체크를 통과시킴
                     validation_result = {"confidence_score": 0.75, "is_valid": True}
@@ -709,7 +767,7 @@ async def query(request: QueryRequest):
                         
                         if perplexity_result and not perplexity_result.get("error"):
                             # Perplexity 답변 사용
-                            response = f"{perplexity_result.get('answer', '')}"
+                            response = f"\n{perplexity_result.get('answer', '')}"
                             
                             # Citations를 sources로 변환
                             sources_list = []
@@ -780,7 +838,7 @@ async def query(request: QueryRequest):
                     
                     if perplexity_result and not perplexity_result.get("error"):
                         # Perplexity 답변 사용
-                        response = f"\n{perplexity_result.get('answer', '')}"
+                        response = f"\n\n{perplexity_result.get('answer', '')}"
                         
                         # Citations를 sources로 변환
                         sources_list = []
@@ -807,6 +865,10 @@ async def query(request: QueryRequest):
             
             source = "GRAPH_RAG"
         
+        # #region agent log
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:338","message":"Query response","data":{"response":response[:500] if response else None,"response_type":type(response).__name__,"source":source},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H3"})+'\n')
+        # #endregion
         
         # return은 "이걸 돌려줘"라는 뜻이에요!
         return {
@@ -823,6 +885,11 @@ async def query(request: QueryRequest):
             "status": "success"
         }
     except Exception as e:
+        # #region agent log
+        import traceback
+        with open('/Users/gyuteoi/Desktop/Finance_GraphRAG/.cursor/debug.log', 'a') as f:
+            f.write(json.dumps({"location":"app.py:352","message":"Query error","data":{"error":str(e),"error_type":type(e).__name__,"traceback":traceback.format_exc()},"timestamp":__import__('time').time()*1000,"sessionId":"debug-session","runId":"run1","hypothesisId":"H1,H4"})+'\n')
+        # #endregion
         # except는 "만약 에러가 생기면"이라는 뜻이에요!
         raise HTTPException(status_code=500, detail=f"질문 처리 중 에러가 발생했어요: {str(e)}")
 
