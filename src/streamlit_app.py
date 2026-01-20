@@ -258,7 +258,23 @@ with tab3:
                     )
                     if response.status_code == 200:
                         result = response.json()
-                        st.success("PDF가 성공적으로 업로드되어 Neo4j 데이터베이스에 저장되었습니다.")
+                        st.success("✅ PDF가 성공적으로 업로드되어 Neo4j 데이터베이스에 저장되었습니다.")
+                        
+                        # 업로드 결과 요약
+                        col_info1, col_info2 = st.columns(2)
+                        with col_info1:
+                            st.info(f"📄 파일: {pdf_db_file.name}")
+                        with col_info2:
+                            st.info(f"📊 추출: {result.get('entities_extracted', 0)} 엔티티, {result.get('relationships_extracted', 0)} 관계")
+                        
+                        # 새로고침 안내
+                        st.markdown("💡 **Visualization 탭**으로 이동하여 업로드된 데이터를 확인하세요.")
+                        
+                        # 자동 새로고침을 위한 session state 업데이트
+                        if 'last_upload_time' not in st.session_state:
+                            st.session_state.last_upload_time = 0
+                        import time
+                        st.session_state.last_upload_time = time.time()
                     else:
                         st.error(f"Upload failed: {response.status_code}")
                         droneLogError("PDF DB upload failed in UI (tab3)", Exception(f"status={response.status_code}"))
@@ -272,6 +288,8 @@ with tab3:
 with tab4:
     try:
         from neo4j import GraphDatabase
+        import pandas as pd
+        
         NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         NEO4J_USERNAME = os.getenv("NEO4J_USERNAME", "neo4j")
         NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
@@ -282,22 +300,52 @@ with tab4:
             driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
 
             with driver.session() as session:
-                # Risk Factors만 표시
+                # 데이터베이스에 저장된 파일 목록 표시
+                st.subheader("📁 데이터베이스에 저장된 파일")
+                files_result = session.run("""
+                    MATCH (n)
+                    WHERE n.source_file IS NOT NULL
+                    RETURN DISTINCT n.source_file as file, count(n) as node_count
+                    ORDER BY file
+                """)
+                
+                files_data = files_result.data()
+                if files_data:
+                    df_files = pd.DataFrame(files_data)
+                    df_files.columns = ['파일명', '노드 수']
+                    st.dataframe(df_files, use_container_width=True)
+                    st.caption(f"총 {len(files_data)}개 파일, {df_files['노드 수'].sum()}개 노드")
+                else:
+                    st.info("데이터베이스에 저장된 파일이 없습니다. Database Upload 탭에서 PDF를 업로드하세요.")
+                
+                st.divider()
+                
+                # Risk Factors 표시
                 st.subheader("⚠️ Risk Factors")
                 result = session.run("""
                     MATCH (r:Risk)
-                    RETURN r.name as name, r.impact_level as impact, r.description as description
+                    RETURN r.name as name, r.impact_level as impact, r.description as description, r.source_file as source
                     ORDER BY r.impact_level DESC
                     LIMIT 20
                 """)
                 
                 risks = result.data()
                 if risks:
-                    import pandas as pd
                     df_risk = pd.DataFrame(risks)
+                    df_risk.columns = ['Risk Name', 'Impact Level', 'Description', 'Source']
+                    # None 값을 빈 문자열로 변경
+                    df_risk = df_risk.fillna('')
                     st.dataframe(df_risk, use_container_width=True)
+                    
+                    # None 값이 많은 경우 안내 메시지
+                    none_count = sum(1 for r in risks if not r['impact'] and not r['description'])
+                    if none_count > len(risks) * 0.5:
+                        st.warning(f"⚠️ Risk Factor의 속성 정보가 부족합니다 ({none_count}/{len(risks)}개). 더 나은 데이터를 위해 아래 명령어를 실행하세요:")
+                        st.code("python scripts/seed/seed_semiconductor.py", language="bash")
                 else:
-                    st.info("데이터베이스에 Risk Factor가 없습니다. PDF를 업로드하거나 데이터를 시딩하세요.")
+                    st.info("데이터베이스에 Risk Factor가 없습니다.")
+                    st.markdown("**Risk Factor 추가 방법:**")
+                    st.code("python scripts/seed/seed_semiconductor.py", language="bash")
         
             driver.close()
 

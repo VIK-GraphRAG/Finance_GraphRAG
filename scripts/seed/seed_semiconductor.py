@@ -6,10 +6,13 @@ Semiconductor Industry Ontology - Comprehensive Supply Chain Model
 
 import sys
 import os
+from pathlib import Path
 from neo4j import GraphDatabase
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from src.config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 
 def run_query(driver, query):
     with driver.session() as session:

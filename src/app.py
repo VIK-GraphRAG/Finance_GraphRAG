@@ -1035,12 +1035,12 @@ async def ingest_pdf_db(file: UploadFile = File(...)):
             if i > 0 and i % 10 == 0:
                 print(f"   Progress: {i}/{len(chunks)} chunks")
             
-            prompt = f"""Extract business entities and relationships from this text.
+            prompt = f"""Extract business entities and relationships from this semiconductor/financial text.
 Return ONLY valid JSON format:
 
 {{
   "entities": [
-    {{"name": "EntityName", "type": "COMPANY|PERSON|PRODUCT|TECHNOLOGY|FINANCIAL_METRIC|LOCATION", "properties": {{"key": "value"}}}}
+    {{"name": "EntityName", "type": "COMPANY|PERSON|PRODUCT|TECHNOLOGY|FINANCIAL_METRIC|LOCATION|REGULATION|RISK", "properties": {{"key": "value"}}}}
   ],
   "relationships": [
     {{"source": "EntityA", "target": "EntityB", "type": "RELATIONSHIP_TYPE", "properties": {{"key": "value"}}}}
@@ -1048,7 +1048,19 @@ Return ONLY valid JSON format:
 }}
 
 Entity types: COMPANY, PERSON, PRODUCT, TECHNOLOGY, FINANCIAL_METRIC, LOCATION, REGULATION, RISK
-Relationship types: SUPPLIES, PURCHASES, COMPETES_WITH, HAS_CEO, EMPLOYS, LOCATED_IN, PRODUCES, IMPACTS, DEPENDS_ON
+
+Relationship types: SUPPLIES, PURCHASES, COMPETES_WITH, HAS_CEO, EMPLOYS, LOCATED_IN, PRODUCES, IMPACTS, DEPENDS_ON, REGULATES
+
+**IMPORTANT for RISK entities:**
+- ALWAYS extract "impact_level" property (high/medium/low or 0.0-1.0)
+- ALWAYS extract "description" property (brief risk explanation)
+- Example: {{"name": "Supply Chain Disruption", "type": "RISK", "properties": {{"impact_level": "high", "description": "Risk of production delays due to supplier issues"}}}}
+
+**IMPORTANT for COMPANY entities:**
+- Extract "industry", "location", "revenue" if available
+
+**IMPORTANT for REGULATION entities:**
+- Extract "region", "effective_date", "impact" if available
 
 Text:
 {chunk[:2000]}
