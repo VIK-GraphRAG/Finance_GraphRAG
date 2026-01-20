@@ -344,19 +344,26 @@ class Neo4jRetriever:
 
     def _find_seed_nodes(self, terms: List[str], limit: int = 10) -> List[Dict]:
         seeds: List[Dict] = []
+        
+        # 모든 라벨에서 검색 (Entity뿐만 아니라 Company, Product, Risk 등)
         for term in terms:
             query = """
-            MATCH (n:Entity)
+            MATCH (n)
             WHERE n.name IS NOT NULL AND toLower(n.name) CONTAINS toLower($term)
-            RETURN n
+            RETURN n, labels(n) as node_labels
             LIMIT $limit
             """
             result = self.executor.execute_query(query, parameters={"term": term, "limit": limit}, limit=limit)
             for node in result.nodes:
                 # 중복 제거
-                if any(s.get("id") == node.id for s in seeds):
+                node_id = getattr(node, "id", None) or str(id(node))
+                if any(s.get("id") == node_id for s in seeds):
                     continue
-                seeds.append({"id": node.id, "name": getattr(node, "name", None), "type": getattr(node, "type", None)})
+                seeds.append({
+                    "id": node_id,
+                    "name": getattr(node, "name", None),
+                    "type": getattr(node, "type", None)
+                })
         return seeds[:limit]
 
     def _expand_neighborhood(self, seed_nodes: List[Dict], depth: int = 2, limit: int = 50) -> Neo4jQueryResult:
@@ -364,22 +371,25 @@ class Neo4jRetriever:
             # 빈 결과
             return Neo4jQueryResult(nodes=[], relationships=[], count=0)
 
-        seed_ids = [s["id"] for s in seed_nodes if s.get("id")]
+        seed_names = [s["name"] for s in seed_nodes if s.get("name")]
+        
+        if not seed_names:
+            return Neo4jQueryResult(nodes=[], relationships=[], count=0)
 
         # depth는 1~3으로 제한
         depth = max(1, min(int(depth), 3))
 
-        # 관계 확장: 1..depth hop, undirected
-        # 필터: source_file이 있거나, original_sentence가 있는 것 우선(쿼리 단계에서 완전 필터는 위험)
+        # 관계 확장: name으로 매칭 (모든 라벨 지원)
         query = f"""
-        MATCH (n:Entity)
-        WHERE n.id IN $seed_ids
-        MATCH p=(n)-[r*1..{depth}]-(m:Entity)
+        MATCH (n)
+        WHERE n.name IN $seed_names
+        MATCH p=(n)-[r*1..{depth}]-(m)
+        WHERE m.name IS NOT NULL
         WITH DISTINCT n, m, relationships(p) AS rels
         RETURN n AS a, m AS b, rels[0] AS r
         LIMIT $limit
         """
-        return self.executor.execute_query(query, parameters={"seed_ids": seed_ids, "limit": limit}, limit=limit)
+        return self.executor.execute_query(query, parameters={"seed_names": seed_names, "limit": limit}, limit=limit)
 
     def _to_sources(self, result: Neo4jQueryResult, top_sources: int = 10) -> List[Dict]:
         sources: List[EvidenceSource] = []

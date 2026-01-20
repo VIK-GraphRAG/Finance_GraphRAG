@@ -96,7 +96,7 @@ tab1, tab2, tab3, tab4 = st.tabs(["Query", "Upload PDF", "Database Upload", "Vis
 # Tab 1: Query
 with tab1:
     # Fixed settings (no UI controls)
-    enable_web_search = True  # Always enabled for real-time intelligence
+    enable_web_search = False  # 기본값: Neo4j 그래프 우선 사용
     temperature = 0.2  # Fixed for consistent analysis
 
     # Main content

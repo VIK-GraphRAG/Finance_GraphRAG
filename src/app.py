@@ -210,7 +210,11 @@ class InsertRequest(BaseModel):
 
 async def classify_query(question: str) -> str:
     """
-    GPT-4o-mini를 사용하여 질문을 분류하는 Router 함수
+    질문을 분류하여 GRAPH_RAG 또는 WEB_SEARCH로 라우팅
+    
+    전략: Neo4j 그래프 우선 사용
+    - 명시적으로 "최신", "오늘", "현재" 등의 키워드가 있을 때만 WEB_SEARCH
+    - 그 외 모든 경우 GRAPH_RAG 사용 (업로드된 문서 기반)
     
     Args:
         question: 사용자 질문
@@ -218,65 +222,23 @@ async def classify_query(question: str) -> str:
     Returns:
         "GRAPH_RAG" 또는 "WEB_SEARCH"
     """
-    try:
-        # OpenAI 클라이언트 생성
-        client = AsyncOpenAI(
-            api_key=OPENAI_API_KEY,
-            base_url=OPENAI_BASE_URL
-        )
-        
-        # 분류를 위한 시스템 프롬프트
-        system_prompt = """You are a query classifier for a financial AI system.
-
-Your task is to classify user questions into two categories:
-
-1. GRAPH_RAG: Questions about uploaded PDF documents, company information, people, financials from internal reports
-   Examples:
-   - "What is NVIDIA's Q3 revenue?"
-   - "Who is Jensen Huang?" (person information from documents)
-   - "How old is the CEO?" (biographical information)
-   - "Summarize the uploaded report"
-   - "What are the key findings in the document?"
-
-2. WEB_SEARCH: Questions EXPLICITLY requiring TODAY's/LATEST/CURRENT real-time market data or breaking news
-   Examples:
-   - "What is today's stock price?"
-   - "Latest news TODAY about Tesla"
-   - "Current inflation rate RIGHT NOW"
-   - "What happened in the market TODAY?"
-
-IMPORTANT: Default to GRAPH_RAG unless the question EXPLICITLY asks for TODAY/LATEST/CURRENT/NOW information.
-
-Respond with ONLY ONE WORD: Either "GRAPH_RAG" or "WEB_SEARCH" - nothing else."""
-
-        # GPT-4o-mini 호출
-        response = await client.chat.completions.create(
-            model=ROUTER_MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"Classify this question: {question}"}
-            ],
-            temperature=ROUTER_TEMPERATURE,
-            max_tokens=10
-        )
-        
-        # 응답 추출 및 정규화
-        classification = response.choices[0].message.content.strip().upper()
-        
-        # 유효성 검사
-        if "GRAPH_RAG" in classification:
-            return "GRAPH_RAG"
-        elif "WEB_SEARCH" in classification or "WEB" in classification:
-            return "WEB_SEARCH"
-        else:
-            # 기본값: GRAPH_RAG (내부 문서 우선)
-            print(f"⚠️ 분류 결과가 명확하지 않아요: {classification}, 기본값 GRAPH_RAG 사용")
-            return "GRAPH_RAG"
+    # 실시간 정보 키워드 체크 (명시적인 경우만)
+    realtime_keywords = [
+        "오늘", "현재", "지금", "실시간", "최신 뉴스",
+        "today", "current", "now", "real-time", "latest news",
+        "right now", "at this moment"
+    ]
     
-    except Exception as e:
-        print(f"❌ 질문 분류 중 에러 발생: {e}")
-        # 에러 시 기본값: GRAPH_RAG
-        return "GRAPH_RAG"
+    question_lower = question.lower()
+    
+    # 실시간 키워드가 명시적으로 있으면 WEB_SEARCH
+    if any(keyword in question_lower for keyword in realtime_keywords):
+        print(f"[ROUTER] WEB_SEARCH 선택 (실시간 키워드 감지)")
+        return "WEB_SEARCH"
+    
+    # 기본값: GRAPH_RAG (업로드된 문서 우선)
+    print(f"[ROUTER] GRAPH_RAG 선택 (기본 전략)")
+    return "GRAPH_RAG"
 
 
 async def handle_web_search(question: str) -> str:
@@ -627,22 +589,31 @@ async def query(request: QueryRequest):
                 sources_list = result.get("sources", [])
                 retrieval_backend = "community"
             else:
-                # Local Search: 특정 엔티티 검색
-                result = await engine.aquery(
-                    request.question,
-                    mode=request.mode,
-                    return_context=True,
-                    top_k=request.top_k
-                )
+                # Local Search: Neo4j Retriever 직접 사용
+                print(f"[DEBUG] Using Neo4j Retriever for: {request.question}")
                 
-                if isinstance(result, dict):
-                    base_answer = result.get("answer", "")
-                    sources_list = result.get("sources", [])
-                    retrieval_backend = result.get("retrieval_backend", "unknown")
-                    retrieval_context = result.get("context", "") or ""
+                from engine.neo4j_retriever import Neo4jRetriever
+                
+                retriever = Neo4jRetriever()
+                retrieval_result = retriever.retrieve(
+                    request.question,
+                    depth=2,
+                    limit=50,
+                    top_sources=10
+                )
+                retriever.close()
+                
+                sources_list = retrieval_result.get("sources", [])
+                retrieval_context = retrieval_result.get("context", "")
+                retrieval_backend = "neo4j_retriever"
+                
+                print(f"[DEBUG] Neo4j Retriever found {len(sources_list)} sources")
+                
+                # 출처가 있으면 LLM으로 답변 생성
+                if sources_list:
+                    base_answer = f"Based on {len(sources_list)} sources from Neo4j graph database."
                 else:
-                    base_answer = result
-                    sources_list = []
+                    base_answer = ""
             
             # Strict Grounding으로 보고서 재생성
             if sources_list:
