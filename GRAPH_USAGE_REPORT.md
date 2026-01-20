@@ -96,7 +96,7 @@ if not override_applied and (validation_result["confidence_score"] < 0.7 or ...)
     print(f"[WARNING] Low confidence or invalid response, falling back to Perplexity search")
 ```
 
-#### 🎯 **핵심 문제**:
+#### **핵심 문제**:
 
 1. **Neo4j Retriever가 제대로 작동하지 않음**
    - 573개 노드가 있는데도 검색 결과 없음

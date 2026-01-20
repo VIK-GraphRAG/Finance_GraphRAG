@@ -50,7 +50,7 @@ for i, question in enumerate(test_questions, 1):
             print(f"\n 출처: {len(sources)}개 (Neo4j: {neo4j_count}, Web: {web_count})")
             
             # 형식 체크
-            has_summary = "## 핵심 인사이트" in answer or "## 🎯 핵심 인사이트" in answer
+            has_summary = "## 핵심 인사이트" in answer or "## 핵심 인사이트" in answer
             has_diagram = "→" in answer
             has_analysis = "## 상세 분석" in answer
             has_agent_comment = "## 에이전트의 한 줄 평" in answer

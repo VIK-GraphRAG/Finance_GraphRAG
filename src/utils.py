@@ -476,7 +476,7 @@ You MUST respond with exactly this message in Korean."""
 
 📝 REQUIRED FORMAT (Professional Markdown):
 
-## 🎯 핵심 인사이트
+## 핵심 인사이트
 [2-3 문장으로 핵심 답변 요약, 모든 수치는 **굵게**, 용어는 `inline code`로]
 
 ## 인과관계 다이어그램
@@ -499,7 +499,7 @@ A → B → C → 결과
 ### 3️⃣ [세 번째 주요 포인트] (필요시)
 - 추가 분석 내용
 
-## 데이터 요약 (테이블 사용)
+## 데이터 요약 
 | 항목 | 수치 |
 |------|------|
 | 예시 | **$100M** |

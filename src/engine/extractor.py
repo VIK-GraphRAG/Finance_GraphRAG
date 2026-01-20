@@ -128,8 +128,8 @@ JSON output:"""
         if not text or not text.strip():
             return {"entities": [], "relationships": []}
         
-        # Truncate to 500 chars for 8GB RAM optimization
-        text = text[:500]
+        # Truncate to 800 chars (500 → 800, 더 많은 정보 추출)
+        text = text[:800]
         
         prompt = self._build_extraction_prompt(text)
         
@@ -151,7 +151,8 @@ JSON output:"""
                         ],
                         options={
                             "temperature": 0.1,  # Low temperature for consistent extraction
-                            "num_predict": 1000,  # Limit response length
+                            "num_predict": 800,  # 1000 → 800 (더 빠른 응답)
+                            "num_ctx": 2048,     # Context window 제한
                         }
                     ),
                     timeout=self.timeout

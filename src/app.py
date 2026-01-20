@@ -849,28 +849,46 @@ async def ingest_pdf(file: UploadFile = File(...)):
 
         print(f"✅ Extracted {len(text)} characters from PDF")
 
+        # Check if Ollama is running
+        import httpx
+        try:
+            response = httpx.get("http://localhost:11434/api/tags", timeout=3.0)
+            if response.status_code != 200:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Ollama 서버가 실행 중이 아닙니다. 터미널에서 'ollama serve'를 실행해주세요."
+                )
+        except (httpx.ConnectError, httpx.TimeoutException):
+            raise HTTPException(
+                status_code=503,
+                detail="Ollama 서버가 실행 중이 아닙니다. 터미널에서 'ollama serve'를 실행해주세요."
+            )
+
         # Extract entities + relationships with Local Ollama
         from engine.extractor import KnowledgeExtractor
         
         extractor = KnowledgeExtractor()
         
-        chunk_size = 1000  # 500 → 1000으로 증가 (요청 횟수 50% 감소)
+        # 성능 최적화 설정
+        chunk_size = 2000  # 1000 → 2000으로 증가 (요청 횟수 50% 감소)
         chunks = [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
         
-        # 청크 수 제한 (처리 시간 단축)
-        max_chunks = 20  # 최대 20개 청크 (약 20,000자, 청크 크기 증가로 커버량 유지)
+        # 청크 수 제한 (처리 시간 대폭 단축)
+        max_chunks = 10  # 20 → 10개로 감소 (처리 시간 50% 단축)
         if len(chunks) > max_chunks:
-            print(f"⚠️ 청크 수 제한: {len(chunks)} → {max_chunks} (처리 시간 단축)")
-            chunks = chunks[:max_chunks]
+            print(f"⚠️ 청크 수 제한: {len(chunks)} → {max_chunks} (빠른 처리를 위해)")
+            # 문서의 앞부분과 뒷부분 모두 샘플링
+            mid = len(chunks) // 2
+            chunks = chunks[:max_chunks//2] + chunks[mid:mid+max_chunks//2]
         
         all_entities = []
         all_relationships = []
 
-        print(f"🔒 Processing {len(chunks)} chunks with Local Ollama (parallel)...")
+        print(f"🔒 Processing {len(chunks)} chunks with Local Ollama (parallel, optimized)...")
 
-        # 병렬 처리로 속도 향상 (동시에 3개씩 처리)
+        # 병렬 처리 증가 (동시에 5개씩 처리)
         import asyncio
-        batch_size = 3
+        batch_size = 5  # 3 → 5로 증가
         
         for batch_start in range(0, len(chunks), batch_size):
             batch = chunks[batch_start:batch_start + batch_size]

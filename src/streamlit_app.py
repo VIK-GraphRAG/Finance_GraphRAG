@@ -146,40 +146,9 @@ with tab1:
                         "type": "graphrag"
                     })
                     
-                    # Display answer
+                    # Display answer (참조 자료 섹션 제거)
                     st.markdown("### Analysis Result")
-                    
-                    # Citation 번호를 클릭 가능한 링크로 변환
-                    formatted_answer = answer
-                    if sources:
-                        import re
-                        # [1], [2] 같은 citation을 강조 표시
-                        for i in range(1, len(sources) + 1):
-                            formatted_answer = formatted_answer.replace(
-                                f'[{i}]', 
-                                f'<sup><strong><a href="#source{i}" style="color: #4a9eff; text-decoration: none;">[{i}]</a></strong></sup>'
-                            )
-                    
-                    st.markdown(f'<div class="report-container">{formatted_answer}</div>', unsafe_allow_html=True)
-                    
-                    # Display sources with anchors
-                    if sources:
-                        st.markdown("---")
-                        st.markdown("### 📚 참조 자료")
-                        for i, source in enumerate(sources, 1):
-                            source_id = f"source{i}"
-                            st.markdown(
-                                f'<div id="{source_id}" style="padding: 0.5rem; margin: 0.5rem 0; background: #1e2330; border-left: 3px solid #4a9eff; border-radius: 4px;">'
-                                f'<strong style="color: #4a9eff;">[{i}]</strong> '
-                                f'<span style="color: #e0e0e0;">{source.get("file", "Unknown")}</span>',
-                                unsafe_allow_html=True
-                            )
-                            if source.get('url'):
-                                st.markdown(f'&nbsp;&nbsp;&nbsp;&nbsp;🔗 <a href="{source["url"]}" target="_blank" style="color: #4a9eff;">{source["url"]}</a>', unsafe_allow_html=True)
-                            if source.get('excerpt'):
-                                excerpt = source['excerpt'][:300] + "..." if len(source['excerpt']) > 300 else source['excerpt']
-                                st.markdown(f'&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #a0a0a0; font-size: 0.9rem;">{excerpt}</span>', unsafe_allow_html=True)
-                            st.markdown('</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div class="report-container">{answer}</div>', unsafe_allow_html=True)
                 
                 elif response.status_code == 500:
                     st.error("서버 처리 중 오류가 발생했습니다.")
@@ -200,11 +169,12 @@ with tab1:
                 with st.expander(f"{item['query'][:60]}..."):
                     st.markdown(item['answer'])
 
-# Tab 2: Upload PDF
+# Tab 2: Upload PDF (로컬 모델만 사용)
 with tab2:
     st.subheader("Upload PDF Document")
     
-    st.markdown("Upload financial reports or industry analysis PDFs")
+    st.markdown("📄 Upload financial reports or industry analysis PDFs")
+    st.info("로컬 모델(Ollama)을 사용하여 PDF를 처리하고 기존 그래프에 병합합니다.")
     
     uploaded_file = st.file_uploader(
         "Choose a PDF file",
@@ -214,19 +184,26 @@ with tab2:
     if uploaded_file is not None:
         st.info(f"File: {uploaded_file.name} ({uploaded_file.size / 1024:.1f} KB)")
         
-        if st.button("Process PDF (Local)", type="primary"):
-            with st.spinner("Processing with local model..."):
+        if st.button("Process PDF", type="primary"):
+            with st.spinner("로컬 모델로 처리 중... (시간이 걸릴 수 있습니다)"):
                 try:
-                    # Send PDF to backend
+                    # Send PDF to backend (로컬 모델 사용)
                     files = {'file': (uploaded_file.name, uploaded_file.getvalue(), 'application/pdf')}
                     response = requests.post(
                         f"{API_BASE_URL}/ingest_pdf",
                         files=files,
-                        timeout=600  # 10분으로 증가 (Ollama 처리 시간)
+                        timeout=600  # 10분 타임아웃 (Ollama 처리 시간)
                     )
                     
                     if response.status_code == 200:
-                        st.success("PDF가 성공적으로 처리되었습니다.")
+                        result = response.json()
+                        st.success("✅ PDF가 성공적으로 처리되어 그래프에 병합되었습니다!")
+                        
+                        # 결과 표시
+                        if result.get("entities_extracted"):
+                            st.info(f"추출된 엔티티: {result['entities_extracted']}개")
+                        if result.get("relationships_created"):
+                            st.info(f"생성된 관계: {result['relationships_created']}개")
                     else:
                         st.error(f"Error processing PDF: {response.status_code}")
                         droneLogError("PDF upload failed in UI (tab2)", Exception(f"status={response.status_code}"))
